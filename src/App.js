@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./App.css";
+import logo from "./logo.svg";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => (
+  <div className="App">
+    <header className="App-header">
+      <img src={logo} className="App-logo" alt="logo" />
+      <p>This is landing for invoicify.</p>
+      <code>
+        Hey! @only4{" "}
+        <span role="img" aria-label="Hey">
+          👋🏻
+        </span>
+      </code>
+      <br />
+      <Link className="App-link" to="/products">
+        Products Page
+      </Link>
+    </header>
+  </div>
+);
 
 export default App;
