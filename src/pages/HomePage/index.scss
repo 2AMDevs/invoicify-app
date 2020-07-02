@@ -1,0 +1,25 @@
+.home-page {
+  color: var(--color-white);
+  background-color: var(--color-black);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__header {
+    font-size: 2rem;
+
+    &__link {
+      background-color: var(--color-white-op-80);
+    }
+  }
+
+  &__content {
+    background-color: var(--color-white-op-20);
+    width: 80rem;
+    height: 50rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

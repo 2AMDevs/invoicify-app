@@ -1,22 +1,32 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import { HashRouter as Router, Route } from "react-router-dom"
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { HashRouter as Router, Route } from 'react-router-dom'
 
-import App from "./App"
-import { HomePage } from "./pages"
+import { initializeIcons } from '@uifabric/icons'
 
-import "./index.css"
+import { HomePage, InvoiceViewer } from './pages'
+
+import './index.scss'
+
+initializeIcons()
 
 ReactDOM.render(
   <Router>
     <div>
       <main>
-        <Route exact path="/" component={App} />
-        <Route path="/products" component={HomePage} />
+        <Route
+          exact
+          path="/"
+          component={HomePage}
+        />
+        <Route
+          path="/invoices"
+          component={InvoiceViewer}
+        />
       </main>
     </div>
   </Router>,
-  document.getElementById("root")
+  document.getElementById('root'),
 )
 
 // If you want your app to work offline and load faster, you can change

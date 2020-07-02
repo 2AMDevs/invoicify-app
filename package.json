@@ -20,8 +20,10 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "@uifabric/icons": "^7.3.58",
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
+    "node-sass": "^4.14.1",
     "office-ui-fabric-react": "^7.121.7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -38,7 +40,10 @@
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ]
   },
   "browserslist": {
     "production": [
@@ -56,6 +61,8 @@
     "concurrently": "^5.2.0",
     "electron": "^9.0.5",
     "electron-builder": "^22.7.0",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb": "^18.2.0",
     "wait-on": "^5.0.1"
   }
 }

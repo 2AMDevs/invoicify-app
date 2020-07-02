@@ -1,0 +1,32 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5% !important; // 1rem = 10px
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+// color variables
+:root {
+  --color-white: rgba(255, 255, 255, 1);
+  --color-white-op-80: rgba(255, 255, 255, 0.8);
+  --color-white-op-50: rgba(255, 255, 255, 0.5);
+  --color-white-op-20: rgba(255, 255, 255, 0.2);
+
+  --color-black: rgba(0, 0, 0, 1);
+}
