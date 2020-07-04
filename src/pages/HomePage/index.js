@@ -1,7 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import { DefaultButton, ActionButton } from 'office-ui-fabric-react'
+
+import { Header, SideBar } from '../../components'
 
 import './index.scss'
 
@@ -23,21 +24,13 @@ const menuProps = {
 const HomePage = () => (
   <div className="home-page">
     <header className="home-page__header">
-      <p>This page is supposed to list products.</p>
-      <br />
-      <Link
-        className="home-page__header__link"
-        to="/invoices"
-      >
-        <ActionButton
-          iconProps={{ iconName: 'AddFriend' }}
-          allowDisabledFocus
-        >
-          Let&apos;s Go to invoices
-        </ActionButton>
-      </Link>
+      <Header />
     </header>
     <mail className="home-page__content">
+      <SideBar
+        className="home-page__content__sidebar"
+        style={{ width: '100px' }}
+      />
       <DefaultButton
         text="Primary"
         primary
