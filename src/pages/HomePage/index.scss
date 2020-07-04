@@ -1,6 +1,5 @@
 .home-page {
-  color: var(--color-white);
-  background-color: var(--color-black);
+  background-color: var(--color-white);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,14 +11,20 @@
     width: 100%;
     height: 5rem;
     background-color: var(--color-white);
+    box-shadow: 0 0 5px 2px var(--color-black);
   }
 
   &__content {
-    background-color: var(--color-white-op-20);
-    width: 80rem;
-    height: 50rem;
+    background-color: var(--color-white-op-80);
+    width: 100%;
+    height: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
+
+    &__sidebar {
+      height: calc(100% - 0.8rem);
+      border-radius: 0.2rem;
+      border-right: 2px solid var(--color-black-op-20);
+    }
   }
 }

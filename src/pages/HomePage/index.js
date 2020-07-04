@@ -27,10 +27,7 @@ const HomePage = () => (
       <Header />
     </header>
     <mail className="home-page__content">
-      <SideBar
-        className="home-page__content__sidebar"
-        style={{ width: '100px' }}
-      />
+      <SideBar className="home-page__content__sidebar" />
       <DefaultButton
         text="Primary"
         primary
