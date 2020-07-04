@@ -43,7 +43,7 @@ const SideBar = ({ className, ...restProps }) => {
         onClick={toggleTeachingBubbleVisible}
         className="sidebar__btn"
         iconProps={{ iconName: 'print' }}
-        text="Print"
+        text="⚡Click"
         disabled={false}
         checked={false}
       />
