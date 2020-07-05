@@ -1,6 +1,6 @@
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
-import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
+// import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
 import { DatePicker } from 'office-ui-fabric-react'
 
 import React from 'react'
@@ -54,10 +54,10 @@ const HomePage = () => (
           label="Mobile No."
           mask="+\91 9999999999"
         />
-        <Checkbox
+        {/* <Checkbox
           label="Same State (Raj.)"
           // onChange={_onChange}
-        />
+        /> */}
       </Stack>
       <Stack {...columnProps}>
         <TextField
