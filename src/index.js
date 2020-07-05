@@ -21,7 +21,7 @@ loadTheme({
     themeDarkAlt: '#36a5fa',
     themeDark: '#55b3fb',
     themeDarker: '#81c7fc',
-    neutralLighterAlt: '#0f0f0f',
+    neutralLighterAlt: '#1e1f21',
     neutralLighter: '#0f0e0e',
     neutralLight: '#0e0e0e',
     neutralQuaternaryAlt: '#0d0d0d',
@@ -33,7 +33,7 @@ loadTheme({
     neutralPrimary: '#fafafa',
     neutralDark: '#fefefe',
     black: '#fefefe',
-    white: '#0f0f0f',
+    white: '#1e1f21',
   },
 })
 
