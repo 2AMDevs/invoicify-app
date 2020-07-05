@@ -1,10 +1,10 @@
-const { app, BrowserWindow, systemPreferences } = require('electron')
+const { app, BrowserWindow, nativeTheme } = require('electron')
 const isDev = require('electron-is-dev')
 const path = require('path')
 
 function createWindow () {
   // Create the browser window.
-  systemPreferences.setAppLevelAppearance('dark')
+  nativeTheme.themeSource = 'dark'
   const win = new BrowserWindow({
     width: 800,
     height: 600,
