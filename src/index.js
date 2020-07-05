@@ -2,7 +2,10 @@ import { initializeIcons } from '@uifabric/icons'
 import { loadTheme } from 'office-ui-fabric-react'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { HashRouter as Router, Route } from 'react-router-dom'
+import {
+  HashRouter as Router,
+  Route,
+} from 'react-router-dom'
 import { Header } from './components'
 import './index.scss'
 import { HomePage, Settings } from './pages'

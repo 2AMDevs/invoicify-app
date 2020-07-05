@@ -1,7 +1,9 @@
 import cn from 'classnames'
 import { CommandBarButton } from 'office-ui-fabric-react'
+import { Text } from 'office-ui-fabric-react/lib/Text'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { getFromStorage } from '../../helper/helper'
 import './index.scss'
 
 const Header = ({ className, ...restProps }) => {
@@ -39,7 +41,14 @@ const Header = ({ className, ...restProps }) => {
           />
         </Link>
       ) : '' }
-
+      <Text
+        variant="xLarge"
+        className="companyName"
+        nowrap
+        block
+      >
+        { getFromStorage('companyName') }
+      </Text>
     </div>
   )
 }
