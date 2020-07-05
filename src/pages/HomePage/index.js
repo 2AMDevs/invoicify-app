@@ -1,17 +1,13 @@
 import React from 'react'
-
-import { Header, SideBar } from '../../components'
-
 import './index.scss'
 
 const HomePage = () => (
   <div className="home-page">
-    <header className="home-page__header">
-      <Header />
-    </header>
-    <mail className="home-page__content">
-      <SideBar className="home-page__content__sidebar" />
-    </mail>
+    <p className="home-page__content">
+      That&apos;s here. That&apos;s home. That&apos;s us.
+      On it everyone you love, everyone you know, everyone you ever heard of,
+      every human being who ever was, lived out their lives.
+    </p>
   </div>
 )
 

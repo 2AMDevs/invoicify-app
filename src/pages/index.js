@@ -1,7 +1,4 @@
 import HomePage from './HomePage'
-import InvoiceViewer from './InvoiceViewer'
+import Settings from './Settings'
 
-export {
-  HomePage,
-  InvoiceViewer,
-}
+export { HomePage, Settings }

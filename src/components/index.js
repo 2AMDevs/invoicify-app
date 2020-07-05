@@ -1,7 +1,8 @@
-import SideBar from './SideBar'
 import Header from './Header'
 
+// ⚡⚡⚡⚡
+const everything = 42
 export {
-  SideBar,
   Header,
+  everything,
 }
