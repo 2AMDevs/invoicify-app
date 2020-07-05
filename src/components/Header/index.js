@@ -23,24 +23,9 @@ const Header = ({ className, ...restProps }) => {
           className="header__link__btn"
           iconProps={{ iconName: firstIconName.toLowerCase() }}
           text={firstIconName}
-          disabled={false}
           checked={false}
         />
       </Link>
-      { pathname === '/' ? (
-        <Link
-          className="header__link"
-          to="/settings"
-        >
-          <CommandBarButton
-            className="header__link__btn"
-            iconProps={{ iconName: 'Settings' }}
-            text="Settings"
-            disabled={false}
-            checked={false}
-          />
-        </Link>
-      ) : '' }
       <Text
         variant="xLarge"
         className="companyName"
@@ -49,6 +34,18 @@ const Header = ({ className, ...restProps }) => {
       >
         { getFromStorage('companyName') }
       </Text>
+      { pathname === '/' ? (
+        <Link
+          className="header__link"
+          to="/settings"
+        >
+          <CommandBarButton
+            className="header__link__btn"
+            iconProps={{ iconName: 'Settings' }}
+            checked={false}
+          />
+        </Link>
+      ) : '' }
     </div>
   )
 }
