@@ -19,7 +19,7 @@ function createWindow () {
       : `file://${path.join(__dirname, '../build/index.html')}`,
   )
 
-  // Open the DevTools.
+  // TODO: Add Tweak to open this when 7 press on Home button, so that we can debug prod
   if (isDev) win.webContents.openDevTools()
 }
 
