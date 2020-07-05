@@ -6,11 +6,12 @@ import { DatePicker } from 'office-ui-fabric-react'
 import React from 'react'
 import './index.scss'
 
-const stackTokens = { childrenGap: 15 }
-const stackStyles = { root: { width: 650 } }
+const deviceWidth = document.documentElement.clientWidth
+const stackTokens = { childrenGap: deviceWidth * 0.1 }
+const stackStyles = { root: { width: deviceWidth * 0.8 } }
 const columnProps = {
-  tokens: { childrenGap: 100 },
-  styles: { root: { width: 650 } },
+  tokens: { childrenGap: deviceWidth * 0.07 },
+  styles: { root: { width: deviceWidth * 0.7 } },
 }
 
 const HomePage = () => (
@@ -50,7 +51,7 @@ const HomePage = () => (
           mask="99-**********-*Z*"
         />
         <MaskedTextField
-          label="Mobile Number"
+          label="Mobile No."
           mask="+\91 9999999999"
         />
         <Checkbox

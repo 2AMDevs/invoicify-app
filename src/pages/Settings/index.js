@@ -5,7 +5,8 @@ import React, { useState } from 'react'
 import { getFromStorage } from '../../helper/helper'
 
 const stackTokens = { childrenGap: 15 }
-const stackStyles = { root: { width: 650 } }
+const deviceWidth = document.documentElement.clientWidth
+const stackStyles = { root: { width: deviceWidth * 0.7 } }
 
 const Settings = () => {
   const [settingsOne, setSettingsOne] = useState(getFromStorage('settingsOne'))
@@ -50,7 +51,6 @@ const Settings = () => {
       <Toggle
         label="Automatically Check for Updates"
         checked={checkForUpdates}
-        inlineLabel
         onText="On"
         offText="Off"
         onChange={onClickUpdates}
