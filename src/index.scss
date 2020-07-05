@@ -1,3 +1,18 @@
+// color variables
+:root {
+  --color-white: white;
+  --color-white-op-80: rgba(255, 255, 255, 0.8);
+  --color-white-op-50: rgba(255, 255, 255, 0.5);
+  --color-white-op-20: rgba(255, 255, 255, 0.2);
+
+  --color-black: rgba(0, 0, 0, 1);
+  --color-black-op-80: rgba(0, 0, 0, 0.8);
+  --color-black-op-50: rgba(0, 0, 0, 0.5);
+  --color-black-op-20: rgba(0, 0, 0, 0.2);
+
+  --color-bg: #1e1f21;
+}
+
 *,
 *::after,
 *::before {
@@ -18,23 +33,10 @@ html {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #1e1f21;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-
-// color variables
-:root {
-  --color-white: white;
-  --color-white-op-80: rgba(255, 255, 255, 0.8);
-  --color-white-op-50: rgba(255, 255, 255, 0.5);
-  --color-white-op-20: rgba(255, 255, 255, 0.2);
-
-  --color-black: rgba(0, 0, 0, 1);
-  --color-black-op-80: rgba(0, 0, 0, 0.8);
-  --color-black-op-50: rgba(0, 0, 0, 0.5);
-  --color-black-op-20: rgba(0, 0, 0, 0.2);
 }

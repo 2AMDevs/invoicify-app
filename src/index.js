@@ -39,7 +39,7 @@ initializeIcons()
 ReactDOM.render(
   <Router>
     <div>
-      <header className="home-page__header">
+      <header>
         <Header />
       </header>
       <main>
