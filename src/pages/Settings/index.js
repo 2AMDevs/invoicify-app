@@ -5,26 +5,33 @@ import React, { useState } from 'react'
 import { getFromStorage } from '../../helper/helper'
 
 const stackTokens = { childrenGap: 15 }
-const stackStyles = { root: { width: 650 } }
+const deviceWidth = document.documentElement.clientWidth
+const stackStyles = { root: { width: deviceWidth * 0.7 } }
 
 const Settings = () => {
   const [settingsOne, setSettingsOne] = useState(getFromStorage('settingsOne'))
+  const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [checkForUpdates, setCheckForUpdates] = useState(getFromStorage('checkForUpdates'))
 
-  const onClick = (ev, checked) => {
+  const onClick = (_event, checked) => {
     localStorage.settingsOne = checked
     setSettingsOne(checked)
   }
 
-  const onClickUpdates = (ev, checked) => {
+  const onClickUpdates = (_event, checked) => {
     localStorage.checkForUpdates = checked
     setCheckForUpdates(checked)
   }
 
-  const onNameChange = (ev, newValue) => {
+  const onNameChange = (_event, newValue) => {
     localStorage.companyName = newValue
     setCompanyName(newValue)
+  }
+
+  const onInvoiceNoChange = (_event, newValue) => {
+    localStorage.invoiceNumber = newValue
+    setInvoiceNumber(newValue)
   }
 
   return (
@@ -39,6 +46,12 @@ const Settings = () => {
         onChange={onNameChange}
         value={companyName}
       />
+      <TextField
+        label="Next Invoice Number"
+        defaultValue="001"
+        onChange={onInvoiceNoChange}
+        value={invoiceNumber}
+      />
       <Toggle
         label={'Setting 1'}
         checked={settingsOne}
@@ -46,11 +59,9 @@ const Settings = () => {
         offText="Off"
         onChange={onClick}
       />
-
       <Toggle
         label="Automatically Check for Updates"
         checked={checkForUpdates}
-        inlineLabel
         onText="On"
         offText="Off"
         onChange={onClickUpdates}
