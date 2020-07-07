@@ -5,6 +5,7 @@ import {
   DetailsListLayoutMode,
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
+import { CommandBarButton } from 'office-ui-fabric-react'
 
 import { productTableColumns, tempItems } from '../../helper/helper'
 
@@ -54,9 +55,21 @@ class ProductsPage extends React.Component {
     console.log(item)
   }
 
+  openCreateModal = (e) => {
+    console.log(e)
+  }
+
   render () {
     return (
       <div className="products-page">
+        <CommandBarButton
+          className="products-page__hero-btn"
+          iconProps={{ iconName: 'CircleAddition' }}
+          text="Add New Product"
+          onClick={this.openCreateModal}
+          checked={false}
+        />
+
         <DetailsList
           items={this.state.items}
           compact={false}
