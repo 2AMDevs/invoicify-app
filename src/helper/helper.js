@@ -22,4 +22,56 @@ const initializeSettings = () => {
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
 }
 
-export { getFromStorage, initializeSettings }
+const productTableColumns = [
+  {
+    key: 'column1',
+    name: 'id',
+    ariaLabel: 'Id of the item',
+    iconName: 'List',
+    isIconOnly: true,
+    fieldName: 'id',
+    minWidth: 16,
+    maxWidth: 16,
+  },
+  {
+    key: 'column2',
+    name: 'Name',
+    fieldName: 'name',
+    minWidth: 210,
+    maxWidth: 350,
+    isRowHeader: true,
+    isResizable: true,
+    isSorted: false,
+    isSortedDescending: false,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column3',
+    name: 'Type',
+    fieldName: 'type',
+    minWidth: 50,
+    maxWidth: 90,
+    isRowHeader: true,
+    isResizable: true,
+    isSorted: false,
+    isSortedDescending: false,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column4',
+    name: 'Price',
+    fieldName: 'price',
+    minWidth: 50,
+    maxWidth: 90,
+    isRowHeader: true,
+    isResizable: true,
+    isSorted: false,
+    isSortedDescending: false,
+    data: 'number',
+    isPadded: true,
+  },
+]
+
+export { getFromStorage, initializeSettings, productTableColumns }

@@ -6,14 +6,14 @@ import {
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
 
-import { getFromStorage } from '../../helper/helper'
+import { getFromStorage, productTableColumns } from '../../helper/helper'
 
 import './index.scss'
 
 const ProductsPage = () => {
   const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
-  const onColumnClick = (e, column) => {
-    console.log(e.target, column)
+  const onColumnClick = (_, column) => {
+    console.log(column)
   }
 
   const onItemClick = (item) => {
@@ -35,78 +35,14 @@ const ProductsPage = () => {
     },
   ]
 
-  const columns = [
-    {
-      key: 'column1',
-      name: 'id',
-      className: 'col-1',
-      iconClassName: 'col-1-icn',
-      ariaLabel: 'Id of the item',
-      iconName: 'List',
-      isIconOnly: true,
-      fieldName: 'id',
-      minWidth: 16,
-      maxWidth: 16,
-      onColumnClick,
-      onRender: (item) => <span>{item.id}</span>,
-    },
-    {
-      key: 'column2',
-      name: 'Name',
-      fieldName: 'name',
-      minWidth: 210,
-      maxWidth: 350,
-      isRowHeader: true,
-      isResizable: true,
-      isSorted: false,
-      isSortedDescending: false,
-      sortAscendingAriaLabel: 'Sorted A to Z',
-      sortDescendingAriaLabel: 'Sorted Z to A',
-      onColumnClick,
-      data: 'string',
-      isPadded: true,
-    },
-    {
-      key: 'column3',
-      name: 'Type',
-      fieldName: 'type',
-      minWidth: 50,
-      maxWidth: 90,
-      isRowHeader: true,
-      isResizable: true,
-      isSorted: false,
-      isSortedDescending: false,
-      sortAscendingAriaLabel: 'Sorted A to Z',
-      sortDescendingAriaLabel: 'Sorted Z to A',
-      onColumnClick,
-      data: 'string',
-      isPadded: true,
-    },
-    {
-      key: 'column4',
-      name: 'Price',
-      fieldName: 'price',
-      minWidth: 50,
-      maxWidth: 90,
-      isRowHeader: true,
-      isResizable: true,
-      isSorted: false,
-      isSortedDescending: false,
-      sortAscendingAriaLabel: 'Sorted A to Z',
-      sortDescendingAriaLabel: 'Sorted Z to A',
-      onColumnClick,
-      data: 'number',
-      isPadded: true,
-    },
-  ]
-
   return (
     <div className="products-page">
       {nextInvoiceNumber}
       <DetailsList
         items={items}
         compact={false}
-        columns={columns}
+        columns={productTableColumns}
+        onColumnHeaderClick={onColumnClick}
         selectionMode={SelectionMode.none}
         getKey={(item, index) => `${item.name} - ${index}`}
         setKey="multiple"
