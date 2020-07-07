@@ -6,53 +6,49 @@ import {
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
 
-import { getFromStorage, productTableColumns } from '../../helper/helper'
+import { productTableColumns, tempItems } from '../../helper/helper'
 
 import './index.scss'
 
-const ProductsPage = () => {
-  const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
-  const onColumnClick = (_, column) => {
+class ProductsPage extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.initialState = {
+      columns: productTableColumns,
+      items: tempItems,
+    }
+
+    this.state = { ...this.initialState }
+  }
+
+  onColumnClick = (_, column) => {
     console.log(column)
   }
 
-  const onItemClick = (item) => {
+  onItemClick = (item) => {
     console.log(item)
   }
 
-  const items = [
-    {
-      id: 0,
-      name: 'ring ring ring',
-      type: 'gold',
-      price: 400,
-    },
-    {
-      id: 2,
-      name: 'aring ring ring',
-      type: 'silver',
-      price: 200,
-    },
-  ]
-
-  return (
-    <div className="products-page">
-      {nextInvoiceNumber}
-      <DetailsList
-        items={items}
-        compact={false}
-        columns={productTableColumns}
-        onColumnHeaderClick={onColumnClick}
-        selectionMode={SelectionMode.none}
-        getKey={(item, index) => `${item.name} - ${index}`}
-        setKey="multiple"
-        layoutMode={DetailsListLayoutMode.justified}
-        isHeaderVisible
-        onActiveItemChanged={onItemClick}
-        enterModalSelectionOnTouch
-      />
-    </div>
-  )
+  render () {
+    return (
+      <div className="products-page">
+        <DetailsList
+          items={this.state.items}
+          compact={false}
+          columns={productTableColumns}
+          onColumnHeaderClick={this.onColumnClick}
+          selectionMode={SelectionMode.none}
+          getKey={(item, index) => `${item.name} - ${index}`}
+          setKey="multiple"
+          layoutMode={DetailsListLayoutMode.justified}
+          isHeaderVisible
+          onActiveItemChanged={this.onItemClick}
+          enterModalSelectionOnTouch
+        />
+      </div>
+    )
+  }
 }
 
 export default ProductsPage

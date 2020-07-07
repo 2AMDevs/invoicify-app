@@ -74,4 +74,25 @@ const productTableColumns = [
   },
 ]
 
-export { getFromStorage, initializeSettings, productTableColumns }
+// remove this shit
+const tempItems = [
+  {
+    id: 0,
+    name: 'ring ring ring',
+    type: 'gold',
+    price: 400,
+  },
+  {
+    id: 2,
+    name: 'aring ring ring',
+    type: 'silver',
+    price: 200,
+  },
+]
+
+export {
+  getFromStorage,
+  initializeSettings,
+  productTableColumns,
+  tempItems,
+}
