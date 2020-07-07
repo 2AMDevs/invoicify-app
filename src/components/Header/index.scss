@@ -7,6 +7,10 @@
   height: 5rem;
   box-shadow: 0 0 5px 2px var(--color-black);
 
+  &__left-section {
+    display: flex;
+  }
+
   &__link {
     text-decoration: none;
     height: 100%;

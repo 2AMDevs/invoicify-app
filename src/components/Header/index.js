@@ -1,31 +1,63 @@
+import React from 'react'
+import { Link, useLocation } from 'react-router-dom'
+
 import cn from 'classnames'
 import { CommandBarButton } from 'office-ui-fabric-react'
 import { Text } from 'office-ui-fabric-react/lib/Text'
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+
 import { getFromStorage } from '../../helper/helper'
+
 import './index.scss'
 
 const Header = ({ className, ...restProps }) => {
   const { pathname } = useLocation()
-  const firstIconName = pathname === '/' ? 'Home' : 'Back'
+  const onSettingsPage = pathname === '/settings'
 
   return (
     <div
       className={cn('header', className)}
       {...restProps}
     >
-      <Link
-        className="header__link"
-        to="/"
-      >
-        <CommandBarButton
-          className="header__link__btn"
-          iconProps={{ iconName: firstIconName.toLowerCase() }}
-          text={firstIconName}
-          checked={false}
-        />
-      </Link>
+      <div className="header__left-section">
+        {onSettingsPage ? (
+          <Link
+            className="header__link"
+            to="/"
+          >
+            <CommandBarButton
+              className="header__link__btn"
+              iconProps={{ iconName: 'Back' }}
+              text="Back"
+              checked={false}
+            />
+          </Link>
+        ) : (
+          <>
+            <Link
+              className="header__link"
+              to="/"
+            >
+              <CommandBarButton
+                className="header__link__btn"
+                iconProps={{ iconName: 'Home' }}
+                text="Home"
+                checked={false}
+              />
+            </Link>
+            <Link
+              className="header__link"
+              to="/products"
+            >
+              <CommandBarButton
+                className="header__link__btn"
+                iconProps={{ iconName: 'ProductVariant' }}
+                text="Products"
+                checked={false}
+              />
+            </Link>
+          </>
+        )}
+      </div>
       <Text
         variant="xLarge"
         className="companyName"
@@ -34,7 +66,7 @@ const Header = ({ className, ...restProps }) => {
       >
         { getFromStorage('companyName') }
       </Text>
-      { pathname === '/' ? (
+      { !onSettingsPage ? (
         <Link
           className="header__link"
           to="/settings"

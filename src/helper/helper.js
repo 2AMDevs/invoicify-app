@@ -22,4 +22,77 @@ const initializeSettings = () => {
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
 }
 
-export { getFromStorage, initializeSettings }
+const productTableColumns = [
+  {
+    key: 'column1',
+    name: 'id',
+    ariaLabel: 'Id of the item',
+    iconName: 'List',
+    isIconOnly: true,
+    fieldName: 'id',
+    minWidth: 16,
+    maxWidth: 16,
+  },
+  {
+    key: 'column2',
+    name: 'Name',
+    fieldName: 'name',
+    minWidth: 210,
+    maxWidth: 350,
+    isRowHeader: true,
+    isResizable: true,
+    isSorted: false,
+    isSortedDescending: false,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column3',
+    name: 'Type',
+    fieldName: 'type',
+    minWidth: 40,
+    maxWidth: 40,
+    isRowHeader: true,
+    isResizable: true,
+    isSorted: false,
+    isSortedDescending: false,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column4',
+    name: 'Price',
+    fieldName: 'price',
+    minWidth: 30,
+    maxWidth: 30,
+    isRowHeader: true,
+    isResizable: true,
+    isSorted: false,
+    isSortedDescending: false,
+    data: 'number',
+    isPadded: true,
+  },
+]
+
+// remove this shit
+const tempItems = [
+  {
+    id: 0,
+    name: 'ring ring ring',
+    type: 'gold',
+    price: 400,
+  },
+  {
+    id: 2,
+    name: 'aring ring ring',
+    type: 'silver',
+    price: 200,
+  },
+]
+
+export {
+  getFromStorage,
+  initializeSettings,
+  productTableColumns,
+  tempItems,
+}

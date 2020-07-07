@@ -1,0 +1,11 @@
+.products-page {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  &__hero-btn {
+    height: 5rem;
+    width: 18rem;
+    font-size: 1.7rem;
+  }
+}
