@@ -66,7 +66,7 @@ const Header = ({ className, ...restProps }) => {
       >
         { getFromStorage('companyName') }
       </Text>
-      { pathname === '/' ? (
+      { !onSettingsPage ? (
         <Link
           className="header__link"
           to="/settings"

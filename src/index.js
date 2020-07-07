@@ -1,15 +1,18 @@
-import { initializeIcons } from '@uifabric/icons'
-import { loadTheme } from 'office-ui-fabric-react'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {
   HashRouter as Router,
   Route,
 } from 'react-router-dom'
+
+import { initializeIcons } from '@uifabric/icons'
+import { loadTheme } from 'office-ui-fabric-react'
+
 import { Header } from './components'
-import './index.scss'
-import { HomePage, Settings } from './pages'
+import { HomePage, ProductsPage, Settings } from './pages'
 import { initializeSettings } from './helper/helper'
+
+import './index.scss'
 
 loadTheme({
   palette: {
@@ -51,6 +54,11 @@ ReactDOM.render(
           exact
           path="/"
           component={HomePage}
+        />
+        <Route
+          exact
+          path="/products"
+          component={ProductsPage}
         />
         <Route
           path="/settings"
