@@ -81,7 +81,7 @@ const HomePage = () => {
           <MaskedTextField
             label="Customer GSTIN"
             mask="99-**********-*Z*"
-            value={gstin.substr(gstin.length)}
+            value={gstin.substr(0, gstin.length - 2)}
             onChange={(_event, val) => setGstin(val)}
           />
           <MaskedTextField

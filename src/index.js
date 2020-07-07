@@ -9,6 +9,7 @@ import {
 import { Header } from './components'
 import './index.scss'
 import { HomePage, Settings } from './pages'
+import { initializeSettings } from './helper/helper'
 
 loadTheme({
   palette: {
@@ -36,8 +37,8 @@ loadTheme({
     white: '#23272A',
   },
 })
-
 initializeIcons()
+initializeSettings()
 
 ReactDOM.render(
   <Router>
