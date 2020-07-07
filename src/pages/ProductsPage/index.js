@@ -24,6 +24,30 @@ class ProductsPage extends React.Component {
 
   onColumnClick = (_, column) => {
     console.log(column)
+    const { columns, items } = this.state
+    const newColumns = columns.slice();
+    const currColumn = newColumns.filter((currCol) => column.key === currCol.key)[0]
+    newColumns.forEach((newCol) => {
+      if (newCol === currColumn) {
+        currColumn.isSortedDescending = !currColumn.isSortedDescending
+        currColumn.isSorted = true
+      } else {
+        newCol.isSorted = false
+        newCol.isSortedDescending = true
+      }
+    })
+    const newItems = this.copyAndSort(items, currColumn.fieldName, currColumn.isSortedDescending)
+    this.setState({
+      columns: newColumns,
+      items: newItems,
+    })
+  }
+
+  copyAndSort= (items, columnKey, isSortedDescending) => {
+    const key = columnKey
+    return items.slice(0).sort(
+      (a, b) => ((isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1),
+    )
   }
 
   onItemClick = (item) => {
@@ -36,7 +60,7 @@ class ProductsPage extends React.Component {
         <DetailsList
           items={this.state.items}
           compact={false}
-          columns={productTableColumns}
+          columns={this.state.columns}
           onColumnHeaderClick={this.onColumnClick}
           selectionMode={SelectionMode.none}
           getKey={(item, index) => `${item.name} - ${index}`}
