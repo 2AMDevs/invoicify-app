@@ -23,9 +23,8 @@ class ProductsPage extends React.Component {
   }
 
   onColumnClick = (_, column) => {
-    console.log(column)
     const { columns, items } = this.state
-    const newColumns = columns.slice();
+    const newColumns = columns.slice()
     const currColumn = newColumns.filter((currCol) => column.key === currCol.key)[0]
     newColumns.forEach((newCol) => {
       if (newCol === currColumn) {
@@ -51,6 +50,7 @@ class ProductsPage extends React.Component {
   }
 
   onItemClick = (item) => {
+    // open edit modal when clicked
     console.log(item)
   }
 
