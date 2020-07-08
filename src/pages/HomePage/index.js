@@ -1,9 +1,11 @@
-// import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
 import { DatePicker, DefaultButton } from 'office-ui-fabric-react'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
 import React, { useState, useEffect } from 'react'
-import { getFromStorage } from '../../helper/helper'
+import {
+  PDFDocument, StandardFonts,
+} from 'pdf-lib'
+import { getFromStorage, downloadPDF, getInvoiceDate } from '../../helper/helper'
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -33,16 +35,76 @@ const HomePage = () => {
     setAddress('')
   }
 
-  const printAndMove = () => {
-    setInvoiceNumber(invoiceNumber + 1)
-    resetForm()
-  }
+  const printAndMove = async () => {
+    let pdfDoc
+    const previewURL = getFromStorage('previewPDFUrl')
+    if (previewURL) {
+      const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
+      pdfDoc = await PDFDocument.load(existingPdfBytes)
+    } else {
+      pdfDoc = await PDFDocument.create()
+    }
 
-  // eslint-disable-next-line no-unused-vars
-  const formObject = {
-    invoiceNumber, date: new Date(), customerName, gstin, mobile, address,
+    // Embed the Helvetica font
+    const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+    const fontSize = 11
+
+    const page = previewURL ? pdfDoc.getPages()[0] : pdfDoc.addPage()
+
+    // Get the width and height of the first page
+    const { width, height } = page.getSize()
+
+    // Draw a string of text diagonally across the first page
+    page.drawText(invoiceNumber.toString(), {
+      x: 90,
+      y: height / 2 + 273,
+      size: fontSize,
+      font,
+    })
+
+    page.drawText(getInvoiceDate(), {
+      x: width - 110,
+      y: height / 2 + 275,
+      size: fontSize,
+      font,
+    })
+
+    page.drawText(customerName, {
+      x: 60,
+      y: height / 2 + 250,
+      size: fontSize,
+      font,
+    })
+
+    page.drawText(gstin, {
+      x: 100,
+      y: height / 2 + 223,
+      size: fontSize,
+      font,
+    })
+
+    page.drawText(mobile, {
+      x: width - 130,
+      y: height / 2 + 223,
+      size: fontSize,
+      font,
+    })
+
+    page.drawText(address, {
+      x: 325,
+      y: height / 2 + 223,
+      size: fontSize,
+      font,
+    })
+
+    // Serialize the PDFDocument to bytes (a Uint8Array)
+    const pdfBytes = await pdfDoc.save()
+
+    downloadPDF(pdfBytes, invoiceNumber)
+
+    setInvoiceNumber(invoiceNumber + 1)
+    // resetForm()
   }
-  // console.log(formObject)
 
   return (
     <div className="home-page">

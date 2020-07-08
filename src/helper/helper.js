@@ -22,6 +22,24 @@ const initializeSettings = () => {
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
 }
 
+const downloadPDF = (pdfBytes, invoiceNumber) => {
+  const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+  const link = document.createElement('a')
+  link.href = window.URL.createObjectURL(blob)
+  link.id = `invoice-${invoiceNumber.toString()}`
+  link.download = `invoice-${invoiceNumber.toString()}.pdf`
+  link.click()
+  // link.id.remove()
+}
+
+const getInvoiceDate = () => {
+  const options = {
+    year: 'numeric', month: 'long', day: 'numeric',
+  }
+  const today = new Date()
+  return today.toLocaleDateString('en-IN', options)
+}
+
 const productTableColumns = [
   {
     key: 'column1',
@@ -95,4 +113,6 @@ export {
   initializeSettings,
   productTableColumns,
   tempItems,
+  downloadPDF,
+  getInvoiceDate,
 }
