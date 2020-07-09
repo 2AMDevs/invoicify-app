@@ -22,6 +22,18 @@ const initializeSettings = () => {
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
 }
 
+const setProduct = (product) => {
+  const products = JSON.parse(localStorage.getItem('products')) || []
+  localStorage.setItem('products', JSON.stringify([...products, product]))
+}
+
+const getProducts = () => {
+  const products = localStorage.getItem('products')
+  if (!products) return []
+
+  return JSON.parse(products)
+}
+
 const productTableColumns = [
   {
     key: 'column1',
@@ -30,8 +42,8 @@ const productTableColumns = [
     iconName: 'List',
     isIconOnly: true,
     fieldName: 'id',
-    minWidth: 16,
-    maxWidth: 16,
+    minWidth: 50,
+    maxWidth: 50,
   },
   {
     key: 'column2',
@@ -74,25 +86,10 @@ const productTableColumns = [
   },
 ]
 
-// remove this shit
-const tempItems = [
-  {
-    id: 0,
-    name: 'ring ring ring',
-    type: 'gold',
-    price: 400,
-  },
-  {
-    id: 2,
-    name: 'aring ring ring',
-    type: 'silver',
-    price: 200,
-  },
-]
-
 export {
   getFromStorage,
   initializeSettings,
   productTableColumns,
-  tempItems,
+  setProduct,
+  getProducts,
 }

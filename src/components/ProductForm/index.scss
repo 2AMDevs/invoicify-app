@@ -1,0 +1,23 @@
+.product-form {
+  &__modal {
+    width: 50rem;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 300;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 0.2rem solid var(--color-white-op-20);
+  }
+
+  &__body {
+    padding: 2rem;
+
+    .ms-TextField {
+      margin-bottom: 2rem;
+    }
+  }
+}

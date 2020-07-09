@@ -7,7 +7,8 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { CommandBarButton } from 'office-ui-fabric-react'
 
-import { productTableColumns, tempItems } from '../../helper/helper'
+import { productTableColumns, getProducts } from '../../helper/helper'
+import { ProductForm } from '../../components'
 
 import './index.scss'
 
@@ -17,7 +18,9 @@ class ProductsPage extends React.Component {
 
     this.initialState = {
       columns: productTableColumns,
-      items: tempItems,
+      items: getProducts(),
+      isProductFormOpen: false,
+      currentItem: null,
     }
 
     this.state = { ...this.initialState }
@@ -50,39 +53,51 @@ class ProductsPage extends React.Component {
     )
   }
 
-  onItemClick = (item) => {
-    // open edit modal when clicked
-    console.log(item)
-  }
+  refreshProductItems = () => this.setState({ items: getProducts() })
 
-  openCreateModal = (e) => {
-    console.log(e)
-  }
+  onItemClick = (item) => this.setState({ currentItem: item, isProductFormOpen: true })
+
+  hideProductForm = () => this.setState({ isProductFormOpen: false })
+
+  showProductForm = () => this.setState({ isProductFormOpen: true })
 
   render () {
     return (
       <div className="products-page">
+        <ProductForm
+          isModalOpen={this.state.isProductFormOpen}
+          hideModal={this.hideProductForm}
+          product={this.state.currentItem}
+          fetchItems={this.refreshProductItems}
+        />
+
         <CommandBarButton
           className="products-page__hero-btn"
           iconProps={{ iconName: 'CircleAddition' }}
           text="Add New Product"
-          onClick={this.openCreateModal}
+          onClick={this.showProductForm}
           checked={false}
         />
 
-        <DetailsList
-          items={this.state.items}
-          compact={false}
-          columns={this.state.columns}
-          onColumnHeaderClick={this.onColumnClick}
-          selectionMode={SelectionMode.none}
-          getKey={(item, index) => `${item.name} - ${index}`}
-          setKey="multiple"
-          layoutMode={DetailsListLayoutMode.justified}
-          isHeaderVisible
-          onActiveItemChanged={this.onItemClick}
-          enterModalSelectionOnTouch
-        />
+        {this.state.items && this.state.items.length > 0 ? (
+          <DetailsList
+            items={this.state.items}
+            compact={false}
+            columns={this.state.columns}
+            onColumnHeaderClick={this.onColumnClick}
+            selectionMode={SelectionMode.none}
+            getKey={(item, index) => `${item.name} - ${index}`}
+            setKey="multiple"
+            layoutMode={DetailsListLayoutMode.justified}
+            isHeaderVisible
+            onActiveItemChanged={this.onItemClick}
+            enterModalSelectionOnTouch
+          />
+        ) : (
+          <p className="products-page__no-items">
+            No products added
+          </p>
+        )}
       </div>
     )
   }
