@@ -7,7 +7,7 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { CommandBarButton } from 'office-ui-fabric-react'
 
-import { productTableColumns, tempItems } from '../../helper/helper'
+import { productTableColumns, getProducts } from '../../helper/helper'
 import { ProductForm } from '../../components'
 
 import './index.scss'
@@ -18,7 +18,7 @@ class ProductsPage extends React.Component {
 
     this.initialState = {
       columns: productTableColumns,
-      items: tempItems,
+      items: getProducts(),
       isProductFormOpen: false,
       currentItem: null,
     }
@@ -76,19 +76,25 @@ class ProductsPage extends React.Component {
           checked={false}
         />
 
-        <DetailsList
-          items={this.state.items}
-          compact={false}
-          columns={this.state.columns}
-          onColumnHeaderClick={this.onColumnClick}
-          selectionMode={SelectionMode.none}
-          getKey={(item, index) => `${item.name} - ${index}`}
-          setKey="multiple"
-          layoutMode={DetailsListLayoutMode.justified}
-          isHeaderVisible
-          onActiveItemChanged={this.onItemClick}
-          enterModalSelectionOnTouch
-        />
+        {this.state.items && this.state.items.length > 0 ? (
+          <DetailsList
+            items={this.state.items}
+            compact={false}
+            columns={this.state.columns}
+            onColumnHeaderClick={this.onColumnClick}
+            selectionMode={SelectionMode.none}
+            getKey={(item, index) => `${item.name} - ${index}`}
+            setKey="multiple"
+            layoutMode={DetailsListLayoutMode.justified}
+            isHeaderVisible
+            onActiveItemChanged={this.onItemClick}
+            enterModalSelectionOnTouch
+          />
+        ) : (
+          <p className="products-page__no-items">
+            No products added
+          </p>
+        )}
       </div>
     )
   }

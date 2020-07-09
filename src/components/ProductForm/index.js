@@ -95,7 +95,7 @@ const ProductForm = ({ isModalOpen, hideModal, product }) => {
               tokens={{ childrenGap: 25 }}
             >
               <DefaultButton
-                text="Print"
+                text="Save"
                 iconProps={{ iconName: 'Save' }}
                 primary
                 onClick={saveForm}
