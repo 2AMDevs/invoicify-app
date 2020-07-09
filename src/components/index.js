@@ -1,8 +1,7 @@
 import Header from './Header'
+import ProductForm from './ProductForm'
 
-// ⚡⚡⚡⚡
-const everything = 42
 export {
   Header,
-  everything,
+  ProductForm,
 }
