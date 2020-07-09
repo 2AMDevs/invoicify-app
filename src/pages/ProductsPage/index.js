@@ -67,6 +67,7 @@ class ProductsPage extends React.Component {
           hideModal={this.hideProductForm}
           product={this.state.currentItem}
         />
+
         <CommandBarButton
           className="products-page__hero-btn"
           iconProps={{ iconName: 'CircleAddition' }}

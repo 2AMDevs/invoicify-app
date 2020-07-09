@@ -40,3 +40,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+// keyframes animations and classes
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(5%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animation-slide-up {
+  animation: slideUp 0.5s forwards;
+}
