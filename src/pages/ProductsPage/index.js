@@ -53,6 +53,8 @@ class ProductsPage extends React.Component {
     )
   }
 
+  refreshProductItems = () => this.setState({ items: getProducts() })
+
   onItemClick = (item) => this.setState({ currentItem: item, isProductFormOpen: true })
 
   hideProductForm = () => this.setState({ isProductFormOpen: false })
@@ -66,6 +68,7 @@ class ProductsPage extends React.Component {
           isModalOpen={this.state.isProductFormOpen}
           hideModal={this.hideProductForm}
           product={this.state.currentItem}
+          fetchItems={this.refreshProductItems}
         />
 
         <CommandBarButton

@@ -8,9 +8,13 @@ import {
   Stack,
 } from 'office-ui-fabric-react'
 
+import { setProduct } from '../../helper/helper'
+
 import './index.scss'
 
-const ProductForm = ({ isModalOpen, hideModal, product }) => {
+const ProductForm = ({
+  isModalOpen, hideModal, fetchItems, product,
+}) => {
   const [name, setName] = useState('')
   const [id, setId] = useState('')
   const [type, setType] = useState('')
@@ -27,15 +31,20 @@ const ProductForm = ({ isModalOpen, hideModal, product }) => {
 
   const changePrice = (_, val) => setPrice(val)
 
-  const saveForm = () => {
-    console.log(product, name, id, type, price)
-  }
-
   const resetForm = () => {
     setName('')
     setPrice('')
     setType('')
     setId('')
+  }
+
+  const saveForm = () => {
+    setProduct({
+      name, id, type, price,
+    })
+    if (fetchItems) fetchItems()
+    if (hideModal) hideModal()
+    resetForm()
   }
 
   return (
