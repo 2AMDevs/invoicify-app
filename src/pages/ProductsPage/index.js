@@ -8,6 +8,7 @@ import {
 import { CommandBarButton } from 'office-ui-fabric-react'
 
 import { productTableColumns, tempItems } from '../../helper/helper'
+import { ProductForm } from '../../components'
 
 import './index.scss'
 
@@ -18,6 +19,8 @@ class ProductsPage extends React.Component {
     this.initialState = {
       columns: productTableColumns,
       items: tempItems,
+      isProductFormOpen: false,
+      currentItem: null,
     }
 
     this.state = { ...this.initialState }
@@ -50,23 +53,25 @@ class ProductsPage extends React.Component {
     )
   }
 
-  onItemClick = (item) => {
-    // open edit modal when clicked
-    console.log(item)
-  }
+  onItemClick = (item) => this.setState({ currentItem: item, isProductFormOpen: true })
 
-  openCreateModal = (e) => {
-    console.log(e)
-  }
+  hideProductForm = () => this.setState({ isProductFormOpen: false })
+
+  showProductForm = () => this.setState({ isProductFormOpen: true })
 
   render () {
     return (
       <div className="products-page">
+        <ProductForm
+          isModalOpen={this.state.isProductFormOpen}
+          hideModal={this.hideProductForm}
+          product={this.state.currentItem}
+        />
         <CommandBarButton
           className="products-page__hero-btn"
           iconProps={{ iconName: 'CircleAddition' }}
           text="Add New Product"
-          onClick={this.openCreateModal}
+          onClick={this.showProductForm}
           checked={false}
         />
 
