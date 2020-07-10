@@ -1,3 +1,6 @@
+import { PDFDocument, StandardFonts } from 'pdf-lib'
+import { PREVIEW, PRINT } from './constants'
+
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
   if (type === 'num') {
@@ -104,6 +107,79 @@ const productTableColumns = [
   },
 ]
 
+const pdfToBase64 = (pdfBytes) => btoa(String.fromCharCode(...new Uint8Array(pdfBytes)))
+
+const getPdf = async (invoice, mode = PRINT) => {
+  let pdfDoc
+  const {
+    invoiceNumber, customerName, mobile, address, gstin,
+  } = invoice
+  const previewURL = getFromStorage('previewPDFUrl')
+  const isPreviewMode = (mode === PREVIEW) && previewURL
+  if (isPreviewMode) {
+    const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
+    pdfDoc = await PDFDocument.load(existingPdfBytes)
+  } else {
+    pdfDoc = await PDFDocument.create()
+  }
+
+  // Embed the Helvetica font
+  const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+  const fontSize = 11
+
+  const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
+
+  // Get the width and height of the first page
+  const { width, height } = page.getSize()
+
+  // Draw a string of text diagonally across the first page
+  page.drawText(invoiceNumber.toString(), {
+    x: 90,
+    y: height / 2 + 273,
+    size: fontSize,
+    font,
+  })
+
+  page.drawText(getInvoiceDate(), {
+    x: width - 110,
+    y: height / 2 + 275,
+    size: fontSize,
+    font,
+  })
+
+  page.drawText(customerName, {
+    x: 60,
+    y: height / 2 + 250,
+    size: fontSize,
+    font,
+  })
+
+  page.drawText(gstin, {
+    x: 100,
+    y: height / 2 + 223,
+    size: fontSize,
+    font,
+  })
+
+  page.drawText(mobile, {
+    x: width - 130,
+    y: height / 2 + 223,
+    size: fontSize,
+    font,
+  })
+
+  page.drawText(address, {
+    x: 325,
+    y: height / 2 + 223,
+    size: fontSize,
+    font,
+  })
+
+  // Serialize the PDFDocument to bytes (a Uint8Array)
+  const pdfBytes = await pdfDoc.save()
+  return pdfToBase64(pdfBytes)
+}
+
 export {
   getFromStorage,
   initializeSettings,
@@ -112,4 +188,6 @@ export {
   getInvoiceDate,
   setProduct,
   getProducts,
+  getPdf,
+  pdfToBase64,
 }

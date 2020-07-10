@@ -11,4 +11,14 @@
     color: var(--color-white);
     font-size: 2rem;
   }
+
+  .preview-area {
+    height: 520px;
+    width: 544px;
+    border: 1px dashed white;
+    color: var(--color-white);
+    display: grid;
+    font-size: 3rem;
+    place-items: center;
+  }
 }

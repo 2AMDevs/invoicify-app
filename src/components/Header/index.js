@@ -5,7 +5,7 @@ import cn from 'classnames'
 import { CommandBarButton } from 'office-ui-fabric-react'
 import { Text } from 'office-ui-fabric-react/lib/Text'
 
-import { getFromStorage } from '../../helper/helper'
+import { getFromStorage } from '../../utils/helper'
 
 import './index.scss'
 

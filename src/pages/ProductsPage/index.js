@@ -7,7 +7,7 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { CommandBarButton } from 'office-ui-fabric-react'
 
-import { productTableColumns, getProducts } from '../../helper/helper'
+import { productTableColumns, getProducts } from '../../utils/helper'
 import { ProductForm } from '../../components'
 
 import './index.scss'

@@ -27,6 +27,7 @@
     "node-sass": "^4.14.1",
     "office-ui-fabric-react": "^7.121.7",
     "pdf-lib": "^1.9.0",
+    "print-js": "^1.0.63",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
