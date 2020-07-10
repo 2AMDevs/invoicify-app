@@ -30,7 +30,7 @@ const Settings = () => {
   }
 
   const onBillURLChange = (_event, newValue) => {
-    localStorage.previewPDFUrl = previewBill
+    localStorage.previewPDFUrl = newValue
     setPreviewBill(newValue)
   }
 
