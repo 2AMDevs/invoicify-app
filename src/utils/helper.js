@@ -45,8 +45,18 @@ const getInvoiceDate = () => {
 }
 
 const setProduct = (product) => {
-  const products = JSON.parse(localStorage.getItem('products')) || []
-  localStorage.setItem('products', JSON.stringify([...products, product]))
+  let editing = false
+  const products = (JSON.parse(localStorage.getItem('products')) || []).map((p) => {
+    if (p.id === product.id) {
+      editing = true
+      return product
+    }
+    return p
+  })
+
+  if (!editing) products.push(product)
+
+  localStorage.setItem('products', JSON.stringify(products))
 }
 
 const getProducts = () => {
