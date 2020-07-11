@@ -15,10 +15,10 @@ import './index.scss'
 const ProductForm = ({
   isModalOpen, hideModal, fetchItems, product,
 }) => {
-  const [name, setName] = useState('')
-  const [id, setId] = useState('')
-  const [type, setType] = useState('')
-  const [price, setPrice] = useState('')
+  const [name, setName] = useState(product ? product.name : '')
+  const [id, setId] = useState(product ? product.id : '')
+  const [type, setType] = useState(product ? product.type : '')
+  const [price, setPrice] = useState(product ? product.price : '')
 
   const changeName = (_, val) => setName(val)
 
@@ -78,6 +78,7 @@ const ProductForm = ({
               placeholder="id of the product"
               value={id}
               onChange={changeId}
+              disabled={!!product}
             />
             <Stack
               horizontal

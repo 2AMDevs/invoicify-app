@@ -57,19 +57,21 @@ class ProductsPage extends React.Component {
 
   onItemClick = (item) => this.setState({ currentItem: item, isProductFormOpen: true })
 
-  hideProductForm = () => this.setState({ isProductFormOpen: false })
+  hideProductForm = () => this.setState({ isProductFormOpen: false, currentItem: null })
 
   showProductForm = () => this.setState({ isProductFormOpen: true })
 
   render () {
     return (
       <div className="products-page">
-        <ProductForm
-          isModalOpen={this.state.isProductFormOpen}
-          hideModal={this.hideProductForm}
-          product={this.state.currentItem}
-          fetchItems={this.refreshProductItems}
-        />
+        {this.state.isProductFormOpen && (
+          <ProductForm
+            isModalOpen={this.state.isProductFormOpen}
+            hideModal={this.hideProductForm}
+            product={this.state.currentItem}
+            fetchItems={this.refreshProductItems}
+          />
+        )}
 
         <CommandBarButton
           className="products-page__hero-btn"
