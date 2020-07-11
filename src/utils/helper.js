@@ -1,4 +1,5 @@
 import { PDFDocument, StandardFonts } from 'pdf-lib'
+
 import { PREVIEW, PRINT } from './constants'
 
 const getFromStorage = (key, type) => {

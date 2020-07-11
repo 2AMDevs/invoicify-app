@@ -1,7 +1,9 @@
+import React, { useState } from 'react'
+
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
-import React, { useState } from 'react'
+
 import { getFromStorage } from '../../utils/helper'
 
 const stackTokens = { childrenGap: 15 }

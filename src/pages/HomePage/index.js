@@ -1,7 +1,9 @@
-import { Stack } from 'office-ui-fabric-react/lib/Stack'
-import React, { useState } from 'react'
-import { Invoice } from '../../components'
 import './index.scss'
+import React, { useState } from 'react'
+
+import { Stack } from 'office-ui-fabric-react/lib/Stack'
+
+import { Invoice } from '../../components'
 
 const deviceWidth = document.documentElement.clientWidth
 const columnProps = {
