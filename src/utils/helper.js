@@ -59,6 +59,16 @@ const setProduct = (product) => {
   localStorage.setItem('products', JSON.stringify(products))
 }
 
+const deleteProducts = (ids) => {
+  const products = []
+  const oldProducts = JSON.parse(localStorage.getItem('products')) || []
+  oldProducts.forEach((p) => {
+    if (!ids.includes(p.id)) products.push(p)
+  })
+
+  localStorage.setItem('products', JSON.stringify(products))
+}
+
 const getProducts = () => {
   const products = localStorage.getItem('products')
   if (!products) return []
@@ -198,6 +208,7 @@ export {
   downloadPDF,
   getInvoiceDate,
   setProduct,
+  deleteProducts,
   getProducts,
   getPdf,
   pdfToBase64,
