@@ -16,37 +16,38 @@ class ProductsPage extends React.Component {
   constructor (props) {
     super(props)
 
+    this.actionColumn = {
+      key: 'column5',
+      name: 'Actions',
+      minWidth: 70,
+      maxWidth: 70,
+      isRowHeader: true,
+      isResizable: true,
+      isSorted: false,
+      isSortedDescending: false,
+      data: 'number',
+      isPadded: false,
+      onRender: (item) => (
+        <>
+          <IconButton
+            iconProps={{ iconName: 'Delete' }}
+            title="Delete"
+            onClick={() => this.deleteProduct(item)}
+            checked={false}
+          />
+          <IconButton
+            iconProps={{ iconName: 'Edit' }}
+            title="Edit"
+            onClick={() => this.onItemClick(item)}
+            checked={false}
+          />
+        </>
+      ),
+    }
     this.initialState = {
       columns: [
         ...productTableColumns,
-        {
-          key: 'column5',
-          name: 'Actions',
-          minWidth: 70,
-          maxWidth: 70,
-          isRowHeader: true,
-          isResizable: true,
-          isSorted: false,
-          isSortedDescending: false,
-          data: 'number',
-          isPadded: false,
-          onRender: (item) => (
-            <>
-              <IconButton
-                iconProps={{ iconName: 'Delete' }}
-                title="Delete"
-                onClick={() => this.deleteProduct(item)}
-                checked={false}
-              />
-              <IconButton
-                iconProps={{ iconName: 'Edit' }}
-                title="Edit"
-                onClick={() => this.onItemClick(item)}
-                checked={false}
-              />
-            </>
-          ),
-        },
+        this.actionColumn,
       ],
       items: getProducts(),
       isProductFormOpen: false,
@@ -57,7 +58,7 @@ class ProductsPage extends React.Component {
   }
 
   onColumnClick = (_, column) => {
-    if (column.key === 'column5') return
+    if (column.key === this.actionColumn.key) return
 
     const { columns, items } = this.state
     const newColumns = columns.slice()

@@ -15,10 +15,10 @@ import './index.scss'
 const ProductForm = ({
   isModalOpen, hideModal, fetchItems, product,
 }) => {
-  const [name, setName] = useState(product ? product.name : '')
-  const [id, setId] = useState(product ? product.id : '')
-  const [type, setType] = useState(product ? product.type : '')
-  const [price, setPrice] = useState(product ? product.price : '')
+  const [name, setName] = useState(product?.name ?? '')
+  const [id, setId] = useState(product?.id ?? '')
+  const [type, setType] = useState(product?.type ?? '')
+  const [price, setPrice] = useState(product?.price ?? '')
 
   const changeName = (_, val) => setName(val)
 
