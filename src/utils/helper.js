@@ -9,6 +9,9 @@ const getFromStorage = (key, type) => {
     // eslint-disable-next-line no-restricted-globals
     return isNaN(intVal) ? 1 : intVal
   }
+  if (type === 'json') {
+    return JSON.parse(value)
+  }
   switch (value) {
   case 'true':
     return true
@@ -45,8 +48,23 @@ const getInvoiceDate = () => {
 }
 
 const setProduct = (product) => {
-  const products = JSON.parse(localStorage.getItem('products')) || []
-  localStorage.setItem('products', JSON.stringify([...products, product]))
+  let editing = false
+  const products = (getFromStorage('products', 'json') || []).map((p) => {
+    if (p.id === product.id) {
+      editing = true
+      return product
+    }
+    return p
+  })
+
+  if (!editing) products.push(product)
+
+  localStorage.setItem('products', JSON.stringify(products))
+}
+
+const deleteProducts = (ids) => {
+  const products = (getFromStorage('products', 'json') || []).filter((p) => !ids.includes(p.id))
+  localStorage.setItem('products', JSON.stringify(products))
 }
 
 const getProducts = () => {
@@ -188,6 +206,7 @@ export {
   downloadPDF,
   getInvoiceDate,
   setProduct,
+  deleteProducts,
   getProducts,
   getPdf,
   pdfToBase64,

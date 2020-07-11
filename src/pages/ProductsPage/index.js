@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CommandBarButton } from 'office-ui-fabric-react'
+import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
 import {
   DetailsList,
   DetailsListLayoutMode,
@@ -8,7 +8,7 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList'
 
 import { ProductForm } from '../../components'
-import { productTableColumns, getProducts } from '../../utils/helper'
+import { productTableColumns, getProducts, deleteProducts } from '../../utils/helper'
 
 import './index.scss'
 
@@ -16,8 +16,39 @@ class ProductsPage extends React.Component {
   constructor (props) {
     super(props)
 
+    this.actionColumn = {
+      key: 'column5',
+      name: 'Actions',
+      minWidth: 70,
+      maxWidth: 70,
+      isRowHeader: true,
+      isResizable: true,
+      isSorted: false,
+      isSortedDescending: false,
+      data: 'number',
+      isPadded: false,
+      onRender: (item) => (
+        <>
+          <IconButton
+            iconProps={{ iconName: 'Delete' }}
+            title="Delete"
+            onClick={() => this.deleteProduct(item)}
+            checked={false}
+          />
+          <IconButton
+            iconProps={{ iconName: 'Edit' }}
+            title="Edit"
+            onClick={() => this.onItemClick(item)}
+            checked={false}
+          />
+        </>
+      ),
+    }
     this.initialState = {
-      columns: productTableColumns,
+      columns: [
+        ...productTableColumns,
+        this.actionColumn,
+      ],
       items: getProducts(),
       isProductFormOpen: false,
       currentItem: null,
@@ -27,6 +58,8 @@ class ProductsPage extends React.Component {
   }
 
   onColumnClick = (_, column) => {
+    if (column.key === this.actionColumn.key) return
+
     const { columns, items } = this.state
     const newColumns = columns.slice()
     const currColumn = newColumns.filter((currCol) => column.key === currCol.key)[0]
@@ -46,6 +79,11 @@ class ProductsPage extends React.Component {
     })
   }
 
+  deleteProduct = (item) => {
+    deleteProducts([item.id])
+    this.refreshProductItems()
+  }
+
   copyAndSort= (items, columnKey, isSortedDescending) => {
     const key = columnKey
     return items.slice(0).sort(
@@ -57,19 +95,21 @@ class ProductsPage extends React.Component {
 
   onItemClick = (item) => this.setState({ currentItem: item, isProductFormOpen: true })
 
-  hideProductForm = () => this.setState({ isProductFormOpen: false })
+  hideProductForm = () => this.setState({ isProductFormOpen: false, currentItem: null })
 
   showProductForm = () => this.setState({ isProductFormOpen: true })
 
   render () {
     return (
       <div className="products-page">
-        <ProductForm
-          isModalOpen={this.state.isProductFormOpen}
-          hideModal={this.hideProductForm}
-          product={this.state.currentItem}
-          fetchItems={this.refreshProductItems}
-        />
+        {this.state.isProductFormOpen && (
+          <ProductForm
+            isModalOpen={this.state.isProductFormOpen}
+            hideModal={this.hideProductForm}
+            product={this.state.currentItem}
+            fetchItems={this.refreshProductItems}
+          />
+        )}
 
         <CommandBarButton
           className="products-page__hero-btn"
@@ -90,7 +130,6 @@ class ProductsPage extends React.Component {
             setKey="multiple"
             layoutMode={DetailsListLayoutMode.justified}
             isHeaderVisible
-            onActiveItemChanged={this.onItemClick}
             enterModalSelectionOnTouch
           />
         ) : (
