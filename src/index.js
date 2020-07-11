@@ -1,16 +1,16 @@
 import React from 'react'
+
+import { initializeIcons } from '@uifabric/icons'
+import { loadTheme } from 'office-ui-fabric-react'
 import ReactDOM from 'react-dom'
 import {
   HashRouter as Router,
   Route,
 } from 'react-router-dom'
 
-import { initializeIcons } from '@uifabric/icons'
-import { loadTheme } from 'office-ui-fabric-react'
-
 import { Header } from './components'
 import { HomePage, ProductsPage, Settings } from './pages'
-import { initializeSettings } from './helper/helper'
+import { initializeSettings } from './utils/helper'
 
 import './index.scss'
 

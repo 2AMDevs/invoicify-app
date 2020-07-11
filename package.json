@@ -26,6 +26,8 @@
     "electron-is-dev": "^1.2.0",
     "node-sass": "^4.14.1",
     "office-ui-fabric-react": "^7.121.7",
+    "pdf-lib": "^1.9.0",
+    "print-js": "^1.0.63",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
@@ -38,6 +40,7 @@
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
     "build": "npm run react-build && npm run electron-build",
+    "lint": "node_modules/eslint/bin/eslint.js src/**/*.js --fix",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {

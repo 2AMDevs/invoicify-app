@@ -1,23 +1,20 @@
+import React, { useState } from 'react'
+
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
-import React, { useState } from 'react'
-import { getFromStorage } from '../../helper/helper'
+
+import { getFromStorage } from '../../utils/helper'
 
 const stackTokens = { childrenGap: 15 }
 const deviceWidth = document.documentElement.clientWidth
 const stackStyles = { root: { width: deviceWidth * 0.7 } }
 
 const Settings = () => {
-  const [settingsOne, setSettingsOne] = useState(getFromStorage('settingsOne'))
+  const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [checkForUpdates, setCheckForUpdates] = useState(getFromStorage('checkForUpdates'))
-
-  const onClick = (_event, checked) => {
-    localStorage.settingsOne = checked
-    setSettingsOne(checked)
-  }
 
   const onClickUpdates = (_event, checked) => {
     localStorage.checkForUpdates = checked
@@ -32,6 +29,11 @@ const Settings = () => {
   const onInvoiceNoChange = (_event, newValue) => {
     localStorage.invoiceNumber = newValue
     setInvoiceNumber(newValue)
+  }
+
+  const onBillURLChange = (_event, newValue) => {
+    localStorage.previewPDFUrl = newValue
+    setPreviewBill(newValue)
   }
 
   return (
@@ -52,12 +54,10 @@ const Settings = () => {
         onChange={onInvoiceNoChange}
         value={invoiceNumber}
       />
-      <Toggle
-        label={'Setting 1'}
-        checked={settingsOne}
-        onText="On"
-        offText="Off"
-        onChange={onClick}
+      <TextField
+        label="Preview Bill URL"
+        onChange={onBillURLChange}
+        value={previewBill}
       />
       <Toggle
         label="Automatically Check for Updates"
