@@ -8,7 +8,7 @@ import {
   Stack,
 } from 'office-ui-fabric-react'
 
-import { setProduct } from '../../helper/helper'
+import { setProduct } from '../../utils/helper'
 
 import './index.scss'
 

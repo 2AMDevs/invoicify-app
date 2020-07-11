@@ -25,6 +25,25 @@ module.exports = {
         "ignoreDestructuring": true,
         "properties": "always",
       }],
+      "import/order": [
+        "error",
+        {
+          "groups": ["builtin", "external", "internal"],
+          "pathGroups": [
+            {
+              "pattern": "react",
+              "group": "external",
+              "position": "before"
+            }
+          ],
+          "pathGroupsExcludedImportTypes": ["react"],
+          "newlines-between": "always",
+          "alphabetize": {
+            "order": "asc",
+            "caseInsensitive": true
+          }
+        }
+      ],
       "comma-spacing": [1, { before: false, after: true }],
       "comma-style": [1, "last"],
       "computed-property-spacing": [1, "never"],

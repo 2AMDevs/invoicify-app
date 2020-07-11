@@ -1,14 +1,14 @@
 import React from 'react'
 
+import { CommandBarButton } from 'office-ui-fabric-react'
 import {
   DetailsList,
   DetailsListLayoutMode,
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
-import { CommandBarButton } from 'office-ui-fabric-react'
 
-import { productTableColumns, getProducts } from '../../helper/helper'
 import { ProductForm } from '../../components'
+import { productTableColumns, getProducts } from '../../utils/helper'
 
 import './index.scss'
 
