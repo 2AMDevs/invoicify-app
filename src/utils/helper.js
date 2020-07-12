@@ -22,6 +22,11 @@ const getFromStorage = (key, type) => {
   }
 }
 
+const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((type) => ({
+  key: type.trim(),
+  text: type.trim(),
+})) || []
+
 const initializeSettings = () => {
   localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
@@ -211,4 +216,5 @@ export {
   getProducts,
   getPdf,
   pdfToBase64,
+  getProductTypes,
 }

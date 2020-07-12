@@ -12,6 +12,7 @@ const stackStyles = { root: { width: deviceWidth * 0.7 } }
 
 const Settings = () => {
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
+  const [productType, setProductType] = useState(getFromStorage('productType'))
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [checkForUpdates, setCheckForUpdates] = useState(getFromStorage('checkForUpdates'))
@@ -36,6 +37,11 @@ const Settings = () => {
     setPreviewBill(newValue)
   }
 
+  const onProductTypeChange = (_event, newValue) => {
+    localStorage.productType = newValue
+    setProductType(newValue)
+  }
+
   return (
     <Stack
       className="invoice-page"
@@ -50,7 +56,6 @@ const Settings = () => {
       />
       <TextField
         label="Next Invoice Number"
-        defaultValue="001"
         onChange={onInvoiceNoChange}
         value={invoiceNumber}
       />
@@ -58,6 +63,11 @@ const Settings = () => {
         label="Preview Bill URL"
         onChange={onBillURLChange}
         value={previewBill}
+      />
+      <TextField
+        label="Product Types"
+        onChange={onProductTypeChange}
+        value={productType}
       />
       <Toggle
         label="Automatically Check for Updates"
