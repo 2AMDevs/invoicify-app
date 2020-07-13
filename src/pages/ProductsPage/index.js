@@ -6,6 +6,7 @@ import {
   DetailsListLayoutMode,
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
+import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 
 import { ProductForm } from '../../components'
 import { productTableColumns, getProducts, deleteProducts } from '../../utils/helper'
@@ -32,6 +33,7 @@ class ProductsPage extends React.Component {
           <IconButton
             iconProps={{ iconName: 'Delete' }}
             title="Delete"
+            id={`item${item.id}`}
             onClick={() => this.deleteProduct(item)}
             checked={false}
           />
@@ -52,6 +54,8 @@ class ProductsPage extends React.Component {
       items: getProducts(),
       isProductFormOpen: false,
       currentItem: null,
+      teachingBubbleVisible: false,
+      targetBtn: null,
     }
 
     this.state = { ...this.initialState }
@@ -80,8 +84,15 @@ class ProductsPage extends React.Component {
   }
 
   deleteProduct = (item) => {
-    deleteProducts([item.id])
-    this.refreshProductItems()
+    this.toggleTeachingBubbleVisible(item.id)
+  }
+
+  finalDelete = () => {
+    if (this.state.targetBtn) {
+      deleteProducts([this.state.targetBtn])
+      this.refreshProductItems()
+      this.toggleTeachingBubbleVisible()
+    }
   }
 
   copyAndSort= (items, columnKey, isSortedDescending) => {
@@ -99,6 +110,13 @@ class ProductsPage extends React.Component {
 
   showProductForm = () => this.setState({ isProductFormOpen: true })
 
+  toggleTeachingBubbleVisible = (id) => this.setState((prevState) => {
+    return {
+      teachingBubbleVisible: !prevState.teachingBubbleVisible,
+      targetBtn: typeof id === 'string' ? id : null,
+    }
+  })
+
   render () {
     return (
       <div className="products-page">
@@ -109,6 +127,18 @@ class ProductsPage extends React.Component {
             product={this.state.currentItem}
             fetchItems={this.refreshProductItems}
           />
+        )}
+
+        {this.state.teachingBubbleVisible && (
+          <TeachingBubble
+            target={`#item${this.state.targetBtn}`}
+            primaryButtonProps={{ children: 'Yes, delete', onClick: this.finalDelete }}
+            secondaryButtonProps={{ children: 'Cancel', onClick: this.toggleTeachingBubbleVisible }}
+            onDismiss={this.toggleTeachingBubbleVisible}
+            headline="Confirmation"
+          >
+            Do you really wana delete this product?
+          </TeachingBubble>
         )}
 
         <CommandBarButton
