@@ -21,6 +21,8 @@ const ProductForm = ({
   const [type, setType] = useState(product?.type ?? '')
   const [price, setPrice] = useState(product?.price ?? '')
 
+  console.log({ name, id, type, price })
+
   const changeName = (_, val) => setName(val)
 
   const changeId = (_, val) => {
@@ -28,7 +30,7 @@ const ProductForm = ({
     setId(val)
   }
 
-  const changeType = (_, val) => setType(val)
+  const changeType = (_, val) => setType(val.key)
 
   const changePrice = (_, val) => setPrice(val)
 
@@ -90,7 +92,7 @@ const ProductForm = ({
                 label="Type"
                 options={getProductTypes()}
                 value={type}
-                selectedKey={type.key}
+                selectedKey={type}
                 onChange={changeType}
               />
               <TextField
