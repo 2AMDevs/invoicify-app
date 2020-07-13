@@ -89,6 +89,7 @@ const ProductForm = ({
             >
               <Dropdown
                 placeholder="Product Type"
+                required
                 label="Type"
                 options={getProductTypes()}
                 value={type}
