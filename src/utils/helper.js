@@ -27,7 +27,7 @@ const initializeSettings = () => {
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.settingsOne = localStorage.settingsOne ?? true
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
-  localStorage.products = localStorage.product ?? '[]'
+  localStorage.products = localStorage.products ?? '[]'
 }
 
 const downloadPDF = (pdfBytes, invoiceNumber) => {
