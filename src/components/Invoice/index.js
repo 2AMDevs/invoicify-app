@@ -5,7 +5,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
 import print from 'print-js'
 
-import { PREVIEW, PRINT, TAB_KEY_CODE } from '../../utils/constants'
+import { PREVIEW, PRINT } from '../../utils/constants'
 import { getFromStorage, getPdf } from '../../utils/helper'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -52,16 +52,12 @@ const Invoice = ({ setPreview }) => {
     setPreview(pdfBytes)
   }
 
-  // Update Preview on TAB
-  const handleKeyDown = async (event) => {
-    if (event.keyCode === TAB_KEY_CODE) await previewPDF()
-  }
+  // Update Preview on blur
+  const handleInputBlur = () => previewPDF()
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div
-      onKeyDown={handleKeyDown}
-    >
+    <div>
       <Stack
         vertical
         tokens={stackTokens}
@@ -80,6 +76,7 @@ const Invoice = ({ setPreview }) => {
             isRequired
             value={new Date()}
             label="Date"
+            onBlur={handleInputBlur}
             placeholder="Select a date..."
             ariaLabel="Select a date"
           />
@@ -89,6 +86,7 @@ const Invoice = ({ setPreview }) => {
           label="Customer Name"
           value={customerName}
           onChange={(_event, val) => setCustomerName(val)}
+          onBlur={handleInputBlur}
         />
         <Stack
           horizontal
@@ -99,12 +97,14 @@ const Invoice = ({ setPreview }) => {
             mask="99-**********-*Z*"
             value={gstin.substr(0, gstin.length - 2)}
             onChange={(_event, val) => setGstin(val)}
+            onBlur={handleInputBlur}
           />
           <MaskedTextField
             label="Mobile No."
             mask="+\91 9999999999"
             value={mobile.substr(3)}
             onChange={(_event, val) => setMobile(val)}
+            onBlur={handleInputBlur}
           />
         </Stack>
         <Stack {...columnProps}>
@@ -112,6 +112,7 @@ const Invoice = ({ setPreview }) => {
             label="Customer Address"
             value={address}
             onChange={(_event, val) => setAddress(val)}
+            onBlur={handleInputBlur}
           />
         </Stack>
         <br />
