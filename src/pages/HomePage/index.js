@@ -13,6 +13,7 @@ const columnProps = {
 
 const HomePage = () => {
   const [preview, setPreview] = useState('')
+
   return (
     <div
       className="home-page"
@@ -28,9 +29,10 @@ const HomePage = () => {
           ? (
             <iframe
               title="Invoice Preview"
-              width="520px"
-              height="554px"
-              src={`data:application/pdf;base64,${preview}`}
+              width="380"
+              height="535"
+              border="0"
+              src={`data:application/pdf;base64,${preview}#toolbar=0&statusbar=0&page=1&view=FitV`}
             />
           ) : (
             <div className="preview-area">

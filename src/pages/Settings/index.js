@@ -43,40 +43,67 @@ const Settings = () => {
   }
 
   return (
-    <Stack
-      className="invoice-page"
-      tokens={stackTokens}
-      styles={stackStyles}
-    >
-      <TextField
-        label="Company Name"
-        defaultValue="Default Company"
-        onChange={onNameChange}
-        value={companyName}
-      />
-      <TextField
-        label="Next Invoice Number"
-        onChange={onInvoiceNoChange}
-        value={invoiceNumber}
-      />
-      <TextField
-        label="Preview Bill URL"
-        onChange={onBillURLChange}
-        value={previewBill}
-      />
-      <TextField
-        label="Product Types"
-        onChange={onProductTypeChange}
-        value={productType}
-      />
-      <Toggle
-        label="Automatically Check for Updates"
-        checked={checkForUpdates}
-        onText="On"
-        offText="Off"
-        onChange={onClickUpdates}
-      />
-    </Stack>
+    <>
+      <Stack
+        className="invoice-page"
+        tokens={stackTokens}
+        styles={stackStyles}
+      >
+        <TextField
+          label="Company Name"
+          defaultValue="Default Company"
+          onChange={onNameChange}
+          value={companyName}
+        />
+        <TextField
+          label="Next Invoice Number"
+          defaultValue="001"
+          onChange={onInvoiceNoChange}
+          value={invoiceNumber}
+        />
+        <TextField
+          label="Preview Bill URL"
+          onChange={onBillURLChange}
+          value={previewBill}
+        />
+        <TextField
+          label="Product Types"
+          onChange={onProductTypeChange}
+          value={productType}
+        />
+        <Toggle
+          label="Automatically Check for Updates"
+          checked={checkForUpdates}
+          onText="On"
+          offText="Off"
+          onChange={onClickUpdates}
+        />
+      </Stack>
+
+      <Stack
+        horizontal
+        {...{
+          tokens: { childrenGap: deviceWidth * 0.02 },
+          styles: { root: { width: deviceWidth * 0.4 } },
+        }}
+      >
+        <TextField
+          label="Field Name"
+          // onChange={onNameChange}
+          // value={companyName}
+        />
+        <TextField
+          label="X Co-ordinate"
+          // onChange={onInvoiceNoChange}
+          // value={invoiceNumber}
+        />
+        <TextField
+          label="Y Co-ordinate"
+          // onChange={onBillURLChange}
+          // value={previewBill}
+        />
+      </Stack>
+    </>
   )
 }
 
