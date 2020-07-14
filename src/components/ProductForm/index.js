@@ -21,8 +21,6 @@ const ProductForm = ({
   const [type, setType] = useState(product?.type ?? '')
   const [price, setPrice] = useState(product?.price ?? '')
 
-  console.log({ name, id, type, price })
-
   const changeName = (_, val) => setName(val)
 
   const changeId = (_, val) => {
