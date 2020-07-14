@@ -7,8 +7,9 @@ import {
   DefaultButton,
   Stack,
 } from 'office-ui-fabric-react'
+import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 
-import { setProduct } from '../../utils/helper'
+import { setProduct, getProductTypes } from '../../utils/helper'
 
 import './index.scss'
 
@@ -27,7 +28,7 @@ const ProductForm = ({
     setId(val)
   }
 
-  const changeType = (_, val) => setType(val)
+  const changeType = (_, val) => setType(val.key)
 
   const changePrice = (_, val) => setPrice(val)
 
@@ -72,23 +73,25 @@ const ProductForm = ({
               value={name}
               onChange={changeName}
             />
+
             <TextField
-              label="id"
+              label="ID"
               required
-              placeholder="id of the product"
+              placeholder="Product Id"
               value={id}
               onChange={changeId}
-              disabled={!!product}
             />
             <Stack
               horizontal
               tokens={{ childrenGap: 15 }}
             >
-              <TextField
-                label="Type"
+              <Dropdown
+                placeholder="Product Type"
                 required
-                placeholder="Type of the product"
+                label="Type"
+                options={getProductTypes()}
                 value={type}
+                selectedKey={type}
                 onChange={changeType}
               />
               <TextField
