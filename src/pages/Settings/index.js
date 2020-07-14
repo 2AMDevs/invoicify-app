@@ -17,27 +17,27 @@ const Settings = () => {
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [checkForUpdates, setCheckForUpdates] = useState(getFromStorage('checkForUpdates'))
 
-  const onClickUpdates = (_event, checked) => {
+  const onClickUpdates = (_, checked) => {
     localStorage.checkForUpdates = checked
     setCheckForUpdates(checked)
   }
 
-  const onNameChange = (_event, newValue) => {
+  const onNameChange = (_, newValue) => {
     localStorage.companyName = newValue
     setCompanyName(newValue)
   }
 
-  const onInvoiceNoChange = (_event, newValue) => {
+  const onInvoiceNoChange = (_, newValue) => {
     localStorage.invoiceNumber = newValue
     setInvoiceNumber(newValue)
   }
 
-  const onBillURLChange = (_event, newValue) => {
+  const onBillURLChange = (_, newValue) => {
     localStorage.previewPDFUrl = newValue
     setPreviewBill(newValue)
   }
 
-  const onProductTypeChange = (_event, newValue) => {
+  const onProductTypeChange = (_, newValue) => {
     localStorage.productType = newValue
     setProductType(newValue)
   }
