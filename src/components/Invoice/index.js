@@ -10,7 +10,7 @@ import { getFromStorage, getPdf } from '../../utils/helper'
 
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
-const stackStyles = { root: { width: deviceWidth * 0.4 } }
+const stackStyles = { root: { width: deviceWidth * 0.5 } }
 const columnProps = {
   tokens: { childrenGap: deviceWidth * 0.07 },
   styles: { root: { width: deviceWidth * 0.4 } },
