@@ -4,6 +4,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
+import InvoiceSettings from '../../components/InvoiceSettings'
 import { getFromStorage } from '../../utils/helper'
 
 const stackTokens = { childrenGap: 15 }
@@ -79,30 +80,8 @@ const Settings = () => {
           onChange={onClickUpdates}
         />
       </Stack>
+      <InvoiceSettings />
 
-      <Stack
-        horizontal
-        {...{
-          tokens: { childrenGap: deviceWidth * 0.02 },
-          styles: { root: { width: deviceWidth * 0.4 } },
-        }}
-      >
-        <TextField
-          label="Field Name"
-          // onChange={onNameChange}
-          // value={companyName}
-        />
-        <TextField
-          label="X Co-ordinate"
-          // onChange={onInvoiceNoChange}
-          // value={invoiceNumber}
-        />
-        <TextField
-          label="Y Co-ordinate"
-          // onChange={onBillURLChange}
-          // value={previewBill}
-        />
-      </Stack>
     </>
   )
 }
