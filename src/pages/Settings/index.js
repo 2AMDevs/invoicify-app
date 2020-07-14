@@ -12,34 +12,28 @@ const stackStyles = { root: { width: deviceWidth * 0.7 } }
 
 const Settings = () => {
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
-  const [productType, setProductType] = useState(getFromStorage('productType'))
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [checkForUpdates, setCheckForUpdates] = useState(getFromStorage('checkForUpdates'))
 
-  const onClickUpdates = (_, checked) => {
+  const onClickUpdates = (_event, checked) => {
     localStorage.checkForUpdates = checked
     setCheckForUpdates(checked)
   }
 
-  const onNameChange = (_, newValue) => {
+  const onNameChange = (_event, newValue) => {
     localStorage.companyName = newValue
     setCompanyName(newValue)
   }
 
-  const onInvoiceNoChange = (_, newValue) => {
+  const onInvoiceNoChange = (_event, newValue) => {
     localStorage.invoiceNumber = newValue
     setInvoiceNumber(newValue)
   }
 
-  const onBillURLChange = (_, newValue) => {
+  const onBillURLChange = (_event, newValue) => {
     localStorage.previewPDFUrl = newValue
     setPreviewBill(newValue)
-  }
-
-  const onProductTypeChange = (_, newValue) => {
-    localStorage.productType = newValue
-    setProductType(newValue)
   }
 
   return (
@@ -65,11 +59,6 @@ const Settings = () => {
           label="Preview Bill URL"
           onChange={onBillURLChange}
           value={previewBill}
-        />
-        <TextField
-          label="Product Types"
-          onChange={onProductTypeChange}
-          value={productType}
         />
         <Toggle
           label="Automatically Check for Updates"
