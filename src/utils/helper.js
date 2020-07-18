@@ -35,6 +35,7 @@ const initializeSettings = () => {
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
   localStorage.products = localStorage.products ?? '[]'
+  localStorage.productType = localStorage.productType ?? 'Gold, Silver'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
 }

@@ -9,7 +9,9 @@ import {
 } from 'react-router-dom'
 
 import { Header } from './components'
-import { HomePage, ProductsPage, Settings } from './pages'
+import {
+  HomePage, InvoiceSettings, ProductsPage, Settings,
+} from './pages'
 import { darkThemePalette } from './utils/constants'
 import { initializeSettings } from './utils/helper'
 
@@ -32,6 +34,10 @@ ReactDOM.render(
           exact
           path="/"
           component={HomePage}
+        />
+        <Route
+          path="/configure"
+          component={InvoiceSettings}
         />
         <Route
           exact

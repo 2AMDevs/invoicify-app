@@ -25,8 +25,8 @@ const InvoiceSettings = () => {
         <Stack
           horizontal
           {...{
-            tokens: { childrenGap: deviceWidth * 0.02 },
-            styles: { root: { width: deviceWidth * 0.7 } },
+            tokens: { childrenGap: deviceWidth * 0.03 },
+            styles: { root: { width: deviceWidth * 0.8 } },
           }}
           key={setting.name.toLowerCase()}
         >
@@ -45,13 +45,6 @@ const InvoiceSettings = () => {
             onChange={(_, val) => handleChange(idx, 'y', val)}
             value={setting.y}
           />
-          <Dropdown
-            label="Type"
-            options={fieldTypes}
-            value={setting.type}
-            selectedKey={setting.type}
-            onChange={(_, val) => handleChange(idx, 'type', val.key)}
-          />
           <Toggle
             label="Required?"
             checked={setting.required}
@@ -65,6 +58,13 @@ const InvoiceSettings = () => {
             onText="On"
             offText="Off"
             onChange={(_, val) => handleChange(idx, 'disabled', val)}
+          />
+          <Dropdown
+            label="Type"
+            options={fieldTypes}
+            value={setting.type}
+            selectedKey={setting.type}
+            onChange={(_, val) => handleChange(idx, 'type', val.key)}
           />
         </Stack>
       ))}

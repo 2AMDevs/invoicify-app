@@ -5,5 +5,5 @@ import ProductForm from './ProductForm'
 export {
   Header,
   ProductForm,
-  Invoice,
+  Invoice
 }
