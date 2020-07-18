@@ -78,6 +78,41 @@ const productTableColumns = [
   },
 ]
 
+const defaultPageSettings = { width: 595.42, height: 895.04, fontSize: 11 }
+
+const defaultPrintSettings = [
+  {
+    name: 'Invoice Number',
+    x: 90,
+    y: 447.52 + 248,
+  },
+  {
+    name: 'Invoice Date',
+    x: 485.42,
+    y: 447.52 + 250,
+  },
+  {
+    name: 'Customer Name',
+    x: 60,
+    y: 447.52 + 225,
+  },
+  {
+    name: 'GSTIN',
+    x: 100,
+    y: 447.52 + 198,
+  },
+  {
+    name: 'Mobile',
+    x: 465.42,
+    y: 447.52 + 198,
+  },
+  {
+    name: 'Address',
+    x: 325,
+    y: 447.52 + 198,
+  },
+]
+
 export {
-  PRINT, PREVIEW, darkThemePalette, productTableColumns,
+  PRINT, PREVIEW, darkThemePalette, productTableColumns, defaultPrintSettings, defaultPageSettings,
 }

@@ -6,7 +6,7 @@ import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField
 import print from 'print-js'
 
 import { PREVIEW, PRINT } from '../../utils/constants'
-import { getFromStorage, getPdf } from '../../utils/helper'
+import { getFromStorage, getPdf, getInvoiceSettings } from '../../utils/helper'
 
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
@@ -18,26 +18,19 @@ const columnProps = {
 
 const Invoice = ({ setPreview }) => {
   const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
-  const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
-  const [customerName, setCustomerName] = useState('')
-  const [gstin, setGstin] = useState('')
-  const [mobile, setMobile] = useState('')
-  const [address, setAddress] = useState('')
+  const invoiceSettings = getInvoiceSettings()
 
-  const fetchPDF = async (mode = PRINT) => getPdf({
-    invoiceNumber, customerName, gstin, mobile, address,
-  }, mode)
+  const [invoice, setInvoice] = useState({})
+  const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
+
+  const fetchPDF = async (mode = PRINT) => getPdf(invoice, mode)
 
   useEffect(() => {
     localStorage.invoiceNumber = invoiceNumber
   }, [invoiceNumber])
 
   const resetForm = () => {
-    setCustomerName('')
-    setGstin('')
-    setMobile('')
-    setAddress('')
-    setPreview('')
+    setInvoice({})
   }
 
   const printAndMove = async () => {
@@ -63,7 +56,18 @@ const Invoice = ({ setPreview }) => {
         tokens={stackTokens}
         styles={stackStyles}
       >
-        <Stack
+        { invoiceSettings.map((field) => (
+          <TextField
+            label={field.name}
+            key={field.name}
+            value={invoice[field.name] || ''}
+            onChange={(_, val) => {
+              setInvoice({ ...invoice, [field.name]: val })
+            }}
+            onBlur={handleInputBlur}
+          />
+        )) }
+        {/* <Stack
           horizontal
           {...columnProps}
         >
@@ -94,8 +98,8 @@ const Invoice = ({ setPreview }) => {
         >
           <MaskedTextField
             label="Customer GSTIN"
-            mask="99-**********-*Z*"
-            value={gstin.substr(0, gstin.length - 2)}
+            mask="99-**********-***"
+            value={gstin}
             onChange={(_event, val) => setGstin(val)}
             onBlur={handleInputBlur}
           />
@@ -114,7 +118,7 @@ const Invoice = ({ setPreview }) => {
             onChange={(_event, val) => setAddress(val)}
             onBlur={handleInputBlur}
           />
-        </Stack>
+        </Stack> */}
         <br />
         <Stack
           horizontal

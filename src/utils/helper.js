@@ -1,7 +1,7 @@
 import fontkit from '@pdf-lib/fontkit'
 import { PDFDocument } from 'pdf-lib'
 
-import { PREVIEW, PRINT } from './constants'
+import { PREVIEW, PRINT, defaultPrintSettings } from './constants'
 
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
@@ -33,7 +33,8 @@ const initializeSettings = () => {
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
   localStorage.products = localStorage.products ?? '[]'
-  localStorage.invoiceSettings = localStorage.invoiceSettings ?? '{}'
+  localStorage.invoiceSettings = localStorage.invoiceSettings
+                                  ?? JSON.stringify(defaultPrintSettings)
 }
 
 const downloadPDF = (pdfBytes, invoiceNumber) => {
@@ -75,9 +76,12 @@ const deleteProducts = (ids) => {
 
 const getProducts = () => {
   const products = localStorage.getItem('products')
-  if (!products) return []
+  return products ? JSON.parse(products) : []
+}
 
-  return JSON.parse(products)
+const getInvoiceSettings = () => {
+  const invoiceSettings = localStorage.getItem('invoiceSettings')
+  return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
 // TIL:  String.fromCharCode function has limit to arguements, hence this process
@@ -85,9 +89,6 @@ const pdfToBase64 = (pdfBytes) => btoa(new Uint8Array(pdfBytes).reduce((data, by
 
 const getPdf = async (invoice, mode = PRINT) => {
   let pdfDoc
-  const {
-    invoiceNumber, customerName, mobile, address, gstin,
-  } = invoice
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
   const mangalFont = await fetch('Manbant.ttf').then((res) => res.arrayBuffer())
@@ -106,52 +107,20 @@ const getPdf = async (invoice, mode = PRINT) => {
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
   // Get the width and height of the first page
-  const { width, height } = page.getSize()
+  // const { width, height } = page.getSize()
 
-  // Draw a string of text diagonally across the first page
-  page.drawText(invoiceNumber.toString(), {
-    x: 90,
-    y: height / 2 + 273,
-    size: fontSize,
-    font,
+  getInvoiceSettings().forEach((field) => {
+    if (invoice[field.name]) {
+      page.drawText(invoice[field.name].toString(), {
+        x: parseFloat(field.x, 10),
+        y: parseFloat(field.y, 10),
+        size: fontSize,
+        font,
+      })
+    }
   })
 
-  page.drawText(getInvoiceDate(), {
-    x: width - 110,
-    y: height / 2 + 275,
-    size: fontSize,
-    font,
-  })
-
-  page.drawText(customerName, {
-    x: 60,
-    y: height / 2 + 250,
-    size: fontSize,
-    font,
-  })
-
-  page.drawText(gstin, {
-    x: 100,
-    y: height / 2 + 223,
-    size: fontSize,
-    font,
-  })
-
-  page.drawText(mobile, {
-    x: width - 130,
-    y: height / 2 + 223,
-    size: fontSize,
-    font,
-  })
-
-  page.drawText(address, {
-    x: 325,
-    y: height / 2 + 223,
-    size: fontSize,
-    font,
-  })
-
-  pdfDoc.setTitle(`Invoice ${invoiceNumber.toString()}`)
+  pdfDoc.setTitle('Invoice Preview')
   pdfDoc.setAuthor('2AM Devs')
 
   // Serialize the PDFDocument to bytes (a Uint8Array)
@@ -170,4 +139,5 @@ export {
   getPdf,
   pdfToBase64,
   getProductTypes,
+  getInvoiceSettings,
 }
