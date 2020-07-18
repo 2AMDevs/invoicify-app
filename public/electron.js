@@ -1,14 +1,17 @@
-const { app, BrowserWindow } = require('electron')
-const isDev = require('electron-is-dev')
 const path = require('path')
 
+const { app, BrowserWindow, Menu } = require('electron')
+const isDev = require('electron-is-dev')
+
 function createWindow () {
-  // Create the browser window.
+  Menu.setApplicationMenu(null)
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
     webPreferences: {
       nodeIntegration: true,
+      devTools: !!isDev,
     },
   })
 
@@ -21,6 +24,8 @@ function createWindow () {
 
   // TODO: Add Tweak to open this when 7 press on Home button, so that we can debug prod
   if (isDev) win.webContents.openDevTools()
+  win.maximize()
+  win.show()
 }
 
 // This method will be called when Electron has finished
