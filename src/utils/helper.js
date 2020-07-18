@@ -1,5 +1,5 @@
 import fontkit from '@pdf-lib/fontkit'
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument, StandardFonts } from 'pdf-lib'
 
 import {
   PREVIEW, PRINT, DATE, defaultPrintSettings, CUSTOM_FONT,
@@ -40,13 +40,22 @@ const initializeSettings = () => {
                                   ?? JSON.stringify(defaultPrintSettings)
 }
 
-const downloadPDF = (pdfBytes, invoiceNumber) => {
+const printPDF = (pdfBytes) => {
   const blob = new Blob([pdfBytes], { type: 'application/pdf' })
-  const link = document.createElement('a')
-  link.href = window.URL.createObjectURL(blob)
-  link.id = `invoice-${invoiceNumber.toString()}`
-  link.download = `invoice-${invoiceNumber.toString()}.pdf`
-  link.click()
+  // const link = document.createElement('a')
+  const blobUrl = window.URL.createObjectURL(blob)
+  const iframeEle = document.getElementById('hidden-frame')
+  iframeEle.src = blobUrl
+  setTimeout(() => {
+    if (iframeEle) {
+      iframeEle.contentWindow.print()
+    }
+  }, 2000)
+
+  // link.id = `invoice-${invoiceNumber.toString()}`
+  // link.download = `${link.id}.pdf`
+  // console.log(link)
+  // link.click()
 }
 
 const getInvoiceDate = (date) => {
@@ -86,14 +95,11 @@ const getInvoiceSettings = () => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
-// TIL:  String.fromCharCode function has limit to arguements, hence this process
-const pdfToBase64 = (pdfBytes) => btoa(new Uint8Array(pdfBytes).reduce((data, byte) => data + String.fromCharCode(byte), ''))
-
 const getPdf = async (invoice, mode = PRINT) => {
   let pdfDoc
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
-  const mangalFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
+  // const mangalFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
     const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
     pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -102,8 +108,9 @@ const getPdf = async (invoice, mode = PRINT) => {
   }
 
   // Register the `fontkit` instance
-  pdfDoc.registerFontkit(fontkit)
-  const font = await pdfDoc.embedFont(mangalFont)
+  // pdfDoc.registerFontkit(fontkit)
+  // const font = await pdfDoc.embedFont(mangalFont)
+  const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
@@ -128,21 +135,19 @@ const getPdf = async (invoice, mode = PRINT) => {
   pdfDoc.setTitle('Invoice Preview')
   pdfDoc.setAuthor('2AM Devs')
 
-  // Serialize the PDFDocument to bytes (a Uint8Array)
-  const pdfBytes = await pdfDoc.save()
-  return pdfToBase64(pdfBytes)
+  // Serialize the PDFDocument to base64
+  return mode === PREVIEW ? pdfDoc.saveAsBase64({ dataUri: true }) : pdfDoc.save()
 }
 
 export {
   getFromStorage,
   initializeSettings,
-  downloadPDF,
+  printPDF,
   getInvoiceDate,
   setProduct,
   deleteProducts,
   getProducts,
   getPdf,
-  pdfToBase64,
   getProductTypes,
   getInvoiceSettings,
 }
