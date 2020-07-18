@@ -3,9 +3,11 @@
   display: flex;
   position: fixed;
   top: 0;
+  z-index: 1;
   flex-direction: row;
   justify-content: space-between;
   font-size: 2rem;
+  background-color: var(--color-bg);
   height: 5rem;
   box-shadow: 0 0 5px 2px var(--color-black);
 
