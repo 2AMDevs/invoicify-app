@@ -5,23 +5,27 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
 import print from 'print-js'
 
-import { PREVIEW, PRINT } from '../../utils/constants'
+import {
+  PREVIEW, PRINT, DATE, MASKED,
+} from '../../utils/constants'
 import { getFromStorage, getPdf, getInvoiceSettings } from '../../utils/helper'
 
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: deviceWidth * 0.5 } }
-const columnProps = {
-  tokens: { childrenGap: deviceWidth * 0.07 },
-  styles: { root: { width: deviceWidth * 0.4 } },
-}
+
+// TODO: Re-enable this after form is customizable with layout too.
+// const columnProps = {
+//   tokens: { childrenGap: deviceWidth * 0.07 },
+//   styles: { root: { width: deviceWidth * 0.4 } },
+// }
 
 const Invoice = ({ setPreview }) => {
   const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
   const invoiceSettings = getInvoiceSettings()
 
-  const [invoice, setInvoice] = useState({})
   const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
+  const [invoice, setInvoice] = useState({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
 
   const fetchPDF = async (mode = PRINT) => getPdf(invoice, mode)
 
@@ -30,7 +34,7 @@ const Invoice = ({ setPreview }) => {
   }, [invoiceNumber])
 
   const resetForm = () => {
-    setInvoice({})
+    setInvoice({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
   }
 
   const printAndMove = async () => {
@@ -50,23 +54,50 @@ const Invoice = ({ setPreview }) => {
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div>
+    <>
       <Stack
         vertical
         tokens={stackTokens}
         styles={stackStyles}
       >
-        { invoiceSettings.map((field) => (
-          <TextField
-            label={field.name}
-            key={field.name}
-            value={invoice[field.name] || ''}
-            onChange={(_, val) => {
+        { invoiceSettings.map((field) => {
+          const props = {
+            label: field.name,
+            key: field.name,
+            value: invoice[field.name],
+            onChange: (_, val) => {
               setInvoice({ ...invoice, [field.name]: val })
-            }}
-            onBlur={handleInputBlur}
-          />
-        )) }
+            },
+            onBlur: handleInputBlur,
+            required: field.required,
+            disabled: field.disabled,
+          }
+          return (
+            // eslint-disable-next-line no-nested-ternary
+            field.type === DATE
+              ? (
+                <DatePicker
+                  {...props}
+                  value={invoice[field.name] ?? new Date()}
+                  ariaLabel="Select a date"
+                  allowTextInput
+                  onSelectDate={(date) => {
+                    setInvoice({ ...invoice, [field.name]: date })
+                  }}
+                />
+              ) : field.type === MASKED
+                ? (
+                  <MaskedTextField
+                    {...props}
+                    mask={field.mask}
+                    value={field.startIndex
+                      ? invoice[field.name]?.substr(field.startIndex)
+                      : invoice[field.name]}
+                  />
+                ) : <TextField {...props} />
+
+          )
+        })}
         {/* <Stack
           horizontal
           {...columnProps}
@@ -142,7 +173,7 @@ const Invoice = ({ setPreview }) => {
           />
         </Stack>
       </Stack>
-    </div>
+    </>
   )
 }
 

@@ -1,5 +1,9 @@
 const PREVIEW = 'preview'
 const PRINT = 'print'
+const DATE = 'Date'
+const TEXT = 'Text'
+const MASKED = 'Masked'
+const CUSTOM_FONT = 'Manbant.ttf'
 
 const darkThemePalette = {
   themePrimary: '#209cfa',
@@ -80,39 +84,67 @@ const productTableColumns = [
 
 const defaultPageSettings = { width: 595.42, height: 895.04, fontSize: 11 }
 
+const fieldTypes = [
+  { key: DATE, text: DATE },
+  { key: TEXT, text: TEXT },
+  { key: MASKED, text: MASKED },
+]
+
 const defaultPrintSettings = [
   {
     name: 'Invoice Number',
     x: 90,
     y: 447.52 + 248,
+    required: true,
+    disabled: true,
+    type: TEXT,
   },
   {
     name: 'Invoice Date',
     x: 485.42,
     y: 447.52 + 250,
+    required: true,
+    disabled: false,
+    type: DATE,
   },
   {
     name: 'Customer Name',
     x: 60,
     y: 447.52 + 225,
+    required: true,
+    disabled: false,
+    type: TEXT,
   },
   {
     name: 'GSTIN',
     x: 100,
     y: 447.52 + 198,
+    required: true,
+    disabled: false,
+    type: MASKED,
+    mask: '99-**********-***',
   },
   {
     name: 'Mobile',
     x: 465.42,
     y: 447.52 + 198,
+    required: true,
+    disabled: false,
+    type: MASKED,
+    mask: '+\\91 9999999999',
+    startIndex: 3,
   },
   {
     name: 'Address',
     x: 325,
     y: 447.52 + 198,
+    required: true,
+    disabled: false,
+    type: TEXT,
   },
 ]
 
 export {
-  PRINT, PREVIEW, darkThemePalette, productTableColumns, defaultPrintSettings, defaultPageSettings,
+  PRINT, PREVIEW, darkThemePalette, productTableColumns, defaultPrintSettings,
+  defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT,
 }

@@ -1,7 +1,9 @@
 import fontkit from '@pdf-lib/fontkit'
 import { PDFDocument } from 'pdf-lib'
 
-import { PREVIEW, PRINT, defaultPrintSettings } from './constants'
+import {
+  PREVIEW, PRINT, DATE, defaultPrintSettings, CUSTOM_FONT,
+} from './constants'
 
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
@@ -46,12 +48,11 @@ const downloadPDF = (pdfBytes, invoiceNumber) => {
   link.click()
 }
 
-const getInvoiceDate = () => {
+const getInvoiceDate = (date) => {
   const options = {
     year: 'numeric', month: 'long', day: 'numeric',
   }
-  const today = new Date()
-  return today.toLocaleDateString('en-IN', options)
+  return date.toLocaleDateString('en-IN', options)
 }
 
 const setProduct = (product) => {
@@ -91,7 +92,7 @@ const getPdf = async (invoice, mode = PRINT) => {
   let pdfDoc
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
-  const mangalFont = await fetch('Manbant.ttf').then((res) => res.arrayBuffer())
+  const mangalFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
     const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
     pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -111,7 +112,10 @@ const getPdf = async (invoice, mode = PRINT) => {
 
   getInvoiceSettings().forEach((field) => {
     if (invoice[field.name]) {
-      page.drawText(invoice[field.name].toString(), {
+      const value = field.type === DATE
+        ? getInvoiceDate(invoice[field.name])
+        : invoice[field.name].toString()
+      page.drawText(value, {
         x: parseFloat(field.x, 10),
         y: parseFloat(field.y, 10),
         size: fontSize,
