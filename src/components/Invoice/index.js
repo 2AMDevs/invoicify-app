@@ -90,6 +90,7 @@ const Invoice = ({ setPreview }) => {
                   <MaskedTextField
                     {...props}
                     mask={field.mask}
+                    maskChar=" "
                     value={field.startIndex
                       ? invoice[field.name]?.substr(field.startIndex)
                       : invoice[field.name]}
@@ -98,58 +99,6 @@ const Invoice = ({ setPreview }) => {
 
           )
         })}
-        {/* <Stack
-          horizontal
-          {...columnProps}
-        >
-          <TextField
-            label="Invoice No."
-            disabled
-            value={invoiceNumber}
-          />
-          <DatePicker
-            isRequired
-            value={new Date()}
-            label="Date"
-            onBlur={handleInputBlur}
-            placeholder="Select a date..."
-            ariaLabel="Select a date"
-          />
-        </Stack>
-        <TextField
-          required
-          label="Customer Name"
-          value={customerName}
-          onChange={(_event, val) => setCustomerName(val)}
-          onBlur={handleInputBlur}
-        />
-        <Stack
-          horizontal
-          {...columnProps}
-        >
-          <MaskedTextField
-            label="Customer GSTIN"
-            mask="99-**********-***"
-            value={gstin}
-            onChange={(_event, val) => setGstin(val)}
-            onBlur={handleInputBlur}
-          />
-          <MaskedTextField
-            label="Mobile No."
-            mask="+\91 9999999999"
-            value={mobile.substr(3)}
-            onChange={(_event, val) => setMobile(val)}
-            onBlur={handleInputBlur}
-          />
-        </Stack>
-        <Stack {...columnProps}>
-          <TextField
-            label="Customer Address"
-            value={address}
-            onChange={(_event, val) => setAddress(val)}
-            onBlur={handleInputBlur}
-          />
-        </Stack> */}
         <br />
         <Stack
           horizontal

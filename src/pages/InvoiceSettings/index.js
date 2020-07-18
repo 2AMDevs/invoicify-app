@@ -5,7 +5,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { fieldTypes } from '../../utils/constants'
+import { fieldTypes, MASKED } from '../../utils/constants'
 import { getInvoiceSettings } from '../../utils/helper'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -25,8 +25,8 @@ const InvoiceSettings = () => {
         <Stack
           horizontal
           {...{
-            tokens: { childrenGap: deviceWidth * 0.03 },
-            styles: { root: { width: deviceWidth * 0.8 } },
+            tokens: { childrenGap: deviceWidth * 0.02 },
+            styles: { root: { width: deviceWidth * 0.9 } },
           }}
           key={setting.name.toLowerCase()}
         >
@@ -48,15 +48,11 @@ const InvoiceSettings = () => {
           <Toggle
             label="Required?"
             checked={setting.required}
-            onText="On"
-            offText="Off"
             onChange={(_, val) => handleChange(idx, 'required', val)}
           />
           <Toggle
             label="Disabled?"
             checked={setting.disabled}
-            onText="On"
-            offText="Off"
             onChange={(_, val) => handleChange(idx, 'disabled', val)}
           />
           <Dropdown
@@ -66,6 +62,14 @@ const InvoiceSettings = () => {
             selectedKey={setting.type}
             onChange={(_, val) => handleChange(idx, 'type', val.key)}
           />
+          { setting.type === MASKED
+            ? (
+              <TextField
+                label="Mask"
+                value={setting.mask}
+                onChange={(_, val) => handleChange(idx, 'mask', val.key)}
+              />
+            ) : ''}
         </Stack>
       ))}
     </>
