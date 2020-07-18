@@ -9,7 +9,8 @@ import {
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 
 import { ProductForm } from '../../components'
-import { productTableColumns, getProducts, deleteProducts } from '../../utils/helper'
+import { productTableColumns } from '../../utils/constants'
+import { getProducts, deleteProducts } from '../../utils/helper'
 
 import './index.scss'
 
@@ -110,12 +111,10 @@ class ProductsPage extends React.Component {
 
   showProductForm = () => this.setState({ isProductFormOpen: true })
 
-  toggleTeachingBubbleVisible = (id) => this.setState((prevState) => {
-    return {
-      teachingBubbleVisible: !prevState.teachingBubbleVisible,
-      targetBtn: typeof id === 'string' ? id : null,
-    }
-  })
+  toggleTeachingBubbleVisible = (id) => this.setState((prevState) => ({
+    teachingBubbleVisible: !prevState.teachingBubbleVisible,
+    targetBtn: typeof id === 'string' ? id : null,
+  }))
 
   render () {
     return (

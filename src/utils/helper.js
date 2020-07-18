@@ -1,4 +1,5 @@
-import { PDFDocument, StandardFonts } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
+import { PDFDocument } from 'pdf-lib'
 
 import { PREVIEW, PRINT } from './constants'
 
@@ -30,9 +31,9 @@ const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((ty
 const initializeSettings = () => {
   localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
-  localStorage.settingsOne = localStorage.settingsOne ?? true
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
   localStorage.products = localStorage.products ?? '[]'
+  localStorage.invoiceSettings = localStorage.invoiceSettings ?? '{}'
 }
 
 const downloadPDF = (pdfBytes, invoiceNumber) => {
@@ -42,7 +43,6 @@ const downloadPDF = (pdfBytes, invoiceNumber) => {
   link.id = `invoice-${invoiceNumber.toString()}`
   link.download = `invoice-${invoiceNumber.toString()}.pdf`
   link.click()
-  // link.id.remove()
 }
 
 const getInvoiceDate = () => {
@@ -80,59 +80,8 @@ const getProducts = () => {
   return JSON.parse(products)
 }
 
-const productTableColumns = [
-  {
-    key: 'column1',
-    name: 'id',
-    ariaLabel: 'Id of the item',
-    iconName: 'List',
-    isIconOnly: true,
-    fieldName: 'id',
-    minWidth: 50,
-    maxWidth: 50,
-  },
-  {
-    key: 'column2',
-    name: 'Name',
-    fieldName: 'name',
-    minWidth: 210,
-    maxWidth: 350,
-    isRowHeader: true,
-    isResizable: true,
-    isSorted: false,
-    isSortedDescending: false,
-    data: 'string',
-    isPadded: true,
-  },
-  {
-    key: 'column3',
-    name: 'Type',
-    fieldName: 'type',
-    minWidth: 40,
-    maxWidth: 40,
-    isRowHeader: true,
-    isResizable: true,
-    isSorted: false,
-    isSortedDescending: false,
-    data: 'string',
-    isPadded: true,
-  },
-  {
-    key: 'column4',
-    name: 'Price',
-    fieldName: 'price',
-    minWidth: 30,
-    maxWidth: 30,
-    isRowHeader: true,
-    isResizable: true,
-    isSorted: false,
-    isSortedDescending: false,
-    data: 'number',
-    isPadded: true,
-  },
-]
-
-const pdfToBase64 = (pdfBytes) => btoa(String.fromCharCode(...new Uint8Array(pdfBytes)))
+// TIL:  String.fromCharCode function has limit to arguements, hence this process
+const pdfToBase64 = (pdfBytes) => btoa(new Uint8Array(pdfBytes).reduce((data, byte) => data + String.fromCharCode(byte), ''))
 
 const getPdf = async (invoice, mode = PRINT) => {
   let pdfDoc
@@ -141,6 +90,7 @@ const getPdf = async (invoice, mode = PRINT) => {
   } = invoice
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
+  const mangalFont = await fetch('Manbant.ttf').then((res) => res.arrayBuffer())
   if (isPreviewMode) {
     const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
     pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -148,8 +98,9 @@ const getPdf = async (invoice, mode = PRINT) => {
     pdfDoc = await PDFDocument.create()
   }
 
-  // Embed the Helvetica font
-  const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+  // Register the `fontkit` instance
+  pdfDoc.registerFontkit(fontkit)
+  const font = await pdfDoc.embedFont(mangalFont)
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
@@ -200,6 +151,9 @@ const getPdf = async (invoice, mode = PRINT) => {
     font,
   })
 
+  pdfDoc.setTitle(`Invoice ${invoiceNumber.toString()}`)
+  pdfDoc.setAuthor('2AM Devs')
+
   // Serialize the PDFDocument to bytes (a Uint8Array)
   const pdfBytes = await pdfDoc.save()
   return pdfToBase64(pdfBytes)
@@ -208,7 +162,6 @@ const getPdf = async (invoice, mode = PRINT) => {
 export {
   getFromStorage,
   initializeSettings,
-  productTableColumns,
   downloadPDF,
   getInvoiceDate,
   setProduct,

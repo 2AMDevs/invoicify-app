@@ -52,13 +52,11 @@ const Settings = () => {
       >
         <TextField
           label="Company Name"
-          defaultValue="Default Company"
           onChange={onNameChange}
           value={companyName}
         />
         <TextField
           label="Next Invoice Number"
-          defaultValue="001"
           onChange={onInvoiceNoChange}
           value={invoiceNumber}
         />
@@ -81,7 +79,6 @@ const Settings = () => {
         />
       </Stack>
       <InvoiceSettings />
-
     </>
   )
 }

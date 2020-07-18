@@ -1,21 +1,24 @@
 const path = require('path')
 
-const { app, BrowserWindow, Menu } = require('electron')
+const {
+  app, BrowserWindow, Menu, screen,
+} = require('electron')
 const isDev = require('electron-is-dev')
 
-function createWindow () {
+const createWindow = () => {
   Menu.setApplicationMenu(null)
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    show: false,
+    height,
+    width,
+    resizable: false,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       devTools: !!isDev,
     },
   })
 
-  // and load the index.html of the app.
   win.loadURL(
     isDev
       ? 'http://localhost:3000'
@@ -24,8 +27,6 @@ function createWindow () {
 
   // TODO: Add Tweak to open this when 7 press on Home button, so that we can debug prod
   if (isDev) win.webContents.openDevTools()
-  win.maximize()
-  win.show()
 }
 
 // This method will be called when Electron has finished
