@@ -1,0 +1,53 @@
+.invoice-items {
+  &__header {
+    font-size: 2.5rem;
+    color: var(--color-white-op-80);
+  }
+
+  &__item {
+    display: flex;
+    color: var(--color-white);
+    background-color: var(--color-black-op-20);
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    justify-content: space-between;
+    margin: 1rem 0;
+
+    &--add-btn {
+      padding: 1.2rem 0;
+      background-color: transparent;
+
+      button {
+        height: 4rem;
+      }
+    }
+
+    &__field {
+      font-size: 2rem;
+      width: 10rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
+    }
+
+    &__input-form {
+      padding: 1rem 3rem 3rem 3rem;
+      display: flex;
+      flex-direction: column;
+
+      &__row {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+
+        & > div {
+          width: 40%;
+        }
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@ import print from 'print-js'
 
 import { PREVIEW, PRINT } from '../../utils/constants'
 import { getFromStorage, getPdf } from '../../utils/helper'
+import InvoiceItems from '../InvoiceItems'
 
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
@@ -23,6 +24,9 @@ const Invoice = ({ setPreview }) => {
   const [gstin, setGstin] = useState('')
   const [mobile, setMobile] = useState('')
   const [address, setAddress] = useState('')
+  const [invoiceItems, setInvoiceItems] = useState([{
+    id: 1, name: 'ringo', type: 'gold', price: 5, quantity: 10, weight: 1.34,
+  }])
 
   const fetchPDF = async (mode = PRINT) => getPdf({
     invoiceNumber, customerName, gstin, mobile, address,
@@ -57,7 +61,7 @@ const Invoice = ({ setPreview }) => {
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div>
+    <div className="animation-slide-up">
       <Stack
         vertical
         tokens={stackTokens}
@@ -115,6 +119,10 @@ const Invoice = ({ setPreview }) => {
             onBlur={handleInputBlur}
           />
         </Stack>
+        <InvoiceItems
+          invoiceItems={invoiceItems}
+          setInvoiceItems={setInvoiceItems}
+        />
         <br />
         <Stack
           horizontal
