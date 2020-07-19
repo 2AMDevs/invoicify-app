@@ -60,6 +60,7 @@ const InvoiceItems = ({
             selectedKey={item.type}
             onChange={(_, option) => onChangeField(index, 'type', option.id)}
             required
+            style={{ maxWidth: 300 }}
           />
           <TextField
             className="invoice-items__item__field"
