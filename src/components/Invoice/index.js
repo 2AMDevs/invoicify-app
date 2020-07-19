@@ -39,17 +39,10 @@ const Invoice = ({ setPreview }) => {
   }
 
   const updateInvoiceItem = (index, valueObject) => {
-    const totalPriceObject = {}
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
-        // if updafing price or quantity also update totalPrice
-        if (Object.keys(valueObject).includes('quantity')) {
-          totalPriceObject.totalPrice = valueObject.quantity * item.price
-        }
-        if (Object.keys(valueObject).includes('price')) {
-          totalPriceObject.totalPrice = valueObject.price * item.quantity
-        }
-        return { ...item, ...totalPriceObject, ...valueObject }
+        const newItem = { ...item, ...valueObject }
+        return { ...newItem, totalPrice: newItem.price * newItem.quantity }
       }
       return item
     }))
