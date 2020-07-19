@@ -10,6 +10,7 @@ import {
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF,
 } from '../../utils/helper'
+import InvoiceItems from '../InvoiceItems'
 
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
@@ -27,6 +28,25 @@ const Invoice = ({ setPreview }) => {
 
   const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
   const [invoice, setInvoice] = useState({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
+  const [invoiceItems, setInvoiceItems] = useState([])
+
+  const addInvoiceItem = (invoiceItem) => {
+    setInvoiceItems([...invoiceItems, invoiceItem])
+  }
+
+  const removeInvoiceItem = (id) => {
+    setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
+  }
+
+  const updateInvoiceItem = (index, valueObject) => {
+    setInvoiceItems(invoiceItems.map((item, i) => {
+      if (i === index) {
+        const newItem = { ...item, ...valueObject }
+        return { ...newItem, totalPrice: newItem.price * newItem.quantity }
+      }
+      return item
+    }))
+  }
 
   const fetchPDF = async (mode = PRINT) => getPdf(invoice, mode)
 
@@ -55,13 +75,13 @@ const Invoice = ({ setPreview }) => {
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <>
+    <div className="animation-slide-up">
       <Stack
         vertical
         tokens={stackTokens}
         styles={stackStyles}
       >
-        { invoiceSettings.map((field) => {
+        {invoiceSettings.map((field) => {
           const props = {
             label: field.name,
             key: field.name,
@@ -99,6 +119,13 @@ const Invoice = ({ setPreview }) => {
                 ) : <TextField {...props} />
           )
         })}
+        <InvoiceItems
+          invoiceItems={invoiceItems}
+          setInvoiceItems={setInvoiceItems}
+          addInvoiceItem={addInvoiceItem}
+          removeInvoiceItem={removeInvoiceItem}
+          updateInvoiceItem={updateInvoiceItem}
+        />
         <br />
         <Stack
           horizontal
@@ -126,7 +153,7 @@ const Invoice = ({ setPreview }) => {
         title="Hidden"
         id="hidden-frame"
       />
-    </>
+    </div>
   )
 }
 

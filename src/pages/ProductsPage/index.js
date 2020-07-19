@@ -19,7 +19,7 @@ class ProductsPage extends React.Component {
     super(props)
 
     this.actionColumn = {
-      key: 'column5',
+      key: 'action-column',
       name: 'Actions',
       minWidth: 70,
       maxWidth: 70,
