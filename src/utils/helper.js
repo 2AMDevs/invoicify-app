@@ -56,7 +56,8 @@ const getInvoiceDate = (date) => {
   const options = {
     year: 'numeric', month: 'long', day: 'numeric',
   }
-  return date.toLocaleDateString('en-IN', options)
+  const hindiDate = getFromStorage('hindiDate')
+  return date.toLocaleDateString(`${hindiDate ? 'hi' : 'en'}-IN`, options)
 }
 
 const setProduct = (product) => {
@@ -103,7 +104,6 @@ const getPdf = async (invoice, mode = PRINT) => {
 
   pdfDoc.registerFontkit(fontkit)
   const font = await pdfDoc.embedFont(mangalFont)
-  // const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()

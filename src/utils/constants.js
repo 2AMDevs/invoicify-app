@@ -3,7 +3,7 @@ const PRINT = 'print'
 const DATE = 'Date'
 const TEXT = 'Text'
 const MASKED = 'Masked'
-const CUSTOM_FONT = 'Manbant.ttf'
+const CUSTOM_FONT = 'invoicify.ttf'
 
 const darkThemePalette = {
   themePrimary: '#209cfa',
