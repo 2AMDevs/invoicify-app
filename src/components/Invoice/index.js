@@ -29,6 +29,14 @@ const Invoice = ({ setPreview }) => {
   const [invoice, setInvoice] = useState({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
   const [invoiceItems, setInvoiceItems] = useState([])
 
+  const addInvoiceItem = (invoiceItem) => {
+    setInvoiceItems([...invoiceItems, invoiceItem])
+  }
+
+  const removeInvoiceItem = (index) => {
+    setInvoiceItems(invoiceItems.filter((_, i) => i !== index))
+  }
+
   const fetchPDF = async (mode = PRINT) => getPdf(invoice, mode)
 
   useEffect(() => {
@@ -105,6 +113,8 @@ const Invoice = ({ setPreview }) => {
         <InvoiceItems
           invoiceItems={invoiceItems}
           setInvoiceItems={setInvoiceItems}
+          addInvoiceItem={addInvoiceItem}
+          removeInvoiceItem={removeInvoiceItem}
         />
         <Stack
           horizontal
