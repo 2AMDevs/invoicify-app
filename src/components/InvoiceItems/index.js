@@ -1,19 +1,33 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
+import { getProducts, generateUuid4 } from '../../utils/helper'
+
 import './index.scss'
 
-const InvoiceItems = ({ invoiceItems, addInvoiceItem, removeInvoiceItem }) => {
+const InvoiceItems = ({
+  invoiceItems, addInvoiceItem, removeInvoiceItem, updateInvoiceItem
+}) => {
   const addNewInvoiceItem = () => {
     addInvoiceItem({
-      type: null, quantity: 0, weight: 0, price: 0, totalPrice: 0,
+      id: generateUuid4(), type: null, quantity: 0, weight: 0, price: 0, totalPrice: 0,
     })
   }
 
-  const onChangeType = (_, a) => console.log(a)
+  const onChangeField = (itemIndex, stateKey, value) => {
+    updateInvoiceItem(itemIndex, { [stateKey]: value })
+  }
+
+  const generateProductOptions = (id) => getProducts().map((op) => ({
+    ...op,
+    text: op.name,
+    key: op.id,
+    isSelected: id === op.id,
+    title: `${op.name} - ${op.type}`,
+  }))
 
   return (
     <div className="invoice-items animation-slide-up">
@@ -21,20 +35,14 @@ const InvoiceItems = ({ invoiceItems, addInvoiceItem, removeInvoiceItem }) => {
       {invoiceItems.map((item, index) => (
         <div
           className="invoice-items__item animation-slide-up"
-          key={`${item.type}-${item.quantity}`}
+          key={item.id}
         >
           <Dropdown
             className="invoice-items__item__field"
             placeholder="Select a type"
             label="Type"
-            options={[
-              { key: 'A', text: 'Option a', title: 'I am option a.' },
-              { key: 'B', text: 'Option b', isSelected: true },
-              { key: 'D', text: 'Option d' },
-              { key: 'E', text: 'Option e' },
-            ]}
-            value={'E'}
-            onChange={onChangeType}
+            options={generateProductOptions(item.type)}
+            onChange={(_, option) => onChangeField(index, 'type', option.id)}
             required
           />
           <TextField
@@ -43,6 +51,7 @@ const InvoiceItems = ({ invoiceItems, addInvoiceItem, removeInvoiceItem }) => {
             min="0"
             label="Quantity"
             value={item.quantity}
+            onChange={(_, value) => onChangeField(index, 'quantity', value)}
             required
           />
           <TextField
@@ -51,6 +60,7 @@ const InvoiceItems = ({ invoiceItems, addInvoiceItem, removeInvoiceItem }) => {
             type="number"
             min="0"
             value={item.weight}
+            onChange={(_, value) => onChangeField(index, 'weight', value)}
             suffix="gram"
             required
           />
@@ -59,6 +69,7 @@ const InvoiceItems = ({ invoiceItems, addInvoiceItem, removeInvoiceItem }) => {
             label="Price Per item"
             type="number"
             value={item.price}
+            onChange={(_, value) => onChangeField(index, 'price', value)}
             min="0"
             suffix="₹"
             required
@@ -68,6 +79,7 @@ const InvoiceItems = ({ invoiceItems, addInvoiceItem, removeInvoiceItem }) => {
             label="Total Price"
             type="number"
             value={item.totalPrice}
+            disabled
             min="0"
             suffix="₹"
             required

@@ -37,6 +37,13 @@ const Invoice = ({ setPreview }) => {
     setInvoiceItems(invoiceItems.filter((_, i) => i !== index))
   }
 
+  const updateInvoiceItem = (index, valueObject) => {
+    setInvoiceItems(invoiceItems.map((item, i) => {
+      if (i === index) return { ...item, ...valueObject }
+      return item
+    }))
+  }
+
   const fetchPDF = async (mode = PRINT) => getPdf(invoice, mode)
 
   useEffect(() => {
@@ -115,6 +122,7 @@ const Invoice = ({ setPreview }) => {
           setInvoiceItems={setInvoiceItems}
           addInvoiceItem={addInvoiceItem}
           removeInvoiceItem={removeInvoiceItem}
+          updateInvoiceItem={updateInvoiceItem}
         />
         <Stack
           horizontal
