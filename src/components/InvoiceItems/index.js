@@ -86,7 +86,7 @@ const InvoiceItems = ({
           />
           <IconButton
             iconProps={{ iconName: 'Delete' }}
-            onClick={() => removeInvoiceItem(index)}
+            onClick={() => removeInvoiceItem(item.id)}
           />
         </div>
       ))}

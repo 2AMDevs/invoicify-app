@@ -33,13 +33,23 @@ const Invoice = ({ setPreview }) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
   }
 
-  const removeInvoiceItem = (index) => {
-    setInvoiceItems(invoiceItems.filter((_, i) => i !== index))
+  const removeInvoiceItem = (id) => {
+    setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
   }
 
   const updateInvoiceItem = (index, valueObject) => {
+    const totalPriceObject = {}
     setInvoiceItems(invoiceItems.map((item, i) => {
-      if (i === index) return { ...item, ...valueObject }
+      if (i === index) {
+        // if updafing price or quantity also update totalPrice
+        if (Object.keys(valueObject).includes('quantity')) {
+          totalPriceObject.totalPrice = valueObject.quantity * item.price
+        }
+        if (Object.keys(valueObject).includes('price')) {
+          totalPriceObject.totalPrice = valueObject.price * item.quantity
+        }
+        return { ...item, ...totalPriceObject, ...valueObject }
+      }
       return item
     }))
   }
