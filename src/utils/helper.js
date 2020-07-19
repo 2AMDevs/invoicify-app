@@ -129,6 +129,22 @@ const getPdf = async (invoice, mode = PRINT) => {
   return mode === PREVIEW ? pdfDoc.saveAsBase64({ dataUri: true }) : pdfDoc.save()
 }
 
+const generateUuid4 = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    // eslint-disable-next-line no-bitwise
+    const r = Math.random() * 16 | 0
+    // eslint-disable-next-line no-mixed-operators, no-bitwise
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
+}
+
+const groupBy = (array, key) => array.reduce((result, currentValue) => {
+  // eslint-disable-next-line no-param-reassign
+  (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue)
+  return result
+}, {})
+
 export {
   getFromStorage,
   initializeSettings,
@@ -140,4 +156,6 @@ export {
   getPdf,
   getProductTypes,
   getInvoiceSettings,
+  generateUuid4,
+  groupBy,
 }
