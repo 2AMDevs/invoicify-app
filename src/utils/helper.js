@@ -1,5 +1,5 @@
 import fontkit from '@pdf-lib/fontkit'
-import { PDFDocument, StandardFonts } from 'pdf-lib'
+import { PDFDocument } from 'pdf-lib'
 
 import {
   PREVIEW, PRINT, DATE, defaultPrintSettings, CUSTOM_FONT,
@@ -42,7 +42,6 @@ const initializeSettings = () => {
 
 const printPDF = (pdfBytes) => {
   const blob = new Blob([pdfBytes], { type: 'application/pdf' })
-  // const link = document.createElement('a')
   const blobUrl = window.URL.createObjectURL(blob)
   const iframeEle = document.getElementById('hidden-frame')
   iframeEle.src = blobUrl
@@ -50,12 +49,7 @@ const printPDF = (pdfBytes) => {
     if (iframeEle) {
       iframeEle.contentWindow.print()
     }
-  }, 2000)
-
-  // link.id = `invoice-${invoiceNumber.toString()}`
-  // link.download = `${link.id}.pdf`
-  // console.log(link)
-  // link.click()
+  }, 500)
 }
 
 const getInvoiceDate = (date) => {
@@ -99,7 +93,7 @@ const getPdf = async (invoice, mode = PRINT) => {
   let pdfDoc
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
-  // const mangalFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
+  const mangalFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
     const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
     pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -107,16 +101,12 @@ const getPdf = async (invoice, mode = PRINT) => {
     pdfDoc = await PDFDocument.create()
   }
 
-  // Register the `fontkit` instance
-  // pdfDoc.registerFontkit(fontkit)
-  // const font = await pdfDoc.embedFont(mangalFont)
-  const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+  pdfDoc.registerFontkit(fontkit)
+  const font = await pdfDoc.embedFont(mangalFont)
+  // const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
-
-  // Get the width and height of the first page
-  // const { width, height } = page.getSize()
 
   getInvoiceSettings().forEach((field) => {
     if (invoice[field.name]) {
