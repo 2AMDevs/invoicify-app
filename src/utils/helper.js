@@ -56,7 +56,8 @@ const getInvoiceDate = (date) => {
   const options = {
     year: 'numeric', month: 'long', day: 'numeric',
   }
-  return date.toLocaleDateString('en-IN', options)
+  const hindiDate = getFromStorage('hindiDate')
+  return date.toLocaleDateString(`${hindiDate ? 'hi' : 'en'}-IN`, options)
 }
 
 const setProduct = (product) => {

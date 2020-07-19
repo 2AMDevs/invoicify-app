@@ -15,11 +15,11 @@ const Settings = () => {
   const [productType, setProductType] = useState(getFromStorage('productType'))
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
-  const [checkForUpdates, setCheckForUpdates] = useState(getFromStorage('checkForUpdates'))
+  const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
 
   const onClickUpdates = (_, checked) => {
-    localStorage.checkForUpdates = checked
-    setCheckForUpdates(checked)
+    localStorage.hindiDate = checked
+    setHindiDate(checked)
   }
 
   const onNameChange = (_, newValue) => {
@@ -70,10 +70,10 @@ const Settings = () => {
           value={productType}
         />
         <Toggle
-          label="Automatically Check for Updates"
-          checked={checkForUpdates}
-          onText="On"
-          offText="Off"
+          label="Date Language"
+          checked={hindiDate}
+          onText="हिन्दी"
+          offText="English"
           onChange={onClickUpdates}
         />
       </Stack>
