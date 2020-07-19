@@ -39,11 +39,12 @@ const Invoice = ({ setPreview }) => {
     setInvoice({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
   }
 
-  const printAndMove = async () => {
-    const pdfBytes = await fetchPDF()
-    print({ printable: pdfBytes, type: 'pdf', base64: true })
-    setInvoiceNumber(invoiceNumber + 1)
-    // resetForm()
+  const printAndMove = () => {
+    fetchPDF().then((res) => {
+      print({ printable: res, type: 'pdf', base64: true, })
+      setInvoiceNumber(invoiceNumber + 1)
+      resetForm()
+    })
   }
 
   const previewPDF = async () => {
