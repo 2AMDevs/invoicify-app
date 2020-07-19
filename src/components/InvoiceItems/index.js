@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
-import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
+import { ComboBox } from 'office-ui-fabric-react/lib/index'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import { getProducts, generateUuid4 } from '../../utils/helper'
@@ -23,7 +23,7 @@ const InvoiceItems = ({
 
   const generateProductOptions = (id) => getProducts().map((op) => ({
     ...op,
-    text: op.name,
+    text: `${op.name} - ${op.type}`,
     key: op.id,
     isSelected: id === op.id,
     title: `${op.name} - ${op.type}`,
@@ -37,11 +37,13 @@ const InvoiceItems = ({
           className="invoice-items__item animation-slide-up"
           key={item.id}
         >
-          <Dropdown
+          <ComboBox
+            allowFreeform
             className="invoice-items__item__field"
             placeholder="Select a type"
-            label="Type"
+            label="Item name"
             options={generateProductOptions(item.type)}
+            selectedKey={item.type}
             onChange={(_, option) => onChangeField(index, 'type', option.id)}
             required
           />
@@ -62,7 +64,6 @@ const InvoiceItems = ({
             value={item.weight}
             onChange={(_, value) => onChangeField(index, 'weight', value)}
             suffix="gram"
-            required
           />
           <TextField
             className="invoice-items__item__field"
@@ -71,7 +72,7 @@ const InvoiceItems = ({
             value={item.price}
             onChange={(_, value) => onChangeField(index, 'price', value)}
             min="0"
-            suffix="₹"
+            prefix="₹"
             required
           />
           <TextField
@@ -81,8 +82,7 @@ const InvoiceItems = ({
             value={item.totalPrice}
             disabled
             min="0"
-            suffix="₹"
-            required
+            prefix="₹"
           />
           <IconButton
             iconProps={{ iconName: 'Delete' }}

@@ -33,16 +33,6 @@ const darkThemePalette = {
 const productTableColumns = [
   {
     key: 'column1',
-    name: 'id (unique random)',
-    ariaLabel: 'Id of the item',
-    iconName: 'List',
-    isIconOnly: true,
-    fieldName: 'id',
-    minWidth: 60,
-    maxWidth: 60,
-  },
-  {
-    key: 'column2',
     name: 'Name',
     fieldName: 'name',
     minWidth: 210,
@@ -55,7 +45,7 @@ const productTableColumns = [
     isPadded: true,
   },
   {
-    key: 'column3',
+    key: 'column2',
     name: 'Type',
     fieldName: 'type',
     minWidth: 40,
