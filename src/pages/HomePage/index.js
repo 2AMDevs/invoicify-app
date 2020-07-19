@@ -30,7 +30,7 @@ const HomePage = () => {
             <iframe
               title="Invoice Preview"
               width="380"
-              height="535"
+              height="540"
               border="0"
               src={`data:application/pdf;base64,${preview}#toolbar=0&statusbar=0&page=1&view=FitV`}
             />

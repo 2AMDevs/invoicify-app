@@ -1,6 +1,9 @@
-import { PDFDocument, StandardFonts } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
+import { PDFDocument } from 'pdf-lib'
 
-import { PREVIEW, PRINT } from './constants'
+import {
+  PREVIEW, PRINT, DATE, defaultPrintSettings, CUSTOM_FONT,
+} from './constants'
 
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
@@ -30,9 +33,11 @@ const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((ty
 const initializeSettings = () => {
   localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
-  localStorage.settingsOne = localStorage.settingsOne ?? true
   localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
   localStorage.products = localStorage.products ?? '[]'
+  localStorage.productType = localStorage.productType ?? 'Gold, Silver'
+  localStorage.invoiceSettings = localStorage.invoiceSettings
+                                  ?? JSON.stringify(defaultPrintSettings)
 }
 
 const downloadPDF = (pdfBytes, invoiceNumber) => {
@@ -42,15 +47,13 @@ const downloadPDF = (pdfBytes, invoiceNumber) => {
   link.id = `invoice-${invoiceNumber.toString()}`
   link.download = `invoice-${invoiceNumber.toString()}.pdf`
   link.click()
-  // link.id.remove()
 }
 
-const getInvoiceDate = () => {
+const getInvoiceDate = (date) => {
   const options = {
     year: 'numeric', month: 'long', day: 'numeric',
   }
-  const today = new Date()
-  return today.toLocaleDateString('en-IN', options)
+  return date.toLocaleDateString('en-IN', options)
 }
 
 const setProduct = (product) => {
@@ -75,72 +78,22 @@ const deleteProducts = (ids) => {
 
 const getProducts = () => {
   const products = localStorage.getItem('products')
-  if (!products) return []
-
-  return JSON.parse(products)
+  return products ? JSON.parse(products) : []
 }
 
-const productTableColumns = [
-  {
-    key: 'column1',
-    name: 'id',
-    ariaLabel: 'Id of the item',
-    iconName: 'List',
-    isIconOnly: true,
-    fieldName: 'id',
-    minWidth: 50,
-    maxWidth: 50,
-  },
-  {
-    key: 'column2',
-    name: 'Name',
-    fieldName: 'name',
-    minWidth: 210,
-    maxWidth: 350,
-    isRowHeader: true,
-    isResizable: true,
-    isSorted: false,
-    isSortedDescending: false,
-    data: 'string',
-    isPadded: true,
-  },
-  {
-    key: 'column3',
-    name: 'Type',
-    fieldName: 'type',
-    minWidth: 40,
-    maxWidth: 40,
-    isRowHeader: true,
-    isResizable: true,
-    isSorted: false,
-    isSortedDescending: false,
-    data: 'string',
-    isPadded: true,
-  },
-  {
-    key: 'column4',
-    name: 'Price',
-    fieldName: 'price',
-    minWidth: 30,
-    maxWidth: 30,
-    isRowHeader: true,
-    isResizable: true,
-    isSorted: false,
-    isSortedDescending: false,
-    data: 'number',
-    isPadded: true,
-  },
-]
+const getInvoiceSettings = () => {
+  const invoiceSettings = localStorage.getItem('invoiceSettings')
+  return invoiceSettings ? JSON.parse(invoiceSettings) : []
+}
 
-const pdfToBase64 = (pdfBytes) => btoa(String.fromCharCode(...new Uint8Array(pdfBytes)))
+// TIL:  String.fromCharCode function has limit to arguements, hence this process
+const pdfToBase64 = (pdfBytes) => btoa(new Uint8Array(pdfBytes).reduce((data, byte) => data + String.fromCharCode(byte), ''))
 
 const getPdf = async (invoice, mode = PRINT) => {
   let pdfDoc
-  const {
-    invoiceNumber, customerName, mobile, address, gstin,
-  } = invoice
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
+  const mangalFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
     const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
     pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -148,57 +101,32 @@ const getPdf = async (invoice, mode = PRINT) => {
     pdfDoc = await PDFDocument.create()
   }
 
-  // Embed the Helvetica font
-  const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+  // Register the `fontkit` instance
+  pdfDoc.registerFontkit(fontkit)
+  const font = await pdfDoc.embedFont(mangalFont)
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
   // Get the width and height of the first page
-  const { width, height } = page.getSize()
+  // const { width, height } = page.getSize()
 
-  // Draw a string of text diagonally across the first page
-  page.drawText(invoiceNumber.toString(), {
-    x: 90,
-    y: height / 2 + 273,
-    size: fontSize,
-    font,
+  getInvoiceSettings().forEach((field) => {
+    if (invoice[field.name]) {
+      const value = field.type === DATE
+        ? getInvoiceDate(invoice[field.name])
+        : invoice[field.name].toString()
+      page.drawText(value, {
+        x: parseFloat(field.x, 10),
+        y: parseFloat(field.y, 10),
+        size: fontSize,
+        font,
+      })
+    }
   })
 
-  page.drawText(getInvoiceDate(), {
-    x: width - 110,
-    y: height / 2 + 275,
-    size: fontSize,
-    font,
-  })
-
-  page.drawText(customerName, {
-    x: 60,
-    y: height / 2 + 250,
-    size: fontSize,
-    font,
-  })
-
-  page.drawText(gstin, {
-    x: 100,
-    y: height / 2 + 223,
-    size: fontSize,
-    font,
-  })
-
-  page.drawText(mobile, {
-    x: width - 130,
-    y: height / 2 + 223,
-    size: fontSize,
-    font,
-  })
-
-  page.drawText(address, {
-    x: 325,
-    y: height / 2 + 223,
-    size: fontSize,
-    font,
-  })
+  pdfDoc.setTitle('Invoice Preview')
+  pdfDoc.setAuthor('2AM Devs')
 
   // Serialize the PDFDocument to bytes (a Uint8Array)
   const pdfBytes = await pdfDoc.save()
@@ -208,7 +136,6 @@ const getPdf = async (invoice, mode = PRINT) => {
 export {
   getFromStorage,
   initializeSettings,
-  productTableColumns,
   downloadPDF,
   getInvoiceDate,
   setProduct,
@@ -217,4 +144,5 @@ export {
   getPdf,
   pdfToBase64,
   getProductTypes,
+  getInvoiceSettings,
 }

@@ -46,6 +46,17 @@ const Header = ({ className, ...restProps }) => {
             </Link>
             <Link
               className="header__link"
+              to="/configure"
+            >
+              <CommandBarButton
+                className="header__link__btn"
+                iconProps={{ iconName: 'EntitlementPolicy' }}
+                text="Invoice Settings"
+                checked={false}
+              />
+            </Link>
+            <Link
+              className="header__link"
               to="/products"
             >
               <CommandBarButton
