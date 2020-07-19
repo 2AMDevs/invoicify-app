@@ -139,6 +139,12 @@ const generateUuid4 = () => {
   })
 }
 
+const groupBy = (array, key) => array.reduce((result, currentValue) => {
+  // eslint-disable-next-line no-param-reassign
+  (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue)
+  return result
+}, {})
+
 export {
   getFromStorage,
   initializeSettings,
@@ -151,4 +157,5 @@ export {
   getProductTypes,
   getInvoiceSettings,
   generateUuid4,
+  groupBy,
 }

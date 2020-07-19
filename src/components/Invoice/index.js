@@ -12,7 +12,6 @@ import {
 } from '../../utils/helper'
 import InvoiceItems from '../InvoiceItems'
 
-
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: deviceWidth * 0.5 } }

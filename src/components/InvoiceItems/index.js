@@ -1,10 +1,10 @@
 import React from 'react'
 
 import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
-import { ComboBox } from 'office-ui-fabric-react/lib/index'
+import { ComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/index'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
-import { getProducts, generateUuid4 } from '../../utils/helper'
+import { getProducts, generateUuid4, groupBy } from '../../utils/helper'
 
 import './index.scss'
 
@@ -21,14 +21,28 @@ const InvoiceItems = ({
     updateInvoiceItem(itemIndex, { [stateKey]: value })
   }
 
-  const generateProductOptions = (id) => getProducts().map((op) => ({
-    ...op,
-    text: `${op.name} - ${op.type}`,
-    key: op.id,
-    isSelected: id === op.id,
-    title: `${op.name} - ${op.type}`,
-  }))
-
+  const generateProductOptions = (id) => {
+    const products = getProducts().map((op) => ({
+      ...op,
+      text: `${op.name} - ${op.type}`,
+      key: op.id,
+      isSelected: id === op.id,
+      title: `${op.name} - ${op.type}`,
+    }))
+    const optionsWithCategory = groupBy(products, 'type')
+    const options = []
+    Object.keys(optionsWithCategory).forEach((category, index) => {
+      if (Object.values(optionsWithCategory)[index]) {
+        options.push({
+          key: `Header${index}`,
+          text: category,
+          itemType: SelectableOptionMenuItemType.Header,
+        })
+        options.push(...Object.values(optionsWithCategory)[index])
+      }
+    })
+    return options
+  }
   return (
     <div className="invoice-items animation-slide-up">
       <div className="invoice-items__header">{`${invoiceItems.length} Item(s)`}</div>
