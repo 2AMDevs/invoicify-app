@@ -9,7 +9,7 @@ import {
 } from 'office-ui-fabric-react'
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 
-import { setProduct, getProductTypes } from '../../utils/helper'
+import { setProduct, getProductTypes, generateUuid4 } from '../../utils/helper'
 
 import './index.scss'
 
@@ -17,31 +17,21 @@ const ProductForm = ({
   isModalOpen, hideModal, fetchItems, product,
 }) => {
   const [name, setName] = useState(product?.name ?? '')
-  const [id, setId] = useState(product?.id ?? '')
   const [type, setType] = useState(product?.type ?? '')
-  const [price, setPrice] = useState(product?.price ?? '')
 
   const changeName = (_, val) => setName(val)
 
-  const changeId = (_, val) => {
-    // check for unique id
-    setId(val)
-  }
-
   const changeType = (_, val) => setType(val.key)
-
-  const changePrice = (_, val) => setPrice(val)
 
   const resetForm = () => {
     setName('')
-    setPrice('')
     setType('')
-    setId('')
   }
 
   const saveForm = () => {
+    const id = product?.id ?? generateUuid4()
     setProduct({
-      name, id, type, price,
+      name, id, type,
     })
     if (fetchItems) fetchItems()
     if (hideModal) hideModal()
@@ -73,14 +63,6 @@ const ProductForm = ({
               value={name}
               onChange={changeName}
             />
-
-            <TextField
-              label="ID"
-              required
-              placeholder="Product Id"
-              value={id}
-              onChange={changeId}
-            />
             <Stack
               horizontal
               tokens={{ childrenGap: 15 }}
@@ -93,13 +75,6 @@ const ProductForm = ({
                 value={type}
                 selectedKey={type}
                 onChange={changeType}
-              />
-              <TextField
-                label="Price"
-                required
-                placeholder="Price of the product"
-                value={price}
-                onChange={changePrice}
               />
             </Stack>
 
