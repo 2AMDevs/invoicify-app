@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { DatePicker, DefaultButton } from 'office-ui-fabric-react'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
-import print from 'print-js'
 
 import {
   PREVIEW, PRINT, DATE, MASKED,
 } from '../../utils/constants'
-import { getFromStorage, getPdf, getInvoiceSettings } from '../../utils/helper'
+import {
+  getFromStorage, getPdf, getInvoiceSettings, printPDF,
+} from '../../utils/helper'
 
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
@@ -39,9 +40,9 @@ const Invoice = ({ setPreview }) => {
 
   const printAndMove = async () => {
     const pdfBytes = await fetchPDF()
-    print({ printable: pdfBytes, type: 'pdf', base64: true })
+    printPDF(pdfBytes)
     setInvoiceNumber(invoiceNumber + 1)
-    // resetForm()
+    resetForm()
   }
 
   const previewPDF = async () => {
@@ -96,7 +97,6 @@ const Invoice = ({ setPreview }) => {
                       : invoice[field.name]}
                   />
                 ) : <TextField {...props} />
-
           )
         })}
         <br />
@@ -122,6 +122,10 @@ const Invoice = ({ setPreview }) => {
           />
         </Stack>
       </Stack>
+      <iframe
+        title="Hidden"
+        id="hidden-frame"
+      />
     </>
   )
 }
