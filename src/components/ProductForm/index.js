@@ -63,21 +63,16 @@ const ProductForm = ({
               value={name}
               onChange={changeName}
             />
-            <Stack
-              horizontal
-              tokens={{ childrenGap: 15 }}
-            >
-              <Dropdown
-                placeholder="Product Type"
-                required
-                label="Type"
-                options={getProductTypes()}
-                value={type}
-                selectedKey={type}
-                onChange={changeType}
-              />
-            </Stack>
-
+            <Dropdown
+              placeholder="Product Type"
+              required
+              label="Type"
+              options={getProductTypes()}
+              value={type}
+              selectedKey={type}
+              onChange={changeType}
+            />
+            <br />
             <Stack
               horizontal
               tokens={{ childrenGap: 25 }}
