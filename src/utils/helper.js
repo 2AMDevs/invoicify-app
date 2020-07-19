@@ -40,13 +40,16 @@ const initializeSettings = () => {
                                   ?? JSON.stringify(defaultPrintSettings)
 }
 
-const downloadPDF = (pdfBytes, invoiceNumber) => {
+const printPDF = (pdfBytes) => {
   const blob = new Blob([pdfBytes], { type: 'application/pdf' })
-  const link = document.createElement('a')
-  link.href = window.URL.createObjectURL(blob)
-  link.id = `invoice-${invoiceNumber.toString()}`
-  link.download = `invoice-${invoiceNumber.toString()}.pdf`
-  link.click()
+  const blobUrl = window.URL.createObjectURL(blob)
+  const iframeEle = document.getElementById('hidden-frame')
+  iframeEle.src = blobUrl
+  setTimeout(() => {
+    if (iframeEle) {
+      iframeEle.contentWindow.print()
+    }
+  }, 500)
 }
 
 const getInvoiceDate = (date) => {
@@ -86,9 +89,6 @@ const getInvoiceSettings = () => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
-// TIL:  String.fromCharCode function has limit to arguements, hence this process
-const pdfToBase64 = (pdfBytes) => btoa(new Uint8Array(pdfBytes).reduce((data, byte) => data + String.fromCharCode(byte), ''))
-
 const getPdf = async (invoice, mode = PRINT) => {
   let pdfDoc
   const previewURL = getFromStorage('previewPDFUrl')
@@ -101,15 +101,12 @@ const getPdf = async (invoice, mode = PRINT) => {
     pdfDoc = await PDFDocument.create()
   }
 
-  // Register the `fontkit` instance
   pdfDoc.registerFontkit(fontkit)
   const font = await pdfDoc.embedFont(mangalFont)
+  // const font = await pdfDoc.embedFont(StandardFonts.TimesRoman)
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
-
-  // Get the width and height of the first page
-  // const { width, height } = page.getSize()
 
   getInvoiceSettings().forEach((field) => {
     if (invoice[field.name]) {
@@ -128,9 +125,8 @@ const getPdf = async (invoice, mode = PRINT) => {
   pdfDoc.setTitle('Invoice Preview')
   pdfDoc.setAuthor('2AM Devs')
 
-  // Serialize the PDFDocument to bytes (a Uint8Array)
-  const pdfBytes = await pdfDoc.save()
-  return pdfToBase64(pdfBytes)
+  // Serialize the PDFDocument to base64
+  return mode === PREVIEW ? pdfDoc.saveAsBase64({ dataUri: true }) : pdfDoc.save()
 }
 
 const generateUuid4 = () => {
@@ -146,14 +142,12 @@ const generateUuid4 = () => {
 export {
   getFromStorage,
   initializeSettings,
-  downloadPDF,
+  printPDF,
   getInvoiceDate,
   setProduct,
   deleteProducts,
   getProducts,
   getPdf,
-  pdfToBase64,
   getProductTypes,
   getInvoiceSettings,
-  generateUuid4,
 }

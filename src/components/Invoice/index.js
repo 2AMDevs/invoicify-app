@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react'
 import { DatePicker, DefaultButton } from 'office-ui-fabric-react'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
-import print from 'print-js'
 
 import {
   PREVIEW, PRINT, DATE, MASKED,
 } from '../../utils/constants'
-import { getFromStorage, getPdf, getInvoiceSettings } from '../../utils/helper'
+import {
+  getFromStorage, getPdf, getInvoiceSettings, printPDF,
+} from '../../utils/helper'
 import InvoiceItems from '../InvoiceItems'
+
 
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
@@ -64,12 +66,11 @@ const Invoice = ({ setPreview }) => {
     setInvoice({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
   }
 
-  const printAndMove = () => {
-    fetchPDF().then((res) => {
-      print({ printable: res, type: 'pdf', base64: true, })
-      setInvoiceNumber(invoiceNumber + 1)
-      resetForm()
-    })
+  const printAndMove = async () => {
+    const pdfBytes = await fetchPDF()
+    printPDF(pdfBytes)
+    setInvoiceNumber(invoiceNumber + 1)
+    resetForm()
   }
 
   const previewPDF = async () => {
@@ -124,7 +125,6 @@ const Invoice = ({ setPreview }) => {
                       : invoice[field.name]}
                   />
                 ) : <TextField {...props} />
-
           )
         })}
         <InvoiceItems
@@ -134,6 +134,7 @@ const Invoice = ({ setPreview }) => {
           removeInvoiceItem={removeInvoiceItem}
           updateInvoiceItem={updateInvoiceItem}
         />
+        <br />
         <Stack
           horizontal
           tokens={stackTokens}
@@ -156,6 +157,10 @@ const Invoice = ({ setPreview }) => {
           />
         </Stack>
       </Stack>
+      <iframe
+        title="Hidden"
+        id="hidden-frame"
+      />
     </div>
   )
 }

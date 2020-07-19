@@ -29,10 +29,12 @@ const HomePage = () => {
           ? (
             <iframe
               title="Invoice Preview"
+              id="invoice-preview"
+              name="invoice-preview"
               width="380"
-              height="540"
+              height="550"
               border="0"
-              src={`data:application/pdf;base64,${preview}#toolbar=0&statusbar=0&page=1&view=FitV`}
+              src={preview}
             />
           ) : (
             <div className="preview-area">

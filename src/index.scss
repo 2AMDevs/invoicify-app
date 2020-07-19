@@ -41,6 +41,10 @@ code {
     monospace;
 }
 
+#hidden-frame {
+  display: none
+}
+
 // keyframes animations and classes
 @keyframes slideUp {
   0% {
