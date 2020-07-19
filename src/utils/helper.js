@@ -150,4 +150,5 @@ export {
   getPdf,
   getProductTypes,
   getInvoiceSettings,
+  generateUuid4,
 }
