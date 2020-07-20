@@ -30,29 +30,11 @@ const Invoice = ({ setPreview }) => {
   const [invoice, setInvoice] = useState({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
   const [invoiceItems, setInvoiceItems] = useState([])
 
-  const addInvoiceItem = (invoiceItem) => {
-    setInvoiceItems([...invoiceItems, invoiceItem])
-  }
-
-  const removeInvoiceItem = (id) => {
-    setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
-  }
-
-  const updateInvoiceItem = (index, valueObject) => {
-    setInvoiceItems(invoiceItems.map((item, i) => {
-      if (i === index) {
-        const newItem = { ...item, ...valueObject }
-        return { ...newItem, totalPrice: newItem.price * newItem.quantity }
-      }
-      return item
-    }))
-  }
-
-  const fetchPDF = async (mode = PRINT) => getPdf(invoice, mode)
-
   useEffect(() => {
     localStorage.invoiceNumber = invoiceNumber
   }, [invoiceNumber])
+
+  const fetchPDF = async (mode = PRINT) => getPdf({ meta: invoice, items: invoiceItems }, mode)
 
   const resetForm = () => {
     setInvoice({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
@@ -72,6 +54,25 @@ const Invoice = ({ setPreview }) => {
 
   // Update Preview on blur
   const handleInputBlur = () => previewPDF()
+
+  const addInvoiceItem = (invoiceItem) => {
+    setInvoiceItems([...invoiceItems, invoiceItem])
+    previewPDF()
+  }
+
+  const removeInvoiceItem = (id) => {
+    setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
+  }
+
+  const updateInvoiceItem = (index, valueObject) => {
+    setInvoiceItems(invoiceItems.map((item, i) => {
+      if (i === index) {
+        const newItem = { ...item, ...valueObject }
+        return { ...newItem, totalPrice: newItem.price * newItem.quantity }
+      }
+      return item
+    }))
+  }
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions

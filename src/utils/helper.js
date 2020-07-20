@@ -80,9 +80,14 @@ const deleteProducts = (ids) => {
   localStorage.setItem('products', JSON.stringify(products))
 }
 
-const getProducts = () => {
-  const products = localStorage.getItem('products')
-  return products ? JSON.parse(products) : []
+const getProducts = (id) => {
+  const productsString = localStorage.getItem('products')
+  const products = productsString ? JSON.parse(productsString) : []
+  if (!id) {
+    return products
+  }
+  const [product] = products.filter((p) => p.id === id)
+  return product
 }
 
 const getInvoiceSettings = () => {
@@ -90,7 +95,8 @@ const getInvoiceSettings = () => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
-const getPdf = async (invoice, mode = PRINT) => {
+const getPdf = async (invoiceDetails, mode = PRINT) => {
+  const { meta, items } = invoiceDetails
   let pdfDoc
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
@@ -109,10 +115,10 @@ const getPdf = async (invoice, mode = PRINT) => {
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
   getInvoiceSettings().forEach((field) => {
-    if (invoice[field.name]) {
+    if (meta[field.name]) {
       const value = field.type === DATE
-        ? getInvoiceDate(invoice[field.name])
-        : invoice[field.name].toString()
+        ? getInvoiceDate(meta[field.name])
+        : meta[field.name].toString()
       page.drawText(value, {
         x: parseFloat(field.x, 10),
         y: parseFloat(field.y, 10),
@@ -122,6 +128,52 @@ const getPdf = async (invoice, mode = PRINT) => {
     }
   })
 
+  items.forEach((item, idx) => {
+    page.drawText((idx + 1).toString(), {
+      x: parseFloat(45, 10),
+      y: parseFloat(590 - idx * 15, 10),
+      size: fontSize,
+      font,
+    })
+    const product = getProducts(item.type)
+    page.drawText(`${product?.name} [${product?.type}]`, {
+      x: parseFloat(70, 10),
+      y: parseFloat(590 - idx * 15, 10),
+      size: fontSize,
+      font,
+    })
+    page.drawText(item.quantity.toString(), {
+      x: parseFloat(210, 10),
+      y: parseFloat(590 - idx * 15, 10),
+      size: fontSize,
+      font,
+    })
+    page.drawText(item.weight.toString(), {
+      x: parseFloat(240, 10),
+      y: parseFloat(590 - idx * 15, 10),
+      size: fontSize,
+      font,
+    })
+    page.drawText(item.weight.toString(), {
+      x: parseFloat(290, 10),
+      y: parseFloat(590 - idx * 15, 10),
+      size: fontSize,
+      font,
+    })
+    page.drawText(item.price.toString(), {
+      x: parseFloat(340, 10),
+      y: parseFloat(590 - idx * 15, 10),
+      size: fontSize,
+      font,
+    })
+    page.drawText(item.totalPrice.toString(), {
+      x: parseFloat(490, 10),
+      y: parseFloat(590 - idx * 15, 10),
+      size: fontSize,
+      font,
+    })
+  })
+
   pdfDoc.setTitle('Invoice Preview')
   pdfDoc.setAuthor('2AM Devs')
 
@@ -129,15 +181,13 @@ const getPdf = async (invoice, mode = PRINT) => {
   return mode === PREVIEW ? pdfDoc.saveAsBase64({ dataUri: true }) : pdfDoc.save()
 }
 
-const generateUuid4 = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    // eslint-disable-next-line no-bitwise
-    const r = Math.random() * 16 | 0
-    // eslint-disable-next-line no-mixed-operators, no-bitwise
-    const v = c === 'x' ? r : (r & 0x3 | 0x8)
-    return v.toString(16)
-  })
-}
+const generateUuid4 = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+  // eslint-disable-next-line no-bitwise
+  const r = Math.random() * 16 | 0
+  // eslint-disable-next-line no-mixed-operators, no-bitwise
+  const v = c === 'x' ? r : (r & 0x3 | 0x8)
+  return v.toString(16)
+}))
 
 const groupBy = (array, key) => array.reduce((result, currentValue) => {
   // eslint-disable-next-line no-param-reassign

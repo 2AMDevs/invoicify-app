@@ -9,7 +9,7 @@ import { getProducts, generateUuid4, groupBy } from '../../utils/helper'
 import './index.scss'
 
 const InvoiceItems = ({
-  invoiceItems, addInvoiceItem, removeInvoiceItem, updateInvoiceItem
+  invoiceItems, addInvoiceItem, removeInvoiceItem, updateInvoiceItem,
 }) => {
   const addNewInvoiceItem = () => {
     addInvoiceItem({
@@ -73,7 +73,7 @@ const InvoiceItems = ({
           />
           <TextField
             className="invoice-items__item__field"
-            label="Weight(total)"
+            label="Weight (Total)"
             type="number"
             min="0"
             value={item.weight}
@@ -82,7 +82,7 @@ const InvoiceItems = ({
           />
           <TextField
             className="invoice-items__item__field"
-            label="Price Per item"
+            label="Rate/item"
             type="number"
             value={item.price}
             onChange={(_, value) => onChangeField(index, 'price', value)}
