@@ -13,7 +13,7 @@ const InvoiceItems = ({
 }) => {
   const addNewInvoiceItem = () => {
     addInvoiceItem({
-      id: generateUuid4(), type: null, quantity: 0, weight: 0, price: 0, totalPrice: 0,
+      id: generateUuid4(), product: null, quantity: 0, weight: 0, price: 0, mkg: 0, totalPrice: 0,
     })
   }
 
@@ -56,9 +56,9 @@ const InvoiceItems = ({
             className="invoice-items__item__field"
             placeholder="Select a type"
             label="Item name"
-            options={generateProductOptions(item.type)}
-            selectedKey={item.type}
-            onChange={(_, option) => onChangeField(index, 'type', option.id)}
+            options={generateProductOptions(item.product)}
+            selectedKey={item.product}
+            onChange={(_, option) => onChangeField(index, 'product', option.id)}
             required
             style={{ maxWidth: 300 }}
           />
@@ -66,7 +66,7 @@ const InvoiceItems = ({
             className="invoice-items__item__field"
             type="number"
             min="0"
-            label="Quantity"
+            label="Qty"
             value={item.quantity}
             onChange={(_, value) => onChangeField(index, 'quantity', value)}
             required
@@ -78,17 +78,26 @@ const InvoiceItems = ({
             min="0"
             value={item.weight}
             onChange={(_, value) => onChangeField(index, 'weight', value)}
-            suffix="gram"
+            suffix="gms"
           />
           <TextField
             className="invoice-items__item__field"
-            label="Rate/item"
+            label="Rate"
             type="number"
             value={item.price}
             onChange={(_, value) => onChangeField(index, 'price', value)}
             min="0"
             prefix="₹"
             required
+          />
+          <TextField
+            className="invoice-items__item__field"
+            label="MKG (%)"
+            type="number"
+            value={item.mkg}
+            onChange={(_, value) => onChangeField(index, 'mkg', value)}
+            min="0"
+            suffix="%"
           />
           <TextField
             className="invoice-items__item__field"

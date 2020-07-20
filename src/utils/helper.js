@@ -100,7 +100,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   let pdfDoc
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
-  const mangalFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
+  const ourFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
     const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
     pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -109,7 +109,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   }
 
   pdfDoc.registerFontkit(fontkit)
-  const font = await pdfDoc.embedFont(mangalFont)
+  const font = await pdfDoc.embedFont(ourFont)
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
@@ -120,8 +120,8 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
         ? getInvoiceDate(meta[field.name])
         : meta[field.name].toString()
       page.drawText(value, {
-        x: parseFloat(field.x, 10),
-        y: parseFloat(field.y, 10),
+        x: parseFloat(field.x),
+        y: parseFloat(field.y),
         size: fontSize,
         font,
       })
@@ -129,48 +129,51 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   })
 
   items.forEach((item, idx) => {
+    const diff = idx * 15
+    const commonStuff = {
+      y: parseFloat(590 - diff),
+      size: fontSize,
+      font,
+    }
     page.drawText((idx + 1).toString(), {
-      x: parseFloat(45, 10),
-      y: parseFloat(590 - idx * 15, 10),
-      size: fontSize,
-      font,
+      x: parseFloat(45),
+      ...commonStuff,
     })
-    const product = getProducts(item.type)
+    const product = getProducts(item.product)
     page.drawText(`${product?.name} [${product?.type}]`, {
-      x: parseFloat(70, 10),
-      y: parseFloat(590 - idx * 15, 10),
-      size: fontSize,
-      font,
+      x: parseFloat(70),
+      ...commonStuff,
     })
-    page.drawText(item.quantity.toString(), {
-      x: parseFloat(210, 10),
-      y: parseFloat(590 - idx * 15, 10),
-      size: fontSize,
-      font,
+    const qtyText = item.quantity.toString()
+    page.drawText(qtyText, {
+      x: parseFloat(232 - font.widthOfTextAtSize(qtyText, fontSize)),
+      ...commonStuff,
     })
-    page.drawText(item.weight.toString(), {
-      x: parseFloat(240, 10),
-      y: parseFloat(590 - idx * 15, 10),
-      size: fontSize,
-      font,
+    page.drawText(`${item.weight}gms`, {
+      x: parseFloat(283 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
+      ...commonStuff,
     })
-    page.drawText(item.weight.toString(), {
-      x: parseFloat(290, 10),
-      y: parseFloat(590 - idx * 15, 10),
-      size: fontSize,
-      font,
+    page.drawText(`${item.weight}gms`, {
+      x: parseFloat(333 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
+      ...commonStuff,
     })
-    page.drawText(item.price.toString(), {
-      x: parseFloat(340, 10),
-      y: parseFloat(590 - idx * 15, 10),
-      size: fontSize,
-      font,
+
+    const priceText = `${item.price}/-`
+    page.drawText(priceText, {
+      x: parseFloat(380 - font.widthOfTextAtSize(priceText, fontSize)),
+      ...commonStuff,
     })
-    page.drawText(item.totalPrice.toString(), {
-      x: parseFloat(490, 10),
-      y: parseFloat(590 - idx * 15, 10),
-      size: fontSize,
-      font,
+
+    const mkgText = `${item.mkg}%`
+    page.drawText(mkgText, {
+      x: parseFloat(428 - font.widthOfTextAtSize(mkgText, fontSize)),
+      ...commonStuff,
+    })
+
+    const totalPriceText = `${item.totalPrice.toFixed(2)}/-`
+    page.drawText(totalPriceText, {
+      x: parseFloat(560 - font.widthOfTextAtSize(totalPriceText, fontSize)),
+      ...commonStuff,
     })
   })
 

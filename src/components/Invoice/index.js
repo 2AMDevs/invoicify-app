@@ -38,6 +38,7 @@ const Invoice = ({ setPreview }) => {
 
   const resetForm = () => {
     setInvoice({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
+    setInvoiceItems([])
   }
 
   const printAndMove = async () => {
@@ -68,7 +69,10 @@ const Invoice = ({ setPreview }) => {
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
         const newItem = { ...item, ...valueObject }
-        return { ...newItem, totalPrice: newItem.price * newItem.quantity }
+        return {
+          ...newItem,
+          totalPrice: newItem.price * newItem.quantity * (1 + 0.01 * newItem.mkg)
+        }
       }
       return item
     }))
