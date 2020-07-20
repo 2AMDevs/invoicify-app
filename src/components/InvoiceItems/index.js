@@ -45,7 +45,7 @@ const InvoiceItems = ({
   }
   return (
     <div className="invoice-items animation-slide-up">
-      <div className="invoice-items__header">{`${invoiceItems.length} Item(s)`}</div>
+      <div className="invoice-items__header">{`${invoiceItems.length} Item${invoiceItems.length > 1 ? 's' : ''}`}</div>
       {invoiceItems.map((item, index) => (
         <div
           className="invoice-items__item animation-slide-up"
@@ -101,6 +101,15 @@ const InvoiceItems = ({
           />
           <TextField
             className="invoice-items__item__field"
+            label="Other Charges"
+            type="number"
+            value={item.other}
+            onChange={(_, value) => onChangeField(index, 'other', value)}
+            min="0"
+            prefix="₹"
+          />
+          <TextField
+            className="invoice-items__item__field"
             label="Total Price"
             type="number"
             value={item.totalPrice}
@@ -109,6 +118,7 @@ const InvoiceItems = ({
             prefix="₹"
           />
           <IconButton
+            className="invoice-items__item__icon"
             iconProps={{ iconName: 'Delete' }}
             onClick={() => removeInvoiceItem(item.id)}
           />

@@ -1,14 +1,13 @@
 .invoice-items {
   &__header {
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: var(--color-white-op-80);
   }
 
   &__item {
     display: flex;
-    color: var(--color-white);
-    background-color: var(--color-black-op-20);
-    padding: 0.5rem 1rem 1rem;
+    // color: var(--color-white);
+    padding: 0.5rem 0.5rem 0.5rem;
     border-radius: 1rem;
     justify-content: space-between;
     align-items: center;
@@ -16,6 +15,11 @@
 
     &__field {
       width: 12rem;
+    }
+
+    &__icon {
+      width: 2.5rem;
+      margin-top: 2.5rem;
     }
 
     &--add-btn {

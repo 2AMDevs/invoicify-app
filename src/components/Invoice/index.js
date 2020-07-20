@@ -71,7 +71,8 @@ const Invoice = ({ setPreview }) => {
         const newItem = { ...item, ...valueObject }
         return {
           ...newItem,
-          totalPrice: newItem.price * newItem.quantity * (1 + 0.01 * newItem.mkg)
+          totalPrice:
+            newItem.price * newItem.quantity * (1 + 0.01 * newItem.mkg) + newItem.other * 1,
         }
       }
       return item

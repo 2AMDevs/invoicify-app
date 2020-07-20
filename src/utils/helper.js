@@ -170,6 +170,11 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       ...commonStuff,
     })
 
+    page.drawText(`${item.other}/-`, {
+      x: parseFloat(478 - font.widthOfTextAtSize(`${item.other}/-`, fontSize)),
+      ...commonStuff,
+    })
+
     const totalPriceText = `${item.totalPrice.toFixed(2)}/-`
     page.drawText(totalPriceText, {
       x: parseFloat(560 - font.widthOfTextAtSize(totalPriceText, fontSize)),
