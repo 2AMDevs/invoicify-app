@@ -71,7 +71,7 @@ const defaultPrintSettings = [
   {
     name: 'Invoice Number',
     x: 90,
-    y: 447.52 + 248,
+    y: 695.52,
     required: true,
     disabled: true,
     type: TEXT,
@@ -79,7 +79,7 @@ const defaultPrintSettings = [
   {
     name: 'Invoice Date',
     x: 485.42,
-    y: 447.52 + 250,
+    y: 679.52,
     required: true,
     disabled: false,
     type: DATE,
@@ -87,7 +87,7 @@ const defaultPrintSettings = [
   {
     name: 'Customer Name',
     x: 60,
-    y: 447.52 + 225,
+    y: 672.52,
     required: true,
     disabled: false,
     type: TEXT,
@@ -95,7 +95,7 @@ const defaultPrintSettings = [
   {
     name: 'GSTIN',
     x: 100,
-    y: 447.52 + 198,
+    y: 645.52,
     required: true,
     disabled: false,
     type: MASKED,
@@ -104,7 +104,7 @@ const defaultPrintSettings = [
   {
     name: 'Mobile',
     x: 465.42,
-    y: 447.52 + 198,
+    y: 645.52,
     required: true,
     disabled: false,
     type: MASKED,
@@ -114,7 +114,7 @@ const defaultPrintSettings = [
   {
     name: 'Address',
     x: 325,
-    y: 447.52 + 198,
+    y: 645.52,
     required: true,
     disabled: false,
     type: TEXT,

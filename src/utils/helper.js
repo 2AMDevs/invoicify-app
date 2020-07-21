@@ -80,9 +80,14 @@ const deleteProducts = (ids) => {
   localStorage.setItem('products', JSON.stringify(products))
 }
 
-const getProducts = () => {
-  const products = localStorage.getItem('products')
-  return products ? JSON.parse(products) : []
+const getProducts = (id) => {
+  const productsString = localStorage.getItem('products')
+  const products = productsString ? JSON.parse(productsString) : []
+  if (!id) {
+    return products
+  }
+  const [product] = products.filter((p) => p.id === id)
+  return product
 }
 
 const getInvoiceSettings = () => {
@@ -90,11 +95,12 @@ const getInvoiceSettings = () => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
-const getPdf = async (invoice, mode = PRINT) => {
+const getPdf = async (invoiceDetails, mode = PRINT) => {
+  const { meta, items } = invoiceDetails
   let pdfDoc
   const previewURL = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewURL
-  const mangalFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
+  const ourFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
     const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
     pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -103,23 +109,77 @@ const getPdf = async (invoice, mode = PRINT) => {
   }
 
   pdfDoc.registerFontkit(fontkit)
-  const font = await pdfDoc.embedFont(mangalFont)
+  const font = await pdfDoc.embedFont(ourFont)
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
   getInvoiceSettings().forEach((field) => {
-    if (invoice[field.name]) {
+    if (meta[field.name]) {
       const value = field.type === DATE
-        ? getInvoiceDate(invoice[field.name])
-        : invoice[field.name].toString()
+        ? getInvoiceDate(meta[field.name])
+        : meta[field.name].toString()
       page.drawText(value, {
-        x: parseFloat(field.x, 10),
-        y: parseFloat(field.y, 10),
+        x: parseFloat(field.x),
+        y: parseFloat(field.y),
         size: fontSize,
         font,
       })
     }
+  })
+
+  items.forEach((item, idx) => {
+    const diff = idx * 15
+    const commonStuff = {
+      y: parseFloat(590 - diff),
+      size: fontSize,
+      font,
+    }
+    page.drawText((idx + 1).toString(), {
+      x: parseFloat(45),
+      ...commonStuff,
+    })
+    const product = getProducts(item.product)
+    page.drawText(`${product?.name} [${product?.type}]`, {
+      x: parseFloat(70),
+      ...commonStuff,
+    })
+    const qtyText = item.quantity.toString()
+    page.drawText(qtyText, {
+      x: parseFloat(232 - font.widthOfTextAtSize(qtyText, fontSize)),
+      ...commonStuff,
+    })
+    page.drawText(`${item.weight}gms`, {
+      x: parseFloat(283 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
+      ...commonStuff,
+    })
+    page.drawText(`${item.weight}gms`, {
+      x: parseFloat(333 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
+      ...commonStuff,
+    })
+
+    const priceText = `${item.price}/-`
+    page.drawText(priceText, {
+      x: parseFloat(380 - font.widthOfTextAtSize(priceText, fontSize)),
+      ...commonStuff,
+    })
+
+    const mkgText = `${item.mkg}%`
+    page.drawText(mkgText, {
+      x: parseFloat(428 - font.widthOfTextAtSize(mkgText, fontSize)),
+      ...commonStuff,
+    })
+
+    page.drawText(`${item.other}/-`, {
+      x: parseFloat(478 - font.widthOfTextAtSize(`${item.other}/-`, fontSize)),
+      ...commonStuff,
+    })
+
+    const totalPriceText = `${item.totalPrice.toFixed(2)}/-`
+    page.drawText(totalPriceText, {
+      x: parseFloat(560 - font.widthOfTextAtSize(totalPriceText, fontSize)),
+      ...commonStuff,
+    })
   })
 
   pdfDoc.setTitle('Invoice Preview')
@@ -129,15 +189,13 @@ const getPdf = async (invoice, mode = PRINT) => {
   return mode === PREVIEW ? pdfDoc.saveAsBase64({ dataUri: true }) : pdfDoc.save()
 }
 
-const generateUuid4 = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    // eslint-disable-next-line no-bitwise
-    const r = Math.random() * 16 | 0
-    // eslint-disable-next-line no-mixed-operators, no-bitwise
-    const v = c === 'x' ? r : (r & 0x3 | 0x8)
-    return v.toString(16)
-  })
-}
+const generateUuid4 = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+  // eslint-disable-next-line no-bitwise
+  const r = Math.random() * 16 | 0
+  // eslint-disable-next-line no-mixed-operators, no-bitwise
+  const v = c === 'x' ? r : (r & 0x3 | 0x8)
+  return v.toString(16)
+}))
 
 const groupBy = (array, key) => array.reduce((result, currentValue) => {
   // eslint-disable-next-line no-param-reassign

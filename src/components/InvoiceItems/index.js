@@ -9,11 +9,11 @@ import { getProducts, generateUuid4, groupBy } from '../../utils/helper'
 import './index.scss'
 
 const InvoiceItems = ({
-  invoiceItems, addInvoiceItem, removeInvoiceItem, updateInvoiceItem
+  invoiceItems, addInvoiceItem, removeInvoiceItem, updateInvoiceItem,
 }) => {
   const addNewInvoiceItem = () => {
     addInvoiceItem({
-      id: generateUuid4(), type: null, quantity: 0, weight: 0, price: 0, totalPrice: 0,
+      id: generateUuid4(), product: null, quantity: 0, weight: 0, price: 0, mkg: 0, totalPrice: 0,
     })
   }
 
@@ -45,7 +45,7 @@ const InvoiceItems = ({
   }
   return (
     <div className="invoice-items animation-slide-up">
-      <div className="invoice-items__header">{`${invoiceItems.length} Item(s)`}</div>
+      <div className="invoice-items__header">{`${invoiceItems.length} Item${invoiceItems.length > 1 ? 's' : ''}`}</div>
       {invoiceItems.map((item, index) => (
         <div
           className="invoice-items__item animation-slide-up"
@@ -56,9 +56,9 @@ const InvoiceItems = ({
             className="invoice-items__item__field"
             placeholder="Select a type"
             label="Item name"
-            options={generateProductOptions(item.type)}
-            selectedKey={item.type}
-            onChange={(_, option) => onChangeField(index, 'type', option.id)}
+            options={generateProductOptions(item.product)}
+            selectedKey={item.product}
+            onChange={(_, option) => onChangeField(index, 'product', option.id)}
             required
             style={{ maxWidth: 300 }}
           />
@@ -66,29 +66,47 @@ const InvoiceItems = ({
             className="invoice-items__item__field"
             type="number"
             min="0"
-            label="Quantity"
+            label="Qty"
             value={item.quantity}
             onChange={(_, value) => onChangeField(index, 'quantity', value)}
             required
           />
           <TextField
             className="invoice-items__item__field"
-            label="Weight(total)"
+            label="Weight (Total)"
             type="number"
             min="0"
             value={item.weight}
             onChange={(_, value) => onChangeField(index, 'weight', value)}
-            suffix="gram"
+            suffix="gms"
           />
           <TextField
             className="invoice-items__item__field"
-            label="Price Per item"
+            label="Rate"
             type="number"
             value={item.price}
             onChange={(_, value) => onChangeField(index, 'price', value)}
             min="0"
             prefix="₹"
             required
+          />
+          <TextField
+            className="invoice-items__item__field"
+            label="MKG (%)"
+            type="number"
+            value={item.mkg}
+            onChange={(_, value) => onChangeField(index, 'mkg', value)}
+            min="0"
+            suffix="%"
+          />
+          <TextField
+            className="invoice-items__item__field"
+            label="Other Charges"
+            type="number"
+            value={item.other}
+            onChange={(_, value) => onChangeField(index, 'other', value)}
+            min="0"
+            prefix="₹"
           />
           <TextField
             className="invoice-items__item__field"
@@ -100,6 +118,7 @@ const InvoiceItems = ({
             prefix="₹"
           />
           <IconButton
+            className="invoice-items__item__icon"
             iconProps={{ iconName: 'Delete' }}
             onClick={() => removeInvoiceItem(item.id)}
           />
