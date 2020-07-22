@@ -164,24 +164,24 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
         ...commonStuff,
       })
 
-      const priceText = `${item.price}/-`
+      const priceText = `${currency(item.price)}/-`
       page.drawText(priceText, {
         x: parseFloat(380 - font.widthOfTextAtSize(priceText, fontSize)),
         ...commonStuff,
       })
 
-      const mkgText = `${item.mkg}%`
+      const mkgText = `${currency(item.mkg)}%`
       page.drawText(mkgText, {
         x: parseFloat(428 - font.widthOfTextAtSize(mkgText, fontSize)),
         ...commonStuff,
       })
 
-      page.drawText(`${item.other}/-`, {
-        x: parseFloat(478 - font.widthOfTextAtSize(`${item.other}/-`, fontSize)),
+      page.drawText(`${currency(item.other)}/-`, {
+        x: parseFloat(478 - font.widthOfTextAtSize(`${currency(item.other)}/-`, fontSize)),
         ...commonStuff,
       })
 
-      const totalPriceText = `${item.totalPrice.toFixed(2)}/-`
+      const totalPriceText = `${currency(item.totalPrice).toFixed(2)}/-`
       page.drawText(totalPriceText, {
         x: parseFloat(560 - font.widthOfTextAtSize(totalPriceText, fontSize)),
         ...commonStuff,

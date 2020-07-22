@@ -53,12 +53,8 @@ const Invoice = ({ setPreview }) => {
     setPreview(pdfBytes)
   }
 
-  // Update Preview on blur
-  const handleInputBlur = () => previewPDF()
-
   const addInvoiceItem = (invoiceItem) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
-    previewPDF()
   }
 
   const removeInvoiceItem = (id) => {
@@ -96,7 +92,7 @@ const Invoice = ({ setPreview }) => {
             onChange: (_, val) => {
               setInvoice({ ...invoice, [field.name]: val })
             },
-            onBlur: handleInputBlur,
+            onBlur: previewPDF,
             required: field.required,
             disabled: field.disabled,
           }
@@ -143,6 +139,12 @@ const Invoice = ({ setPreview }) => {
             iconProps={{ iconName: 'print' }}
             primary
             onClick={printAndMove}
+          />
+          <DefaultButton
+            text="Preview"
+            iconProps={{ iconName: 'SaveTemplate' }}
+            primary
+            onClick={previewPDF}
           />
           <DefaultButton
             text="Skip"
