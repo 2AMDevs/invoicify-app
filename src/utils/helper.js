@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import fontkit from '@pdf-lib/fontkit'
 import { PDFDocument } from 'pdf-lib'
 
@@ -9,7 +10,6 @@ const getFromStorage = (key, type) => {
   const value = localStorage[key]
   if (type === 'num') {
     const intVal = parseInt(value, 10)
-    // eslint-disable-next-line no-restricted-globals
     return isNaN(intVal) ? 1 : intVal
   }
   if (type === 'json') {
@@ -29,6 +29,11 @@ const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((ty
   key: type.trim(),
   text: type.trim(),
 })) || []
+
+const currency = (val) => {
+  const parsedCurrency = parseFloat(val)
+  return isNaN(parsedCurrency) ? 0 : parsedCurrency
+}
 
 const initializeSettings = () => {
   localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
@@ -135,51 +140,53 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       size: fontSize,
       font,
     }
-    page.drawText((idx + 1).toString(), {
-      x: parseFloat(45),
-      ...commonStuff,
-    })
     const product = getProducts(item.product)
-    page.drawText(`${product?.name} [${product?.type}]`, {
-      x: parseFloat(70),
-      ...commonStuff,
-    })
-    const qtyText = item.quantity.toString()
-    page.drawText(qtyText, {
-      x: parseFloat(232 - font.widthOfTextAtSize(qtyText, fontSize)),
-      ...commonStuff,
-    })
-    page.drawText(`${item.weight}gms`, {
-      x: parseFloat(283 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
-      ...commonStuff,
-    })
-    page.drawText(`${item.weight}gms`, {
-      x: parseFloat(333 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
-      ...commonStuff,
-    })
+    if (product?.name) {
+      page.drawText((idx + 1).toString(), {
+        x: parseFloat(45),
+        ...commonStuff,
+      })
+      page.drawText(`${product?.name} [${product?.type}]`, {
+        x: parseFloat(70),
+        ...commonStuff,
+      })
+      const qtyText = item.quantity.toString()
+      page.drawText(qtyText, {
+        x: parseFloat(232 - font.widthOfTextAtSize(qtyText, fontSize)),
+        ...commonStuff,
+      })
+      page.drawText(`${item.weight}gms`, {
+        x: parseFloat(283 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
+        ...commonStuff,
+      })
+      page.drawText(`${item.weight}gms`, {
+        x: parseFloat(333 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
+        ...commonStuff,
+      })
 
-    const priceText = `${item.price}/-`
-    page.drawText(priceText, {
-      x: parseFloat(380 - font.widthOfTextAtSize(priceText, fontSize)),
-      ...commonStuff,
-    })
+      const priceText = `${item.price}/-`
+      page.drawText(priceText, {
+        x: parseFloat(380 - font.widthOfTextAtSize(priceText, fontSize)),
+        ...commonStuff,
+      })
 
-    const mkgText = `${item.mkg}%`
-    page.drawText(mkgText, {
-      x: parseFloat(428 - font.widthOfTextAtSize(mkgText, fontSize)),
-      ...commonStuff,
-    })
+      const mkgText = `${item.mkg}%`
+      page.drawText(mkgText, {
+        x: parseFloat(428 - font.widthOfTextAtSize(mkgText, fontSize)),
+        ...commonStuff,
+      })
 
-    page.drawText(`${item.other}/-`, {
-      x: parseFloat(478 - font.widthOfTextAtSize(`${item.other}/-`, fontSize)),
-      ...commonStuff,
-    })
+      page.drawText(`${item.other}/-`, {
+        x: parseFloat(478 - font.widthOfTextAtSize(`${item.other}/-`, fontSize)),
+        ...commonStuff,
+      })
 
-    const totalPriceText = `${item.totalPrice.toFixed(2)}/-`
-    page.drawText(totalPriceText, {
-      x: parseFloat(560 - font.widthOfTextAtSize(totalPriceText, fontSize)),
-      ...commonStuff,
-    })
+      const totalPriceText = `${item.totalPrice.toFixed(2)}/-`
+      page.drawText(totalPriceText, {
+        x: parseFloat(560 - font.widthOfTextAtSize(totalPriceText, fontSize)),
+        ...commonStuff,
+      })
+    }
   })
 
   pdfDoc.setTitle('Invoice Preview')
@@ -216,4 +223,5 @@ export {
   getInvoiceSettings,
   generateUuid4,
   groupBy,
+  currency,
 }

@@ -8,7 +8,7 @@ import {
   PREVIEW, PRINT, DATE, MASKED,
 } from '../../utils/constants'
 import {
-  getFromStorage, getPdf, getInvoiceSettings, printPDF,
+  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency,
 } from '../../utils/helper'
 import InvoiceItems from '../InvoiceItems'
 
@@ -72,7 +72,8 @@ const Invoice = ({ setPreview }) => {
         return {
           ...newItem,
           totalPrice:
-            newItem.price * newItem.quantity * (1 + 0.01 * newItem.mkg) + newItem.other * 1,
+            currency(newItem.price) * newItem.quantity * (1 + 0.01 * currency(newItem.mkg))
+            + currency(newItem.other),
         }
       }
       return item

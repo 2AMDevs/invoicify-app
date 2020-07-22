@@ -13,7 +13,14 @@ const InvoiceItems = ({
 }) => {
   const addNewInvoiceItem = () => {
     addInvoiceItem({
-      id: generateUuid4(), product: null, quantity: 0, weight: 0, price: 0, mkg: 0, totalPrice: 0,
+      id: generateUuid4(),
+      product: null,
+      quantity: 0,
+      weight: 0,
+      price: 0,
+      mkg: 0,
+      other: 0,
+      totalPrice: 0,
     })
   }
 
@@ -101,7 +108,7 @@ const InvoiceItems = ({
           />
           <TextField
             className="invoice-items__item__field"
-            label="Other Charges"
+            label="Other"
             type="number"
             value={item.other}
             onChange={(_, value) => onChangeField(index, 'other', value)}
@@ -110,10 +117,11 @@ const InvoiceItems = ({
           />
           <TextField
             className="invoice-items__item__field"
-            label="Total Price"
+            label="Total"
             type="number"
             value={item.totalPrice}
             disabled
+            readOnly
             min="0"
             prefix="₹"
           />
