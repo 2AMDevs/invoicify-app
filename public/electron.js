@@ -1,9 +1,11 @@
 const path = require('path')
 
 const {
-  app, BrowserWindow, Menu, screen,
+  app, BrowserWindow, Menu, screen, ipcMain,
 } = require('electron')
 const isDev = require('electron-is-dev')
+
+const { print } = require('./printPdf')
 
 const createWindow = () => {
   Menu.setApplicationMenu(null)
@@ -53,3 +55,6 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('printThis', (_, data) => {
+  print(data)
+})

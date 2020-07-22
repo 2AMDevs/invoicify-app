@@ -41,15 +41,18 @@ const initializeSettings = () => {
 }
 
 const printPDF = (pdfBytes) => {
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' })
-  const blobUrl = window.URL.createObjectURL(blob)
-  const iframeEle = document.getElementById('hidden-frame')
-  iframeEle.src = blobUrl
-  setTimeout(() => {
-    if (iframeEle) {
-      iframeEle.contentWindow.print()
-    }
-  }, 500)
+  // const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+  // const blobUrl = window.URL.createObjectURL(blob)
+  // const iframeEle = document.getElementById('hidden-frame')
+  // iframeEle.src = blobUrl
+  // setTimeout(() => {
+  //   if (iframeEle) {
+  //     iframeEle.contentWindow.print()
+  //   }
+  // }, 500)
+  // eslint-disable-next-line global-require
+  const { ipcRenderer } = require('electron')
+  ipcRenderer.send('printThis', pdfBytes)
 }
 
 const getInvoiceDate = (date) => {

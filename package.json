@@ -17,6 +17,7 @@
   },
   "homepage": "./",
   "dependencies": {
+    "@craco/craco": "^5.6.4",
     "@pdf-lib/fontkit": "^1.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -34,10 +35,10 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "react-start": "react-scripts start",
-    "react-build": "react-scripts build",
-    "react-test": "react-scripts test",
-    "react-eject": "react-scripts eject",
+    "react-start": "craco start",
+    "react-build": "craco build",
+    "react-test": "craco test",
+    "react-eject": "craco eject",
     "electron-build": "electron-builder",
     "build": "npm run react-build && npm run electron-build",
     "lint": "node_modules/eslint/bin/eslint.js src/**/*.js --fix",
