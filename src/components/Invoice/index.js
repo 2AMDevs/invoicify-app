@@ -27,8 +27,13 @@ const Invoice = ({ setPreview }) => {
   const invoiceSettings = getInvoiceSettings()
 
   const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
-  const [invoice, setInvoice] = useState({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
+
+  const defaultInvoice = { 'Invoice Number': invoiceNumber, 'Invoice Date': new Date(), grossTotal: parseFloat(0) }
+
+  const [invoice, setInvoice] = useState(defaultInvoice)
   const [invoiceItems, setInvoiceItems] = useState([])
+
+  console.log(invoice)
 
   useEffect(() => {
     localStorage.invoiceNumber = invoiceNumber
@@ -37,7 +42,7 @@ const Invoice = ({ setPreview }) => {
   const fetchPDF = async (mode = PRINT) => getPdf({ meta: invoice, items: invoiceItems }, mode)
 
   const resetForm = () => {
-    setInvoice({ 'Invoice Number': invoiceNumber, 'Invoice Date': new Date() })
+    setInvoice(defaultInvoice)
     setInvoiceItems([])
   }
 
@@ -62,18 +67,26 @@ const Invoice = ({ setPreview }) => {
   }
 
   const updateInvoiceItem = (index, valueObject) => {
+    let grossTotal = 0
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
         const newItem = { ...item, ...valueObject }
+        const totalPrice = (currency(newItem.price) * newItem.quantity
+        * (1 + 0.01 * currency(newItem.mkg)) + currency(newItem.other))
+        grossTotal += totalPrice
         return {
           ...newItem,
-          totalPrice:
-            currency(newItem.price) * newItem.quantity * (1 + 0.01 * currency(newItem.mkg))
-            + currency(newItem.other),
+          totalPrice,
         }
       }
+      grossTotal += currency(item.totalPrice)
       return item
     }))
+
+    setInvoice({
+      ...invoice,
+      grossTotal,
+    })
   }
 
   return (
@@ -128,6 +141,17 @@ const Invoice = ({ setPreview }) => {
           addInvoiceItem={addInvoiceItem}
           removeInvoiceItem={removeInvoiceItem}
           updateInvoiceItem={updateInvoiceItem}
+        />
+        <br />
+        <TextField
+          className="invoice-items__item__field"
+          label="Gross Total"
+          type="number"
+          value={invoice.grossTotal}
+          disabled
+          readOnly
+          min="0"
+          prefix="₹"
         />
         <br />
         <Stack

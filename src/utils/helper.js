@@ -119,6 +119,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
+  // Print Invoice Header
   getInvoiceSettings().forEach((field) => {
     if (meta[field.name]) {
       const value = field.type === DATE
@@ -133,6 +134,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     }
   })
 
+  // Print Items
   items.forEach((item, idx) => {
     const diff = idx * 15
     const commonStuff = {
@@ -187,6 +189,15 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
         ...commonStuff,
       })
     }
+  })
+
+  // Print Footer
+  const grossTotal = `${meta.grossTotal.toFixed(2)}/-`
+  page.drawText(grossTotal, {
+    x: parseFloat(560 - font.widthOfTextAtSize(grossTotal, fontSize)),
+    y: 210,
+    size: fontSize,
+    font,
   })
 
   pdfDoc.setTitle('Invoice Preview')
