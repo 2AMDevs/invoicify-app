@@ -27,13 +27,7 @@ const HomePage = () => {
         />
         {preview?.length
           ? (
-            <iframe
-              title="Invoice Preview"
-              id="invoice-preview"
-              name="invoice-preview"
-              width="380"
-              height="550"
-              border="0"
+            <webview
               src={preview}
             />
           ) : (

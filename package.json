@@ -7,6 +7,9 @@
   "main": "./public/electron.js",
   "build": {
     "appId": "invoicify.2am",
+    "extraResources": [
+      "./public/**"
+    ],
     "win": {
       "icon": "./public/icon.png"
     },
