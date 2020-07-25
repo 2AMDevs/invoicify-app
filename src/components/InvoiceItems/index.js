@@ -57,7 +57,7 @@ const InvoiceItems = ({
   const openComboboxDropdown = React.useCallback(() => itemsComboBoxRef.current?.focus(true), [])
 
   const filterComboBoxOptions = (product) => (generateProductOptions(product) || [])
-    .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLocaleLowerCase()))
+    .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase()))
 
   return (
     <div className="invoice-items animation-slide-up">
