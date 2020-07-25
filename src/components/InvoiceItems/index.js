@@ -29,6 +29,7 @@ const InvoiceItems = ({
 
   const onChangeField = (itemIndex, stateKey, value) => {
     updateInvoiceItem(itemIndex, { [stateKey]: value })
+    setItemsFilterValue('')
   }
 
   const generateProductOptions = (id) => {
