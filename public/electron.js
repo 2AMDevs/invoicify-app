@@ -7,6 +7,10 @@ const isDev = require('electron-is-dev')
 
 const { print } = require('./printPdf')
 
+require('electron-reload')(__dirname, {
+  electron: path.join(process.cwd(), 'node_modules', '.bin', 'electron.cmd'),
+})
+
 const createWindow = () => {
   Menu.setApplicationMenu(null)
   const { width, height } = screen.getPrimaryDisplay().workAreaSize

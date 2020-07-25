@@ -1,22 +1,17 @@
+/* eslint-disable no-console */
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
 
-const PDFWindow = require('electron-pdf-window')
+const ptp = require('pdf-to-printer')
 
 const print = (pdfBytes) => {
-  fs.writeFile(path.join(os.tmpdir(), 'print.pdf'), pdfBytes, () => {})
-  const win = new PDFWindow({ show: true, plugins: true })
-
-  const pdfPath = encodeURIComponent(`file://${os.tmpdir()}/print.pdf`)
-  win.loadURL(pdfPath)
-
-  win.webContents.once('dom-ready', () => {
-    setTimeout(() => {
-      const code = 'document.getElementById(\'print\').dispatchEvent(new Event(\'click\'));'
-      win.webContents.executeJavaScript(code)
-    }, 3000)
-  })
+  const filePath = path.join(os.tmpdir(), 'print.pdf')
+  fs.writeFile(filePath, pdfBytes, () => {})
+  ptp
+    .print(filePath, { win32: ['-print-settings "2x"'] })
+    .then(console.log)
+    .catch(console.error)
 }
 
 module.exports = {
