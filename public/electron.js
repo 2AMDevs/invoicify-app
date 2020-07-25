@@ -5,6 +5,8 @@ const {
 } = require('electron')
 const isDev = require('electron-is-dev')
 
+const { print } = require('./printPdf')
+
 const createWindow = () => {
   Menu.setApplicationMenu(null)
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -55,3 +57,6 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('print-it', (event, pdfBytes) => {
+  print(pdfBytes)
+})

@@ -155,10 +155,6 @@ const Invoice = ({ setPreview }) => {
           />
         </Stack>
       </Stack>
-      <iframe
-        title="Hidden"
-        id="hidden-frame"
-      />
     </div>
   )
 }

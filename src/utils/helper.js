@@ -41,14 +41,9 @@ const initializeSettings = () => {
 }
 
 const printPDF = (pdfBytes) => {
-  const iframeEle = document.getElementById('hidden-frame')
-  iframeEle.src = pdfBytes
-  iframeEle.contentWindow.focus()
-  setTimeout(() => {
-    if (iframeEle) {
-      iframeEle.contentWindow.print()
-    }
-  }, 500)
+  // eslint-disable-next-line global-require
+  const { ipcRenderer } = require('electron')
+  ipcRenderer.send('print-it', pdfBytes)
 }
 
 const getInvoiceDate = (date) => {
@@ -185,7 +180,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   pdfDoc.setAuthor('2AM Devs')
 
   // Serialize the PDFDocument to base64
-  return pdfDoc.saveAsBase64({ dataUri: true })
+  return pdfDoc.save()
 }
 
 const generateUuid4 = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
