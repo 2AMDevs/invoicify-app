@@ -7,9 +7,12 @@ const isDev = require('electron-is-dev')
 
 const { print } = require('./printPdf')
 
-require('electron-reload')(__dirname, {
-  electron: path.join(process.cwd(), 'node_modules', '.bin', 'electron.cmd'),
-})
+if (isDev) {
+  // eslint-disable-next-line global-require
+  require('electron-reload')(__dirname, {
+    electron: path.join(process.cwd(), 'node_modules', '.bin', 'electron.cmd'),
+  })
+}
 
 const createWindow = () => {
   Menu.setApplicationMenu(null)
