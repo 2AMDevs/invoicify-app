@@ -1,12 +1,15 @@
 {
   "name": "invoicify",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "2AM Devs",
   "description": "Digitalizes your billing process",
   "private": true,
   "main": "./public/electron.js",
   "build": {
     "appId": "invoicify.2am",
+    "extraResources": [
+      "./public/**"
+    ],
     "win": {
       "icon": "./public/icon.png"
     },
@@ -17,6 +20,7 @@
   },
   "homepage": "./",
   "dependencies": {
+    "@craco/craco": "^5.6.4",
     "@pdf-lib/fontkit": "^1.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -28,16 +32,18 @@
     "node-sass": "^4.14.1",
     "office-ui-fabric-react": "^7.121.7",
     "pdf-lib": "^1.9.0",
+    "pdf-to-printer": "^1.4.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-pdf": "5.0.0-beta.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "react-start": "react-scripts start",
-    "react-build": "react-scripts build",
-    "react-test": "react-scripts test",
-    "react-eject": "react-scripts eject",
+    "react-start": "craco start",
+    "react-build": "craco build",
+    "react-test": "craco test",
+    "react-eject": "craco eject",
     "electron-build": "electron-builder",
     "build": "npm run react-build && npm run electron-build",
     "lint": "node_modules/eslint/bin/eslint.js src/**/*.js --fix",
@@ -63,8 +69,9 @@
   },
   "devDependencies": {
     "concurrently": "^5.2.0",
-    "electron": "^9.0.5",
+    "electron": "8.4.1",
     "electron-builder": "^22.7.0",
+    "electron-reload": "^1.5.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
     "wait-on": "^5.0.1"

@@ -1,9 +1,18 @@
 const path = require('path')
 
 const {
-  app, BrowserWindow, Menu, screen,
+  app, BrowserWindow, Menu, screen, ipcMain,
 } = require('electron')
 const isDev = require('electron-is-dev')
+
+const { print } = require('./printPdf')
+
+if (isDev) {
+  // eslint-disable-next-line global-require
+  require('electron-reload')(__dirname, {
+    electron: path.join(process.cwd(), 'node_modules', '.bin', 'electron.cmd'),
+  })
+}
 
 const createWindow = () => {
   Menu.setApplicationMenu(null)
@@ -16,6 +25,7 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       devTools: !!isDev,
+      plugins: true,
     },
   })
 
@@ -32,6 +42,7 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+app.allowRendererProcessReuse = true
 app.whenReady().then(createWindow)
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -53,3 +64,7 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('print-it', (event, pdfBytes) => {
+  event.preventDefault()
+  print(pdfBytes)
+})
