@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 
 import { DatePicker, DefaultButton } from 'office-ui-fabric-react'
+import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import {
-  PREVIEW, PRINT, DATE, MASKED,
+  PREVIEW, PRINT, DATE, MASKED, ZERO,
 } from '../../utils/constants'
 import {
-  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency,
+  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy,
 } from '../../utils/helper'
 import InvoiceItems from '../InvoiceItems'
 
@@ -16,11 +17,10 @@ const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: deviceWidth * 0.5 } }
 
-// TODO: Re-enable this after form is customizable with layout too.
-// const columnProps = {
-//   tokens: { childrenGap: deviceWidth * 0.07 },
-//   styles: { root: { width: deviceWidth * 0.4 } },
-// }
+const columnProps = {
+  tokens: { childrenGap: deviceWidth * 0.05 },
+  styles: { root: { width: deviceWidth * 0.5 } },
+}
 
 const Invoice = ({ setPreview }) => {
   const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
@@ -28,7 +28,18 @@ const Invoice = ({ setPreview }) => {
 
   const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
 
-  const defaultInvoice = { 'Invoice Number': invoiceNumber, 'Invoice Date': new Date(), grossTotal: parseFloat(0) }
+  const defaultInvoice = {
+    'Invoice Number': invoiceNumber,
+    'Invoice Date': new Date(),
+    grossTotal: ZERO,
+    igst: ZERO,
+    cgst: ZERO,
+    sgst: ZERO,
+    totalAmount: ZERO,
+    oldPurchase: ZERO,
+    grandTotal: ZERO,
+    interState: false,
+  }
 
   const [invoice, setInvoice] = useState(defaultInvoice)
   const [invoiceItems, setInvoiceItems] = useState([])
@@ -71,7 +82,8 @@ const Invoice = ({ setPreview }) => {
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
         const newItem = { ...item, ...valueObject }
-        const totalPrice = (currency(newItem.price) * newItem.quantity
+        // The logic is price*weight + %MKG + other
+        const totalPrice = (currency(newItem.price) * newItem.weight
         * (1 + 0.01 * currency(newItem.mkg)) + currency(newItem.other))
         grossTotal += totalPrice
         return {
@@ -83,11 +95,23 @@ const Invoice = ({ setPreview }) => {
       return item
     }))
 
+    const cgst = invoice.interState ? 0 : grossTotal * 0.015
+    const sgst = invoice.interState ? 0 : grossTotal * 0.015
+    const igst = invoice.interState ? grossTotal * 0.035 : 0
+    const totalAmount = Number((grossTotal + cgst + sgst + igst).toFixed(2))
+    const { oldPurchase } = invoice
     setInvoice({
       ...invoice,
-      grossTotal,
+      grossTotal: Number(grossTotal.toFixed(2)),
+      cgst,
+      sgst,
+      igst,
+      totalAmount,
+      grandTotal: totalAmount - oldPurchase,
     })
   }
+
+  const groupedSettings = groupBy(invoiceSettings, 'row')
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
@@ -97,44 +121,52 @@ const Invoice = ({ setPreview }) => {
         tokens={stackTokens}
         styles={stackStyles}
       >
-        {invoiceSettings.map((field) => {
-          const props = {
-            label: field.name,
-            key: field.name,
-            value: invoice[field.name],
-            onChange: (_, val) => {
-              setInvoice({ ...invoice, [field.name]: val })
-            },
-            onBlur: previewPDF,
-            required: field.required,
-            disabled: field.disabled,
-          }
-          return (
-            // eslint-disable-next-line no-nested-ternary
-            field.type === DATE
-              ? (
-                <DatePicker
-                  {...props}
-                  value={invoice[field.name] ?? new Date()}
-                  ariaLabel="Select a date"
-                  allowTextInput
-                  onSelectDate={(date) => {
-                    setInvoice({ ...invoice, [field.name]: date })
-                  }}
-                />
-              ) : field.type === MASKED
-                ? (
-                  <MaskedTextField
-                    {...props}
-                    mask={field.mask}
-                    maskChar=" "
-                    value={field.startIndex
-                      ? invoice[field.name]?.substr(field.startIndex)
-                      : invoice[field.name]}
-                  />
-                ) : <TextField {...props} />
-          )
-        })}
+        {Object.keys(groupedSettings).map((row) => (
+          <Stack
+            horizontal={groupedSettings[row].length > 1}
+            key={row}
+            {...columnProps}
+          >
+            {groupedSettings[row].map((field) => {
+              const props = {
+                label: field.name,
+                key: field.name,
+                value: invoice[field.name],
+                onChange: (_, val) => {
+                  setInvoice({ ...invoice, [field.name]: val })
+                },
+                onBlur: previewPDF,
+                required: field.required,
+                disabled: field.disabled,
+              }
+              return (
+              // eslint-disable-next-line no-nested-ternary
+                field.type === DATE
+                  ? (
+                    <DatePicker
+                      {...props}
+                      value={invoice[field.name] ?? new Date()}
+                      ariaLabel="Select a date"
+                      allowTextInput
+                      onSelectDate={(date) => {
+                        setInvoice({ ...invoice, [field.name]: date })
+                      }}
+                    />
+                  ) : field.type === MASKED
+                    ? (
+                      <MaskedTextField
+                        {...props}
+                        mask={field.mask}
+                        maskChar=" "
+                        value={field.startIndex
+                          ? invoice[field.name]?.substr(field.startIndex)
+                          : invoice[field.name]}
+                      />
+                    ) : <TextField {...props} />
+              )
+            })}
+          </Stack>
+        ))}
         <InvoiceItems
           invoiceItems={invoiceItems}
           setInvoiceItems={setInvoiceItems}
@@ -143,16 +175,59 @@ const Invoice = ({ setPreview }) => {
           updateInvoiceItem={updateInvoiceItem}
         />
         <br />
-        <TextField
-          className="invoice-items__item__field"
-          label="Gross Total"
-          type="number"
-          value={invoice.grossTotal}
-          disabled
-          readOnly
-          min="0"
-          prefix="₹"
-        />
+        <Stack
+          horizontal
+          verticalAlign="center"
+          tokens={{ childrenGap: deviceWidth * 0.01 }}
+        >
+          <Checkbox
+            label="Same State?"
+            boxSide="end"
+            checked={!invoice.interState}
+            onChange={(_, val) => setInvoice({ ...invoice, interState: !val })}
+          />
+          <TextField
+            className="invoice-items__item__field"
+            label="Gross Total"
+            type="number"
+            value={invoice.grossTotal}
+            disabled
+            readOnly
+            min="0"
+            prefix="₹"
+          />
+          <TextField
+            className="invoice-items__item__field"
+            label="Total Amount"
+            type="number"
+            value={invoice.totalAmount}
+            disabled
+            readOnly
+            min="0"
+            prefix="₹"
+          />
+          <TextField
+            className="invoice-items__item__field"
+            label="Old Purchase"
+            type="number"
+            value={invoice.oldPurchase}
+            onChange={(_, val) => {
+              setInvoice({ ...invoice, oldPurchase: val })
+            }}
+            min="0"
+            prefix="₹"
+          />
+          <TextField
+            className="invoice-items__item__field"
+            label="Grand Total"
+            type="number"
+            value={invoice.grandTotal}
+            disabled
+            readOnly
+            min="0"
+            prefix="₹"
+          />
+        </Stack>
         <br />
         <Stack
           horizontal

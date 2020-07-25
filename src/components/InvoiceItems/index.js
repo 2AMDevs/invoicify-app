@@ -91,14 +91,23 @@ const InvoiceItems = ({
             className="invoice-items__item__field"
             type="number"
             min="0"
-            label="Qty"
+            label="Pcs"
             value={item.quantity}
             onChange={(_, value) => onChangeField(index, 'quantity', value)}
             required
           />
           <TextField
             className="invoice-items__item__field"
-            label="Weight (Total)"
+            label="G. Weight"
+            type="number"
+            min="0"
+            value={item.gWeight}
+            onChange={(_, value) => onChangeField(index, 'gWeight', value)}
+            suffix="gms"
+          />
+          <TextField
+            className="invoice-items__item__field"
+            label="Net Weight"
             type="number"
             min="0"
             value={item.weight}
