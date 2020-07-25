@@ -23,6 +23,9 @@ const InvoiceItems = ({
       totalPrice: 0,
     })
   }
+  const [itemsFilterValue, setItemsFilterValue] = React.useState('')
+
+  const itemsComboBoxRef = React.useRef(null)
 
   const onChangeField = (itemIndex, stateKey, value) => {
     updateInvoiceItem(itemIndex, { [stateKey]: value })
@@ -50,6 +53,12 @@ const InvoiceItems = ({
     })
     return options
   }
+
+  const openComboboxDropdown = React.useCallback(() => itemsComboBoxRef.current?.focus(true), [])
+
+  const filterComboBoxOptions = (product) => (generateProductOptions(product) || [])
+    .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLocaleLowerCase()))
+
   return (
     <div className="invoice-items animation-slide-up">
       <div className="invoice-items__header">{`${invoiceItems.length} Item${invoiceItems.length > 1 ? 's' : ''}`}</div>
@@ -59,13 +68,21 @@ const InvoiceItems = ({
           key={item.id}
         >
           <ComboBox
+            componentRef={itemsComboBoxRef}
+            onClick={openComboboxDropdown}
             allowFreeform
+            autoComplete={false}
             className="invoice-items__item__field"
             placeholder="Select a type"
             label="Item name"
-            options={generateProductOptions(item.product)}
+            options={filterComboBoxOptions(item.product)}
             selectedKey={item.product}
-            onChange={(_, option) => onChangeField(index, 'product', option.id)}
+            onChange={(_, option) => option && onChangeField(index, 'product', option.id)}
+            onKeyUp={(e) => {
+              if (!e.key.includes('Arrow')) {
+                setItemsFilterValue(e.target.value)
+              }
+            }}
             required
             style={{ maxWidth: 300 }}
           />
