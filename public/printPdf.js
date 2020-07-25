@@ -1,14 +1,16 @@
 const fs = require('fs')
+const os = require('os')
 const path = require('path')
 
 const PDFWindow = require('electron-pdf-window')
 
 const print = (pdfBytes) => {
-  fs.writeFile(path.join(__dirname, 'print.pdf'), pdfBytes, () => {})
-  const win = new PDFWindow({ show: false, plugins: true })
+  fs.writeFile(path.join(os.tmpdir(), 'print.pdf'), pdfBytes, () => {})
+  const win = new PDFWindow({ show: true, plugins: true })
 
-  const pdfPath = encodeURIComponent(`file://${__dirname}/print.pdf`)
+  const pdfPath = encodeURIComponent(`file://${os.tmpdir()}/print.pdf`)
   win.loadURL(pdfPath)
+
   win.webContents.once('dom-ready', () => {
     setTimeout(() => {
       const code = 'document.getElementById(\'print\').dispatchEvent(new Event(\'click\'));'
