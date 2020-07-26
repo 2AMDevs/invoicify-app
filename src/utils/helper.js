@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import fontkit from '@pdf-lib/fontkit'
+import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
@@ -113,6 +114,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
+  // Print Invoice Header
   getInvoiceSettings().forEach((field) => {
     if (meta[field.name]) {
       const value = field.type === DATE
@@ -127,6 +129,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     }
   })
 
+  // Print Items
   items.forEach((item, idx) => {
     const diff = idx * 15
     const commonStuff = {
@@ -149,8 +152,8 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
         x: parseFloat(232 - font.widthOfTextAtSize(qtyText, fontSize)),
         ...commonStuff,
       })
-      page.drawText(`${item.weight}gms`, {
-        x: parseFloat(283 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
+      page.drawText(`${item.gWeight}gms`, {
+        x: parseFloat(283 - font.widthOfTextAtSize(`${item.gWeight}gms`, fontSize)),
         ...commonStuff,
       })
       page.drawText(`${item.weight}gms`, {
@@ -181,6 +184,70 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
         ...commonStuff,
       })
     }
+  })
+
+  // Print Footer
+  const grossTotal = `${meta.grossTotal.toFixed(2)}/-`
+  page.drawText(grossTotal, {
+    x: parseFloat(560 - font.widthOfTextAtSize(grossTotal, fontSize)),
+    y: 210,
+    size: fontSize,
+    font,
+  })
+
+  const cgst = `${meta.cgst.toFixed(2)}/-`
+  page.drawText(cgst, {
+    x: parseFloat(560 - font.widthOfTextAtSize(cgst, fontSize)),
+    y: 190,
+    size: fontSize,
+    font,
+  })
+
+  const sgst = `${meta.sgst.toFixed(2)}/-`
+  page.drawText(sgst, {
+    x: parseFloat(560 - font.widthOfTextAtSize(sgst, fontSize)),
+    y: 170,
+    size: fontSize,
+    font,
+  })
+
+  const igst = `${meta.igst.toFixed(2)}/-`
+  page.drawText(igst, {
+    x: parseFloat(560 - font.widthOfTextAtSize(igst, fontSize)),
+    y: 150,
+    size: fontSize,
+    font,
+  })
+
+  const totalAmount = `${meta.totalAmount.toFixed(2)}/-`
+  page.drawText(totalAmount, {
+    x: parseFloat(560 - font.widthOfTextAtSize(totalAmount, fontSize)),
+    y: 130,
+    size: fontSize,
+    font,
+  })
+
+  const oldPurchase = `${currency(meta.oldPurchase).toFixed(2)}/-`
+  page.drawText(oldPurchase, {
+    x: parseFloat(560 - font.widthOfTextAtSize(oldPurchase, fontSize)),
+    y: 110,
+    size: fontSize,
+    font,
+  })
+
+  const grandTotal = `${meta.grandTotal.toFixed(2)}/-`
+  page.drawText(grandTotal, {
+    x: parseFloat(560 - font.widthOfTextAtSize(grandTotal, fontSize)),
+    y: 90,
+    size: fontSize,
+    font,
+  })
+
+  page.drawText(toWords(meta.grandTotal), {
+    x: 85,
+    y: 87,
+    size: fontSize,
+    font,
   })
 
   pdfDoc.setTitle('Invoice Preview')

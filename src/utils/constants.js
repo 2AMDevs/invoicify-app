@@ -4,6 +4,7 @@ const DATE = 'Date'
 const TEXT = 'Text'
 const MASKED = 'Masked'
 const CUSTOM_FONT = 'invoicify.ttf'
+const ZERO = parseFloat(0)
 
 const darkThemePalette = {
   themePrimary: '#209cfa',
@@ -75,6 +76,7 @@ const defaultPrintSettings = [
     required: true,
     disabled: true,
     type: TEXT,
+    row: 1,
   },
   {
     name: 'Invoice Date',
@@ -83,6 +85,7 @@ const defaultPrintSettings = [
     required: true,
     disabled: false,
     type: DATE,
+    row: 1,
   },
   {
     name: 'Customer Name',
@@ -91,6 +94,7 @@ const defaultPrintSettings = [
     required: true,
     disabled: false,
     type: TEXT,
+    row: 2,
   },
   {
     name: 'GSTIN',
@@ -100,6 +104,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: MASKED,
     mask: '99-**********-***',
+    row: 3,
   },
   {
     name: 'Mobile',
@@ -110,6 +115,7 @@ const defaultPrintSettings = [
     type: MASKED,
     mask: '+\\91 9999999999',
     startIndex: 3,
+    row: 3,
   },
   {
     name: 'Address',
@@ -118,10 +124,11 @@ const defaultPrintSettings = [
     required: true,
     disabled: false,
     type: TEXT,
+    row: 4,
   },
 ]
 
 export {
   PRINT, PREVIEW, darkThemePalette, productTableColumns, defaultPrintSettings,
-  defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT,
+  defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO,
 }

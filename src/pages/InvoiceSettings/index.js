@@ -36,6 +36,11 @@ const InvoiceSettings = () => {
             value={setting.name}
           />
           <TextField
+            label="Row Number"
+            onChange={(_, val) => handleChange(idx, 'row', val)}
+            value={setting.row}
+          />
+          <TextField
             label="X Co-ordinate"
             onChange={(_, val) => handleChange(idx, 'x', val)}
             value={setting.x}
@@ -67,7 +72,7 @@ const InvoiceSettings = () => {
               <TextField
                 label="Mask"
                 value={setting.mask}
-                onChange={(_, val) => handleChange(idx, 'mask', val.key)}
+                onChange={(_, val) => handleChange(idx, 'mask', val)}
               />
             ) : ''}
         </Stack>
