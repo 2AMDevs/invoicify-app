@@ -55,17 +55,6 @@ const Header = ({ className, ...restProps }) => {
                 checked={false}
               />
             </Link>
-            <Link
-              className="header__link"
-              to="/products"
-            >
-              <CommandBarButton
-                className="header__link__btn"
-                iconProps={{ iconName: 'ProductVariant' }}
-                text="Products"
-                checked={false}
-              />
-            </Link>
           </>
         )}
       </div>

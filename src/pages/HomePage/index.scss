@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
 
-  &__preiew-panel {
+  &__preview-panel {
     .ms-Panel-main  {
       width: 50rem;
     }
@@ -11,6 +11,20 @@
     &__doc {
       margin-top: 3rem;
     }
+  }
+
+  &__products-panel {
+    .ms-Panel-main  {
+      width: 50rem;
+    }
+
+    &__header {
+      padding-left: 1rem;
+    }
+  }
+
+  &__products-btn {
+    height: 4rem;
   }
 
   &__content {
