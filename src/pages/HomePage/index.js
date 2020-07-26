@@ -2,6 +2,8 @@ import './index.scss'
 import React, { useState } from 'react'
 
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
+import { Panel } from 'office-ui-fabric-react/lib/Panel'
+import { useConstCallback } from '@uifabric/react-hooks'
 import { pdfjs, Document, Page } from 'react-pdf'
 
 import { Invoice } from '../../components'
@@ -16,6 +18,12 @@ const columnProps = {
 
 const HomePage = () => {
   const [preview, setPreview] = useState('')
+  const [isPreviewOpen, setIsPreviewOpen] = React.useState(false)
+
+  const showPdfPreview = (pdfBytes) => {
+    setPreview(pdfBytes)
+    setIsPreviewOpen(true)
+  }
 
   return (
     <div
@@ -26,23 +34,34 @@ const HomePage = () => {
         {...columnProps}
       >
         <Invoice
-          setPreview={setPreview}
+          showPdfPreview={showPdfPreview}
         />
-        {preview?.length
-          ? (
-            <Document
-              file={{ data: preview }}
-            >
-              <Page
-                pageNumber={1}
-                scale={0.65}
-              />
-            </Document>
-          ) : (
-            <div className="preview-area">
-              <div>Invoice Preview</div>
-            </div>
-          )}
+        <Panel
+          isLightDismiss
+          className="home-page__panel"
+          isOpen={isPreviewOpen}
+          onDismiss={() => {
+            setIsPreviewOpen(false)
+          }}
+          closeButtonAriaLabel="Close"
+          headerText="Invoice preview"
+        >
+          {preview?.length
+            ? (
+              <Document
+                file={{ data: preview }}
+              >
+                <Page
+                  pageNumber={1}
+                  scale={0.65}
+                />
+              </Document>
+            ) : (
+              <div className="preview-area">
+                <div>Invoice Preview</div>
+              </div>
+            )}
+        </Panel>
       </Stack>
     </div>
   )

@@ -22,7 +22,7 @@ const columnProps = {
   styles: { root: { width: deviceWidth * 0.5 } },
 }
 
-const Invoice = ({ setPreview }) => {
+const Invoice = ({ showPdfPreview }) => {
   const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
   const invoiceSettings = getInvoiceSettings()
 
@@ -66,7 +66,7 @@ const Invoice = ({ setPreview }) => {
 
   const previewPDF = async () => {
     const pdfBytes = await fetchPDF(PREVIEW)
-    setPreview(pdfBytes)
+    showPdfPreview(pdfBytes)
   }
 
   const addInvoiceItem = (invoiceItem) => {
@@ -135,7 +135,6 @@ const Invoice = ({ setPreview }) => {
                 onChange: (_, val) => {
                   setInvoice({ ...invoice, [field.name]: val })
                 },
-                onBlur: previewPDF,
                 required: field.required,
                 disabled: field.disabled,
               }
