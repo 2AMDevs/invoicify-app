@@ -18,7 +18,7 @@ const HomePage = () => {
 
   const showPdfPreview = (pdfBytes) => {
     setPreview(pdfBytes)
-    openPanel(true)
+    openPanel()
   }
 
   return (
@@ -30,7 +30,7 @@ const HomePage = () => {
       />
       <Panel
         isLightDismiss
-        className="home-page__panel"
+        className="home-page__preiew-panel"
         isOpen={isPreviewOpen}
         onDismiss={dismissPanel}
         closeButtonAriaLabel="Close"
@@ -40,7 +40,7 @@ const HomePage = () => {
           ? (
             <Document
               file={{ data: preview }}
-              className="home-page__panel__doc"
+              className="home-page__preiew-panel__doc"
             >
               <Page
                 pageNumber={1}
