@@ -1,8 +1,8 @@
 import './index.scss'
 import React, { useState } from 'react'
 
-import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { useConstCallback } from '@uifabric/react-hooks'
+import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { pdfjs, Document, Page } from 'react-pdf'
 
 import { Invoice } from '../../components'
@@ -11,7 +11,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 const HomePage = () => {
   const [preview, setPreview] = useState('')
-  const [isPreviewOpen, setIsPreviewOpen] = React.useState(false)
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
   const openPanel = useConstCallback(() => setIsPreviewOpen(true))
   const dismissPanel = useConstCallback(() => setIsPreviewOpen(false))

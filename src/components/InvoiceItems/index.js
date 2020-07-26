@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState, useRef } from 'react'
 
 import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
 import { ComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/index'
@@ -23,9 +23,9 @@ const InvoiceItems = ({
       totalPrice: 0,
     })
   }
-  const [itemsFilterValue, setItemsFilterValue] = React.useState('')
+  const [itemsFilterValue, setItemsFilterValue] = useState('')
 
-  const itemsComboBoxRef = React.useRef(null)
+  const itemsComboBoxRef = useRef(null)
 
   const onChangeField = (itemIndex, stateKey, value) => {
     updateInvoiceItem(itemIndex, { [stateKey]: value })
@@ -55,7 +55,7 @@ const InvoiceItems = ({
     return options
   }
 
-  const openComboboxDropdown = React.useCallback(() => itemsComboBoxRef.current?.focus(true), [])
+  const openComboboxDropdown = useCallback(() => itemsComboBoxRef.current?.focus(true), [])
 
   const filterComboBoxOptions = (product) => (generateProductOptions(product) || [])
     .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase()))
