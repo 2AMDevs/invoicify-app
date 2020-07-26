@@ -50,6 +50,7 @@ const HomePage = () => {
             ? (
               <Document
                 file={{ data: preview }}
+                className="home-page__panel__doc"
               >
                 <Page
                   pageNumber={1}
