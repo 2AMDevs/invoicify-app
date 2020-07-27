@@ -1,7 +1,7 @@
 const path = require('path')
 
 const {
-  app, BrowserWindow, Menu, screen, ipcMain,
+  app, BrowserWindow, Menu, screen, ipcMain, autoUpdater, dialog,
 } = require('electron')
 const isDev = require('electron-is-dev')
 
@@ -21,6 +21,7 @@ const createWindow = () => {
     height,
     width,
     resizable: false,
+    title: `Invoicify ${app.getVersion()}`,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
@@ -67,3 +68,27 @@ ipcMain.on('print-it', (event, pdfBytes) => {
   event.preventDefault()
   print(pdfBytes)
 })
+
+if (!isDev) {
+  const server = 'https://invoicify-server.herokuapp.com'
+  const url = `${server}/download`
+
+  autoUpdater.setFeedURL({ url })
+  setInterval(() => {
+    autoUpdater.checkForUpdates()
+  }, 60000)
+
+  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Application Update',
+      message: process.platform === 'win32' ? releaseNotes : releaseName,
+      detail: 'A new version has been downloaded. Restart the application to apply the updates.',
+    }
+
+    dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) autoUpdater.quitAndInstall()
+    })
+  })
+}
