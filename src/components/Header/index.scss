@@ -18,11 +18,7 @@
   &__right-section {
     display: flex;
 
-    &__products-btn {
-      height: 100%;
-    }
-
-    &__products-panel {
+    &__products-panel, &__settings-panel {
       .ms-Panel-main  {
         width: 50rem;
       }
