@@ -9,9 +9,7 @@ import {
 } from 'react-router-dom'
 
 import { Header } from './components'
-import {
-  HomePage, InvoiceSettings, Settings,
-} from './pages'
+import { HomePage, InvoiceSettings } from './pages'
 import { darkThemePalette } from './utils/constants'
 import { initializeSettings } from './utils/helper'
 
@@ -38,10 +36,6 @@ ReactDOM.render(
         <Route
           path="/configure"
           component={InvoiceSettings}
-        />
-        <Route
-          path="/settings"
-          component={Settings}
         />
       </main>
     </div>

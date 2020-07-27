@@ -8,9 +8,9 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 
-import { ProductForm } from '../../components'
 import { productTableColumns } from '../../utils/constants'
 import { getProducts, deleteProducts } from '../../utils/helper'
+import ProductForm from '../ProductForm'
 
 import './index.scss'
 
