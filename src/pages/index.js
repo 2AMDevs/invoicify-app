@@ -1,6 +1,5 @@
 import HomePage from './HomePage'
-import ProductsPage from './ProductsPage'
+import InvoiceSettings from './InvoiceSettings'
 import Settings from './Settings'
-import InvoiceSettings from '../pages/InvoiceSettings'
 
-export { HomePage, ProductsPage, Settings, InvoiceSettings }
+export { HomePage, Settings, InvoiceSettings }
