@@ -3,11 +3,18 @@
   align-items: center;
   flex-direction: column;
 
-  &__hero-btn {
-    height: 5rem;
-    width: 18rem;
-    font-size: 1.7rem;
+  &__header {
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    &__btn {
+      height: 5rem;
+      font-size: 1.7rem;
+    }
   }
+
 
   &__no-items {
     font-size: 5rem;

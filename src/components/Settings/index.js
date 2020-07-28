@@ -42,7 +42,7 @@ const Settings = () => {
   }
 
   return (
-    <div className="settings">
+    <div className="settings animation-slide-up">
       <Stack
         className="invoice-page"
         tokens={stackTokens}
