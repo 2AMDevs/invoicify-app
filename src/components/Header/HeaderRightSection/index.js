@@ -35,10 +35,12 @@ const HeaderRightSection = () => {
         checked={false}
         onClick={openSettingsPanel}
       />
-      <CommandBarButton
-        className="header__link__btn"
-        text={`v${localStorage.getItem('version')}`}
-      />
+      {localStorage.getItem('version') && (
+        <CommandBarButton
+          className="header__link__btn"
+          text={`v${localStorage.getItem('version')}`}
+        />
+      )}
       <Panel
         isLightDismiss
         className="header__right-section__products-panel"
