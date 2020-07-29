@@ -34,7 +34,6 @@ ReactDOM.render(
         <MessageBar
           actions={(
             <div>
-              <p id="message" />
               <MessageBarButton
                 id="restart-button"
                 onClick={restartApp}
@@ -57,7 +56,7 @@ ReactDOM.render(
           id="notification"
           className="hidden"
         >
-          Success MessageBar with single line and action buttons.
+          <p id="message" />
         </MessageBar>
         <Route
           exact
