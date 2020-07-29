@@ -1,0 +1,16 @@
+.invoice {
+  &__add-item-btn{
+    height: 4rem;
+    width: 15rem;
+  }
+
+  &__item-panel {
+    .ms-Panel-main  {
+      width: 50rem;
+    }
+
+    &__header {
+      padding: 1rem;
+    }
+  }
+}
