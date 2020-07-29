@@ -282,12 +282,14 @@ const notification = document.getElementById('notification')
 const message = document.getElementById('message')
 const restartButton = document.getElementById('restart-button')
 ipcRenderer.on('update_available', () => {
+  console.log('Gotcha')
   ipcRenderer.removeAllListeners('update_available')
   message.innerText = 'A new update is available. Downloading now...'
   notification.parentElement.parentElement.parentElement.classList.remove('hidden')
 })
 
 ipcRenderer.on('update_downloaded', () => {
+  console.log('Its Done')
   ipcRenderer.removeAllListeners('update_downloaded')
   message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?'
   restartButton.classList.remove('hidden')
@@ -295,7 +297,8 @@ ipcRenderer.on('update_downloaded', () => {
 })
 
 const closeNotification = () => {
-  notification.parentElement.parentElement.parentElement.classList.add('hidden')
+  const n = document.getElementById('notification')
+  n.parentElement.parentElement.parentElement.classList.add('hidden')
 }
 
 const restartApp = () => {

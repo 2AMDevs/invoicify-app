@@ -15,7 +15,6 @@ import { HomePage, InvoiceSettings } from './pages'
 import { darkThemePalette } from './utils/constants'
 import { initializeSettings, closeNotification, restartApp } from './utils/helper'
 
-
 import './index.scss'
 
 loadTheme({
@@ -54,7 +53,7 @@ ReactDOM.render(
           messageBarType={MessageBarType.success}
           isMultiline={false}
           id="notification"
-          className="hidden"
+          // className="hidden"
         >
           <p id="message" />
         </MessageBar>
