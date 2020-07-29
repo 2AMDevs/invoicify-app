@@ -1,9 +1,10 @@
 const path = require('path')
 
 const {
-  app, BrowserWindow, Menu, screen, ipcMain, autoUpdater, dialog,
+  app, BrowserWindow, Menu, screen, ipcMain,
 } = require('electron')
 const isDev = require('electron-is-dev')
+const { autoUpdater } = require('electron-updater')
 
 const { print } = require('./printPdf')
 
@@ -14,14 +15,15 @@ if (isDev) {
   })
 }
 
+let win
+
 const createWindow = () => {
   Menu.setApplicationMenu(null)
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     height,
     width,
     resizable: false,
-    title: `Invoicify ${app.getVersion()}`,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
@@ -38,6 +40,9 @@ const createWindow = () => {
 
   // TODO: Add Tweak to open this when 7 press on Home button, so that we can debug prod
   if (isDev) win.webContents.openDevTools()
+  win.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify()
+  })
 }
 
 // This method will be called when Electron has finished
@@ -69,26 +74,20 @@ ipcMain.on('print-it', (event, pdfBytes) => {
   print(pdfBytes)
 })
 
+ipcMain.on('app_version', (event) => {
+  event.sender.send('app_version', { version: app.getVersion() })
+})
+
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall()
+})
+
 if (!isDev) {
-  const server = 'https://invoicify-server.herokuapp.com'
-  const url = `${server}/download`
+  autoUpdater.on('update-available', () => {
+    win.webContents.send('update_available')
+  })
 
-  autoUpdater.setFeedURL({ url })
-  setInterval(() => {
-    autoUpdater.checkForUpdates()
-  }, 60000)
-
-  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    const dialogOpts = {
-      type: 'info',
-      buttons: ['Restart', 'Later'],
-      title: 'Application Update',
-      message: process.platform === 'win32' ? releaseNotes : releaseName,
-      detail: 'A new version has been downloaded. Restart the application to apply the updates.',
-    }
-
-    dialog.showMessageBox(dialogOpts).then((returnValue) => {
-      if (returnValue.response === 0) autoUpdater.quitAndInstall()
-    })
+  autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update_downloaded')
   })
 }

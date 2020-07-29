@@ -1,12 +1,19 @@
 {
   "name": "invoicify",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "author": "2AM Devs",
   "description": "Digitalizes your billing process",
   "private": true,
   "main": "./public/electron.js",
   "build": {
     "appId": "invoicify.2am",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "2AMDevs",
+        "repo": "invoicify-app"
+      }
+    ],
     "extraResources": [
       "./public/**"
     ],
@@ -17,6 +24,10 @@
       "icon": "./public/icon.png",
       "category": "public.app-category.utilities"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/2AMDevs/invoicify-app.git"
   },
   "homepage": "./",
   "dependencies": {
@@ -30,6 +41,7 @@
     "convert-rupees-into-words": "^1.0.6",
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
+    "electron-updater": "^4.3.4",
     "node-sass": "^4.14.1",
     "office-ui-fabric-react": "^7.121.7",
     "pdf-lib": "^1.9.0",
@@ -46,7 +58,9 @@
     "react-test": "craco test",
     "react-eject": "craco eject",
     "electron-build": "electron-builder",
+    "electron-deploy": "electron-builder build --win --publish always",
     "build": "npm run react-build && npm run electron-build",
+    "deploy": "npm run react-build && npm run electron-deploy",
     "lint": "node_modules/eslint/bin/eslint.js src/**/*.js --fix",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
