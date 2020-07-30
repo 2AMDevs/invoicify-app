@@ -53,7 +53,7 @@ ReactDOM.render(
           messageBarType={MessageBarType.success}
           isMultiline={false}
           id="notification"
-          // className="hidden"
+          className="hidden"
         >
           <p id="message" />
         </MessageBar>

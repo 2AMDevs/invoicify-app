@@ -41,6 +41,7 @@ const createWindow = () => {
   // TODO: Add Tweak to open this when 7 press on Home button, so that we can debug prod
   if (isDev) win.webContents.openDevTools()
   win.once('ready-to-show', () => {
+    console.log(autoUpdater.checkForUpdatesAndNotify())
     autoUpdater.checkForUpdatesAndNotify()
   })
 }
