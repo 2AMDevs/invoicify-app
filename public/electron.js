@@ -40,16 +40,19 @@ const createWindow = () => {
 
   // TODO: Add Tweak to open this when 7 press on Home button, so that we can debug prod
   if (isDev) win.webContents.openDevTools()
-  win.once('ready-to-show', () => {
-    console.log(autoUpdater.checkForUpdatesAndNotify())
-    autoUpdater.checkForUpdatesAndNotify()
-  })
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow)
+// app.whenReady().then(createWindow)
+app.on('ready', () => {
+  createWindow()
+  autoUpdater.setFeedURL({
+    provider: 'github', owner: process.env.OWNER, repo: process.env.REPO, token: process.env.GH_TOKEN,
+  })
+  autoUpdater.checkForUpdates()
+})
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -84,11 +87,7 @@ ipcMain.on('restart_app', () => {
 })
 
 if (!isDev) {
-  autoUpdater.on('update-available', () => {
-    win.webContents.send('update_available')
-  })
-
   autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('update_downloaded')
+    win.webContents.send('updateDownloaded')
   })
 }
