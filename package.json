@@ -60,7 +60,7 @@
     "electron-build": "electron-builder",
     "electron-deploy": "electron-builder build --win --publish always",
     "build": "npm run react-build && npm run electron-build",
-    "deploy": "npm run react-build && npm run electron-deploy",
+    "ship": "npm run react-build && npm run electron-deploy",
     "lint": "node_modules/eslint/bin/eslint.js src/**/*.js --fix",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
