@@ -4,7 +4,7 @@ import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
 import { ComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/index'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
-import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip'
+import { TooltipHost, DirectionalHint } from 'office-ui-fabric-react/lib/Tooltip'
 
 import { getProducts, groupBy } from '../../utils/helper'
 
@@ -16,7 +16,7 @@ const columnProps = {
 
 const InvoiceItems = ({
   currentInvoiceItem, currentInvoiceItemIndex, removeInvoiceItem, updateInvoiceItem,
-  dismissInvoiceItemsPanel,
+  dismissInvoiceItemsPanel, addNewInvoiceItem,
 }) => {
   const [itemsFilterValue, setItemsFilterValue] = useState('')
 
@@ -166,7 +166,10 @@ const InvoiceItems = ({
         </div>
       )}
 
-      <TooltipHost content="Changes are saved automatically">
+      <TooltipHost
+        content="Changes are saved automatically"
+        directionalHint={DirectionalHint.leftCenter}
+      >
         <IconButton iconProps={{ iconName: 'InfoSolid' }} />
       </TooltipHost>
 
@@ -174,10 +177,11 @@ const InvoiceItems = ({
         <CommandBarButton
           iconProps={{ iconName: 'Save' }}
           text="Add another"
+          onClick={addNewInvoiceItem}
         />
         <CommandBarButton
-          iconProps={{ iconName: 'Save' }}
-          text="Save & close"
+          iconProps={{ iconName: 'CheckedOutByYou12' }}
+          text="Exit form"
           onClick={dismissInvoiceItemsPanel}
         />
         <CommandBarButton
