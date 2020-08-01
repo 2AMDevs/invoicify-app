@@ -1,28 +1,22 @@
 import React, { useCallback, useState, useRef } from 'react'
 
-import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
+import { CommandBarButton, Icon } from 'office-ui-fabric-react'
 import { ComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/index'
+import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
-import { getProducts, generateUuid4, groupBy } from '../../utils/helper'
+import { getProducts, groupBy, currency } from '../../utils/helper'
 
 import './index.scss'
 
+const columnProps = {
+  styles: { root: { width: '100%', display: 'flex', justifyContent: 'space-between' } },
+}
+
 const InvoiceItems = ({
-  invoiceItems, addInvoiceItem, removeInvoiceItem, updateInvoiceItem,
+  currentInvoiceItem, currentInvoiceItemIndex, removeInvoiceItem, updateInvoiceItem,
+  dismissInvoiceItemsPanel, addNewInvoiceItem,
 }) => {
-  const addNewInvoiceItem = () => {
-    addInvoiceItem({
-      id: generateUuid4(),
-      product: null,
-      quantity: 0,
-      weight: 0,
-      price: 0,
-      mkg: 0,
-      other: 0,
-      totalPrice: 0,
-    })
-  }
   const [itemsFilterValue, setItemsFilterValue] = useState('')
 
   const itemsComboBoxRef = useRef(null)
@@ -62,108 +56,143 @@ const InvoiceItems = ({
 
   return (
     <div className="invoice-items animation-slide-up">
-      <div className="invoice-items__header">{`${invoiceItems.length} Item${invoiceItems.length > 1 ? 's' : ''}`}</div>
-      {invoiceItems.map((item, index) => (
-        <div
-          className="invoice-items__item animation-slide-up"
-          key={item.id}
-        >
-          <ComboBox
-            componentRef={itemsComboBoxRef}
-            onClick={openComboboxDropdown}
-            allowFreeform
-            autoComplete={false}
-            className="invoice-items__item__field"
-            placeholder="Select a type"
-            label="Item name"
-            options={filterComboBoxOptions(item.product)}
-            selectedKey={item.product}
-            onChange={(_, option) => option && onChangeField(index, 'product', option.id)}
-            onKeyUp={(e) => {
-              if (!e.key.includes('Arrow')) {
-                setItemsFilterValue(e.target.value)
-              }
-            }}
-            required
-            style={{ maxWidth: 300 }}
-          />
-          <TextField
-            className="invoice-items__item__field"
-            type="number"
-            min="0"
-            label="Pcs"
-            value={item.quantity}
-            onChange={(_, value) => onChangeField(index, 'quantity', value)}
-            required
-          />
-          <TextField
-            className="invoice-items__item__field"
-            label="G. Weight"
-            type="number"
-            min="0"
-            value={item.gWeight}
-            onChange={(_, value) => onChangeField(index, 'gWeight', value)}
-            suffix="gms"
-          />
-          <TextField
-            className="invoice-items__item__field"
-            label="Net Weight"
-            type="number"
-            min="0"
-            value={item.weight}
-            onChange={(_, value) => onChangeField(index, 'weight', value)}
-            suffix="gms"
-          />
-          <TextField
-            className="invoice-items__item__field"
-            label="Rate"
-            type="number"
-            value={item.price}
-            onChange={(_, value) => onChangeField(index, 'price', value)}
-            min="0"
-            prefix="₹"
-            required
-          />
-          <TextField
-            className="invoice-items__item__field"
-            label="MKG (%)"
-            type="number"
-            value={item.mkg}
-            onChange={(_, value) => onChangeField(index, 'mkg', value)}
-            min="0"
-            suffix="%"
-          />
-          <TextField
-            className="invoice-items__item__field"
-            label="Other"
-            type="number"
-            value={item.other}
-            onChange={(_, value) => onChangeField(index, 'other', value)}
-            min="0"
-            prefix="₹"
-          />
-          <TextField
-            className="invoice-items__item__field"
-            label="Total"
-            type="number"
-            value={item.totalPrice}
-            disabled
-            readOnly
-            min="0"
-            prefix="₹"
-          />
-          <IconButton
-            className="invoice-items__item__icon"
-            iconProps={{ iconName: 'Delete' }}
-            onClick={() => removeInvoiceItem(item.id)}
-          />
+      {currentInvoiceItem && (
+        <div className="invoice-items__item animation-slide-up">
+          <Stack
+            horizontal
+            {...columnProps}
+          >
+            <ComboBox
+              componentRef={itemsComboBoxRef}
+              onClick={openComboboxDropdown}
+              allowFreeform
+              autoComplete={false}
+              className="invoice-items__item__field"
+              placeholder="Select a type"
+              label="Item name"
+              options={filterComboBoxOptions(currentInvoiceItem.product)}
+              selectedKey={currentInvoiceItem.product}
+              onChange={(_, option) => option && onChangeField(currentInvoiceItemIndex, 'product', option.id)}
+              onKeyUp={(e) => {
+                if (!e.key.includes('Arrow')) {
+                  setItemsFilterValue(e.target.value)
+                }
+              }}
+              required
+              style={{ maxWidth: 300 }}
+            />
+            <TextField
+              className="invoice-items__item__field"
+              type="number"
+              min="0"
+              label="Pcs"
+              value={currentInvoiceItem.quantity}
+              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', currency(value))}
+              required
+            />
+          </Stack>
+          <Stack
+            horizontal
+            {...columnProps}
+          >
+            <TextField
+              className="invoice-items__item__field"
+              label="G. Weight"
+              type="number"
+              min="0"
+              disabled={!currentInvoiceItem.quantity}
+              value={currentInvoiceItem.gWeight}
+              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'gWeight', value)}
+              suffix="gms"
+            />
+            <TextField
+              className="invoice-items__item__field"
+              label="Net Weight"
+              type="number"
+              min="0"
+              disabled={!currentInvoiceItem.quantity}
+              value={currentInvoiceItem.weight}
+              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'weight', value)}
+              suffix="gms"
+            />
+          </Stack>
+          <Stack
+            horizontal
+            {...columnProps}
+          >
+            <TextField
+              className="invoice-items__item__field"
+              label="Rate"
+              type="number"
+              disabled={!currentInvoiceItem.quantity}
+              value={currentInvoiceItem.price}
+              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'price', value)}
+              min="0"
+              prefix="₹"
+              required
+            />
+            <TextField
+              className="invoice-items__item__field"
+              label="MKG (%)"
+              type="number"
+              disabled={!currentInvoiceItem.quantity}
+              value={currentInvoiceItem.mkg}
+              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'mkg', value)}
+              min="0"
+              suffix="%"
+            />
+          </Stack>
+          <Stack
+            horizontal
+            {...columnProps}
+          >
+            <TextField
+              className="invoice-items__item__field"
+              label="Other"
+              type="number"
+              disabled={!currentInvoiceItem.quantity}
+              value={currentInvoiceItem.other}
+              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'other', value)}
+              min="0"
+              prefix="₹"
+            />
+            <TextField
+              className="invoice-items__item__field"
+              label="Total"
+              type="number"
+              value={currentInvoiceItem.totalPrice}
+              disabled
+              readOnly
+              min="0"
+              prefix="₹"
+            />
+          </Stack>
         </div>
-      ))}
+      )}
+
+      <div className="invoice-items__item__info">
+        <Icon
+          className="invoice-items__item__info--icn"
+          iconName="Info"
+        />
+        Changes are saved automatically
+      </div>
+
       <div className="invoice-items__item invoice-items__item--add-btn animation-slide-up">
         <CommandBarButton
-          iconProps={{ iconName: 'CircleAddition' }}
-          text="Add New Item"
+          iconProps={{ iconName: 'Save' }}
+          text="Add another"
           onClick={addNewInvoiceItem}
+        />
+        <CommandBarButton
+          iconProps={{ iconName: 'CheckedOutByYou12' }}
+          text="Exit form"
+          onClick={dismissInvoiceItemsPanel}
+        />
+        <CommandBarButton
+          iconProps={{ iconName: 'Delete' }}
+          text="Delete"
+          onClick={() => removeInvoiceItem(currentInvoiceItem.id)}
         />
       </div>
     </div>

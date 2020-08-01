@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
-import { DatePicker, DefaultButton } from 'office-ui-fabric-react'
+import { useConstCallback } from '@uifabric/react-hooks'
+import { CommandBarButton, DatePicker, DefaultButton } from 'office-ui-fabric-react'
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
+import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
 
@@ -9,9 +11,12 @@ import {
   PREVIEW, PRINT, DATE, MASKED, ZERO,
 } from '../../utils/constants'
 import {
-  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy,
+  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
 } from '../../utils/helper'
 import InvoiceItems from '../InvoiceItems'
+import InvoiceItemsTable from '../InvoiceItemsTable'
+
+import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
 const stackTokens = { childrenGap: 15 }
@@ -22,7 +27,14 @@ const columnProps = {
 }
 
 const Invoice = ({ showPdfPreview }) => {
+  const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
+
+  const openInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(true))
+
+  const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
+
   const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
+
   const invoiceSettings = getInvoiceSettings()
 
   const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
@@ -41,9 +53,10 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const [invoice, setInvoice] = useState(defaultInvoice)
+
   const [invoiceItems, setInvoiceItems] = useState([])
 
-  console.log(invoice)
+  const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
 
   useEffect(() => {
     localStorage.invoiceNumber = invoiceNumber
@@ -74,6 +87,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const removeInvoiceItem = (id) => {
     setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
+    dismissInvoiceItemsPanel()
   }
 
   const updateInvoiceItem = (index, valueObject) => {
@@ -110,11 +124,33 @@ const Invoice = ({ showPdfPreview }) => {
     })
   }
 
+  const addNewInvoiceItem = () => {
+    const newItemId = generateUuid4()
+    addInvoiceItem({
+      id: newItemId,
+      product: null,
+      quantity: ZERO,
+      weight: ZERO,
+      price: ZERO,
+      mkg: ZERO,
+      gWeight: ZERO,
+      other: ZERO,
+      totalPrice: ZERO,
+    })
+    setCurrentInvoiceItemIndex(invoiceItems.length)
+    openInvoiceItemsPanel()
+  }
+
+  const editInvoiceItem = (id) => {
+    setCurrentInvoiceItemIndex(invoiceItems.findIndex((item) => item.id === id))
+    openInvoiceItemsPanel()
+  }
+
   const groupedSettings = groupBy(invoiceSettings, 'row')
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div className="animation-slide-up">
+    <div className="animation-slide-up invoice">
       <Stack horizontal>
         <Stack
           vertical
@@ -198,12 +234,16 @@ const Invoice = ({ showPdfPreview }) => {
         <Stack
           styles={{ root: { width: deviceWidth * 0.6, padding: '0 0 0 4rem' } }}
         >
-          <InvoiceItems
-            invoiceItems={invoiceItems}
-            setInvoiceItems={setInvoiceItems}
-            addInvoiceItem={addInvoiceItem}
+          <CommandBarButton
+            className="invoice__add-item-btn"
+            iconProps={{ iconName: 'CircleAddition' }}
+            text="Add New Item"
+            onClick={addNewInvoiceItem}
+          />
+          <InvoiceItemsTable
+            items={invoiceItems}
             removeInvoiceItem={removeInvoiceItem}
-            updateInvoiceItem={updateInvoiceItem}
+            editInvoiceItem={editInvoiceItem}
           />
           <br />
           <Stack
@@ -261,6 +301,26 @@ const Invoice = ({ showPdfPreview }) => {
           </Stack>
         </Stack>
       </Stack>
+      <Panel
+        isLightDismiss
+        className="invoice__item-panel"
+        headerClassName="invoice__item-panel__header"
+        isOpen={isInvoiceItemFormOpen}
+        onDismiss={dismissInvoiceItemsPanel}
+        closeButtonAriaLabel="Close"
+        headerText="Invoice item"
+      >
+        <InvoiceItems
+          invoiceItems={invoiceItems}
+          currentInvoiceItemIndex={currentInvoiceItemIndex}
+          currentInvoiceItem={invoiceItems[currentInvoiceItemIndex]}
+          setInvoiceItems={setInvoiceItems}
+          removeInvoiceItem={removeInvoiceItem}
+          updateInvoiceItem={updateInvoiceItem}
+          dismissInvoiceItemsPanel={dismissInvoiceItemsPanel}
+          addNewInvoiceItem={addNewInvoiceItem}
+        />
+      </Panel>
     </div>
   )
 }

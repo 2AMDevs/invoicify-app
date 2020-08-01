@@ -60,6 +60,79 @@ const productTableColumns = [
   },
 ]
 
+const invoiceItemsTableColumns = [
+  {
+    key: 'column2',
+    name: 'Pcs',
+    fieldName: 'quantity',
+    isResizable: true,
+    maxWidth: 30,
+    minWidth: 30,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column3',
+    name: 'Weight',
+    fieldName: 'gWeight',
+    maxWidth: 35,
+    minWidth: 35,
+    isResizable: true,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column4',
+    name: 'Net Weight',
+    fieldName: 'weight',
+    maxWidth: 50,
+    minWidth: 50,
+    isResizable: true,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column5',
+    name: 'Rate',
+    fieldName: 'price',
+    maxWidth: 55,
+    minWidth: 55,
+    isResizable: true,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column6',
+    name: 'MKG (%)',
+    fieldName: 'mkg',
+    maxWidth: 35,
+    minWidth: 35,
+    isResizable: true,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column7',
+    name: 'Other (₹)',
+    fieldName: 'other',
+    maxWidth: 60,
+    minWidth: 60,
+    isResizable: true,
+    data: 'string',
+    isPadded: true,
+  },
+  {
+    key: 'column8',
+    name: 'Total (₹)',
+    fieldName: 'totalPrice',
+    maxWidth: 60,
+    minWidth: 60,
+    isResizable: true,
+    data: 'string',
+    isPadded: false,
+  },
+]
+
 const defaultPageSettings = { width: 595.42, height: 895.04, fontSize: 11 }
 
 const fieldTypes = [
@@ -129,6 +202,7 @@ const defaultPrintSettings = [
 ]
 
 export {
-  PRINT, PREVIEW, darkThemePalette, productTableColumns, defaultPrintSettings,
+  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns,
+  productTableColumns, defaultPrintSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO,
 }
