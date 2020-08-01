@@ -215,7 +215,7 @@ const Invoice = ({ showPdfPreview }) => {
             />
             <DefaultButton
               text="Preview"
-              iconProps={{ iconName: 'SaveTemplate' }}
+              iconProps={{ iconName: 'LightningBolt' }}
               primary
               onClick={previewPDF}
             />

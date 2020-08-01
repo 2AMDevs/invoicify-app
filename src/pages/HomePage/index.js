@@ -3,11 +3,10 @@ import React, { useState } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
-import { pdfjs, Document, Page } from 'react-pdf'
+import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner'
+import { Document, Page } from 'react-pdf'
 
 import { Invoice } from '../../components'
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 const HomePage = () => {
   const [preview, setPreview] = useState('')
@@ -43,6 +42,15 @@ const HomePage = () => {
             <Document
               file={{ data: preview }}
               className="home-page__preview-panel__doc"
+              onLoadError={console.error}
+              onSourceError={console.error}
+              onRenderError={console.error}
+              loading={(
+                <Spinner
+                  size={SpinnerSize.large}
+                  styles={{ verticalAlign: 'center' }}
+                />
+              )}
             >
               <Page
                 pageNumber={1}

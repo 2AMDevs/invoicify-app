@@ -47,7 +47,6 @@ ipcRenderer.on('app_version', (event, arg) => {
 const initializeSettings = () => {
   localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
-  localStorage.checkForUpdates = localStorage.checkForUpdates ?? true
   localStorage.products = localStorage.products ?? '[]'
   localStorage.productType = localStorage.productType ?? 'Gold, Silver'
   localStorage.invoiceSettings = localStorage.invoiceSettings
