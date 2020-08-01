@@ -305,6 +305,7 @@ const Invoice = ({ showPdfPreview }) => {
           setInvoiceItems={setInvoiceItems}
           removeInvoiceItem={removeInvoiceItem}
           updateInvoiceItem={updateInvoiceItem}
+          dismissInvoiceItemsPanel={dismissInvoiceItemsPanel}
         />
       </Panel>
     </div>

@@ -16,6 +16,7 @@ const columnProps = {
 
 const InvoiceItems = ({
   currentInvoiceItem, currentInvoiceItemIndex, removeInvoiceItem, updateInvoiceItem,
+  dismissInvoiceItemsPanel,
 }) => {
   const [itemsFilterValue, setItemsFilterValue] = useState('')
 
@@ -177,6 +178,7 @@ const InvoiceItems = ({
         <CommandBarButton
           iconProps={{ iconName: 'Save' }}
           text="Save & close"
+          onClick={dismissInvoiceItemsPanel}
         />
         <CommandBarButton
           iconProps={{ iconName: 'Delete' }}
