@@ -14,6 +14,7 @@ import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
 } from '../../utils/helper'
 import InvoiceItems from '../InvoiceItems'
+import InvoiceItemsTable from '../InvoiceItemsTable'
 
 import './index.scss'
 
@@ -132,6 +133,7 @@ const Invoice = ({ showPdfPreview }) => {
       weight: 0,
       price: 0,
       mkg: 0,
+      gWeight: 0,
       other: 0,
       totalPrice: 0,
     })
@@ -233,6 +235,7 @@ const Invoice = ({ showPdfPreview }) => {
             text="Add New Item"
             onClick={addNewInvoiceItem}
           />
+          <InvoiceItemsTable items={invoiceItems} />
           <br />
           <Stack
             horizontal
