@@ -48,10 +48,13 @@ const createWindow = () => {
 // app.whenReady().then(createWindow)
 app.on('ready', () => {
   createWindow()
-  autoUpdater.setFeedURL({
-    provider: 'github', owner: process.env.OWNER, repo: process.env.REPO, token: process.env.GH_TOKEN,
-  })
-  autoUpdater.checkForUpdates()
+
+  if (!isDev) {
+    autoUpdater.setFeedURL({
+      provider: 'github', owner: process.env.OWNER, repo: process.env.REPO, token: process.env.GH_TOKEN,
+    })
+    autoUpdater.checkForUpdates()
+  }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
