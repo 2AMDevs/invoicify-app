@@ -62,22 +62,12 @@ const productTableColumns = [
 
 const invoiceItemsTableColumns = [
   {
-    key: 'column1',
-    name: 'Item',
-    fieldName: 'product',
-    maxWidth: 150,
-    minWidth: 150,
-    isResizable: true,
-    data: 'string',
-    isPadded: true,
-  },
-  {
     key: 'column2',
     name: 'Pcs',
     fieldName: 'quantity',
     isResizable: true,
-    maxWidth: 10,
-    minWidth: 10,
+    maxWidth: 30,
+    minWidth: 30,
     data: 'string',
     isPadded: true,
   },
@@ -105,8 +95,8 @@ const invoiceItemsTableColumns = [
     key: 'column5',
     name: 'Rate',
     fieldName: 'price',
-    maxWidth: 20,
-    minWidth: 20,
+    maxWidth: 55,
+    minWidth: 55,
     isResizable: true,
     data: 'string',
     isPadded: true,
@@ -123,7 +113,7 @@ const invoiceItemsTableColumns = [
   },
   {
     key: 'column7',
-    name: 'Other',
+    name: 'Other (₹)',
     fieldName: 'other',
     maxWidth: 60,
     minWidth: 60,
@@ -133,13 +123,13 @@ const invoiceItemsTableColumns = [
   },
   {
     key: 'column8',
-    name: 'Total',
+    name: 'Total (₹)',
     fieldName: 'totalPrice',
     maxWidth: 60,
     minWidth: 60,
     isResizable: true,
     data: 'string',
-    isPadded: true,
+    isPadded: false,
   },
 ]
 

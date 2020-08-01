@@ -19,13 +19,8 @@ class InvoiceItemsTable extends React.Component {
     this.actionColumn = {
       key: 'action-column',
       name: 'Actions',
-      minWidth: 70,
-      maxWidth: 70,
-      isRowHeader: true,
-      isResizable: true,
-      isSorted: false,
-      isSortedDescending: false,
-      data: 'number',
+      minWidth: 65,
+      maxWidth: 65,
       isPadded: false,
       onRender: (item) => (
         <>
@@ -33,20 +28,35 @@ class InvoiceItemsTable extends React.Component {
             iconProps={{ iconName: 'Delete' }}
             title="Delete"
             id={`item${item.id}`}
-            onClick={() => this.deleteProduct(item)}
+            onClick={() => this.deleteInvoiceItem(item)}
             checked={false}
           />
           <IconButton
             iconProps={{ iconName: 'Edit' }}
             title="Edit"
-            onClick={() => this.onItemClick(item)}
+            onClick={() => this.editInvoiceItem(item)}
             checked={false}
           />
         </>
       ),
     }
+    this.itemColumn = {
+      key: 'column1',
+      name: 'Item',
+      maxWidth: 150,
+      minWidth: 150,
+      isResizable: true,
+      data: 'string',
+      isPadded: true,
+      onRender: (item) => (
+        <>
+          {item && item.product && `${getProducts(item.product).name} - ${getProducts(item.product).type}`}
+        </>
+      ),
+    }
     this.initialState = {
       columns: [
+        this.itemColumn,
         ...invoiceItemsTableColumns,
         this.actionColumn,
       ],
@@ -59,16 +69,11 @@ class InvoiceItemsTable extends React.Component {
     this.state = { ...this.initialState }
   }
 
-  static getDerivedStateFromProps (props, state) {
-    console.log(props)
-    return state
-  }
-
-  deleteProduct = (item) => {
+  deleteInvoiceItem = (item) => {
     console.log('delete item', item)
   }
 
-  onItemClick = (item) => {
+  editInvoiceItem = (item) => {
     console.log('edit item', item)
   }
 
