@@ -141,6 +141,11 @@ const Invoice = ({ showPdfPreview }) => {
     openInvoiceItemsPanel()
   }
 
+  const editInvoiceItem = (id) => {
+    setCurrentInvoiceItemIndex(invoiceItems.findIndex((item) => item.id === id))
+    openInvoiceItemsPanel()
+  }
+
   const groupedSettings = groupBy(invoiceSettings, 'row')
 
   return (
@@ -235,7 +240,11 @@ const Invoice = ({ showPdfPreview }) => {
             text="Add New Item"
             onClick={addNewInvoiceItem}
           />
-          <InvoiceItemsTable items={invoiceItems} />
+          <InvoiceItemsTable
+            items={invoiceItems}
+            removeInvoiceItem={removeInvoiceItem}
+            editInvoiceItem={editInvoiceItem}
+          />
           <br />
           <Stack
             horizontal
