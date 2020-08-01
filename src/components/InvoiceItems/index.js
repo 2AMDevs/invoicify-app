@@ -4,6 +4,7 @@ import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
 import { ComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/index'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
+import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip'
 
 import { getProducts, groupBy } from '../../utils/helper'
 
@@ -56,7 +57,6 @@ const InvoiceItems = ({
   return (
     <div className="invoice-items animation-slide-up">
       {currentInvoiceItem && (
-
         <div className="invoice-items__item animation-slide-up">
           <Stack
             horizontal
@@ -162,21 +162,26 @@ const InvoiceItems = ({
               prefix="₹"
             />
           </Stack>
-          <IconButton
-            className="invoice-items__item__icon"
-            iconProps={{ iconName: 'Delete' }}
-            onClick={() => removeInvoiceItem(currentInvoiceItem.id)}
-          />
         </div>
       )}
+
+      <TooltipHost content="Changes are saved automatically">
+        <IconButton iconProps={{ iconName: 'InfoSolid' }} />
+      </TooltipHost>
+
       <div className="invoice-items__item invoice-items__item--add-btn animation-slide-up">
         <CommandBarButton
           iconProps={{ iconName: 'Save' }}
-          text="Save"
+          text="Add another"
         />
         <CommandBarButton
-          iconProps={{ iconName: 'Cancel' }}
-          text="Cancel"
+          iconProps={{ iconName: 'Save' }}
+          text="Save & close"
+        />
+        <CommandBarButton
+          iconProps={{ iconName: 'Delete' }}
+          text="Delete"
+          onClick={() => removeInvoiceItem(currentInvoiceItem.id)}
         />
       </div>
     </div>
