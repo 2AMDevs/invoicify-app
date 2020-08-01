@@ -7,10 +7,11 @@ import {
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
+import { TooltipHost, DirectionalHint } from 'office-ui-fabric-react/lib/Tooltip'
 
-import { ProductForm } from '../../components'
 import { productTableColumns } from '../../utils/constants'
 import { getProducts, deleteProducts } from '../../utils/helper'
+import ProductForm from '../ProductForm'
 
 import './index.scss'
 
@@ -118,7 +119,7 @@ class ProductsPage extends React.Component {
 
   render () {
     return (
-      <div className="products-page">
+      <div className="products-page animation-slide-up">
         {this.state.isProductFormOpen && (
           <ProductForm
             isModalOpen={this.state.isProductFormOpen}
@@ -140,13 +141,43 @@ class ProductsPage extends React.Component {
           </TeachingBubble>
         )}
 
-        <CommandBarButton
-          className="products-page__hero-btn"
-          iconProps={{ iconName: 'CircleAddition' }}
-          text="Add New Product"
-          onClick={this.showProductForm}
-          checked={false}
-        />
+        <div className="products-page__header">
+          <CommandBarButton
+            className="products-page__header__btn"
+            iconProps={{ iconName: 'CircleAddition' }}
+            text="Add New Product"
+            onClick={this.showProductForm}
+            checked={false}
+          />
+          <TooltipHost
+            content="Import from a excel or csv file."
+            closeDelay={500}
+            directionalHint={DirectionalHint.bottomCenter}
+            id="importBtn"
+          >
+            <CommandBarButton
+              aria-describedby="importBtn"
+              className="products-page__header__btn"
+              iconProps={{ iconName: 'Import' }}
+              text="Import"
+              checked={false}
+            />
+          </TooltipHost>
+          <TooltipHost
+            content="Export from a excel or csv file."
+            closeDelay={500}
+            directionalHint={DirectionalHint.bottomCenter}
+            id="exportBtn"
+          >
+            <CommandBarButton
+              aria-describedby="exportBtn"
+              className="products-page__header__btn"
+              iconProps={{ iconName: 'Export' }}
+              text="Export"
+              checked={false}
+            />
+          </TooltipHost>
+        </div>
 
         {this.state.items && this.state.items.length > 0 ? (
           <DetailsList

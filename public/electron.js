@@ -4,6 +4,7 @@ const {
   app, BrowserWindow, Menu, screen, ipcMain,
 } = require('electron')
 const isDev = require('electron-is-dev')
+const { autoUpdater } = require('electron-updater')
 
 const { print } = require('./printPdf')
 
@@ -14,10 +15,12 @@ if (isDev) {
   })
 }
 
+let win
+
 const createWindow = () => {
   Menu.setApplicationMenu(null)
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     height,
     width,
     resizable: false,
@@ -42,7 +45,17 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow)
+// app.whenReady().then(createWindow)
+app.on('ready', () => {
+  createWindow()
+
+  if (!isDev) {
+    autoUpdater.setFeedURL({
+      provider: 'github', owner: process.env.OWNER, repo: process.env.REPO, token: process.env.GH_TOKEN,
+    })
+    autoUpdater.checkForUpdates()
+  }
+})
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -67,3 +80,17 @@ ipcMain.on('print-it', (event, pdfBytes) => {
   event.preventDefault()
   print(pdfBytes)
 })
+
+ipcMain.on('app_version', (event) => {
+  event.sender.send('app_version', { version: app.getVersion() })
+})
+
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall()
+})
+
+if (!isDev) {
+  autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('updateDownloaded')
+  })
+}

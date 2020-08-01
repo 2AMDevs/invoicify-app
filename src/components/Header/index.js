@@ -1,73 +1,73 @@
 import React from 'react'
 
 import cn from 'classnames'
-import { CommandBarButton } from 'office-ui-fabric-react'
+import {
+  CommandBarButton, MessageBarButton, MessageBarType, MessageBar,
+} from 'office-ui-fabric-react'
 import { Text } from 'office-ui-fabric-react/lib/Text'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-import { getFromStorage } from '../../utils/helper'
+import { getFromStorage, closeNotification, restartApp } from '../../utils/helper'
+import HeaderRightSection from './HeaderRightSection'
 
 import './index.scss'
 
-const Header = ({ className, ...restProps }) => {
-  const { pathname } = useLocation()
-  const onSettingsPage = pathname === '/settings'
-
-  return (
+const Header = ({ className, ...restProps }) => (
+  <div className="header-container">
+    <MessageBar
+      actions={(
+        <div>
+          <MessageBarButton
+            id="restart-button"
+            onClick={restartApp}
+            className="hidden"
+            type="submit"
+          >
+            Update & Restart
+          </MessageBarButton>
+          <MessageBarButton
+            id="close-button"
+            onClick={closeNotification}
+            type="submit"
+          >
+            Close
+          </MessageBarButton>
+        </div>
+      )}
+      messageBarType={MessageBarType.success}
+      isMultiline={false}
+      id="notification"
+      className="hidden header-container__update-notification"
+    >
+      <p id="message" />
+    </MessageBar>
     <div
       className={cn('header', className)}
       {...restProps}
     >
       <div className="header__left-section">
-        {onSettingsPage ? (
-          <Link
-            className="header__link"
-            to="/"
-          >
-            <CommandBarButton
-              className="header__link__btn"
-              iconProps={{ iconName: 'Back' }}
-              text="Back"
-              checked={false}
-            />
-          </Link>
-        ) : (
-          <>
-            <Link
-              className="header__link"
-              to="/"
-            >
-              <CommandBarButton
-                className="header__link__btn"
-                iconProps={{ iconName: 'Home' }}
-                text="Home"
-                checked={false}
-              />
-            </Link>
-            <Link
-              className="header__link"
-              to="/configure"
-            >
-              <CommandBarButton
-                className="header__link__btn"
-                iconProps={{ iconName: 'EntitlementPolicy' }}
-                text="Invoice Settings"
-                checked={false}
-              />
-            </Link>
-            <Link
-              className="header__link"
-              to="/products"
-            >
-              <CommandBarButton
-                className="header__link__btn"
-                iconProps={{ iconName: 'ProductVariant' }}
-                text="Products"
-                checked={false}
-              />
-            </Link>
-          </>
-        )}
+        <Link
+          className="header__link"
+          to="/"
+        >
+          <CommandBarButton
+            className="header__link__btn"
+            iconProps={{ iconName: 'Home' }}
+            text="Home"
+            checked={false}
+          />
+        </Link>
+        <Link
+          className="header__link"
+          to="/configure"
+        >
+          <CommandBarButton
+            className="header__link__btn"
+            iconProps={{ iconName: 'EntitlementPolicy' }}
+            text="Invoice Settings"
+            checked={false}
+          />
+        </Link>
       </div>
       <Text
         variant="xLarge"
@@ -77,20 +77,9 @@ const Header = ({ className, ...restProps }) => {
       >
         { getFromStorage('companyName') }
       </Text>
-      { !onSettingsPage ? (
-        <Link
-          className="header__link"
-          to="/settings"
-        >
-          <CommandBarButton
-            className="header__link__btn"
-            iconProps={{ iconName: 'Settings' }}
-            checked={false}
-          />
-        </Link>
-      ) : '' }
+      <HeaderRightSection />
     </div>
-  )
-}
+  </div>
+)
 
 export default Header

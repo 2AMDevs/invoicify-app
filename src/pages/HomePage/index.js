@@ -1,41 +1,52 @@
 import './index.scss'
 import React, { useState } from 'react'
 
-import { Stack } from 'office-ui-fabric-react/lib/Stack'
+import { useConstCallback } from '@uifabric/react-hooks'
+import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { pdfjs, Document, Page } from 'react-pdf'
 
 import { Invoice } from '../../components'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
-const deviceWidth = document.documentElement.clientWidth
-const columnProps = {
-  tokens: { childrenGap: deviceWidth * 0.07 },
-  styles: { root: { width: deviceWidth * 0.9 } },
-}
-
 const HomePage = () => {
   const [preview, setPreview] = useState('')
+
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+
+  const openPreviewPanel = useConstCallback(() => setIsPreviewOpen(true))
+
+  const dismissPreviewPanel = useConstCallback(() => setIsPreviewOpen(false))
+
+  const showPdfPreview = (pdfBytes) => {
+    setPreview(pdfBytes)
+    openPreviewPanel()
+  }
 
   return (
     <div
       className="home-page"
     >
-      <Stack
-        horizontal
-        {...columnProps}
+      <Invoice
+        showPdfPreview={showPdfPreview}
+      />
+      <Panel
+        isLightDismiss
+        className="home-page__preview-panel"
+        isOpen={isPreviewOpen}
+        onDismiss={dismissPreviewPanel}
+        closeButtonAriaLabel="Close"
+        headerText="Invoice preview"
       >
-        <Invoice
-          setPreview={setPreview}
-        />
         {preview?.length
           ? (
             <Document
               file={{ data: preview }}
+              className="home-page__preview-panel__doc"
             >
               <Page
                 pageNumber={1}
-                scale={0.65}
+                scale={0.75}
               />
             </Document>
           ) : (
@@ -43,7 +54,7 @@ const HomePage = () => {
               <div>Invoice Preview</div>
             </div>
           )}
-      </Stack>
+      </Panel>
     </div>
   )
 }

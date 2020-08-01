@@ -7,6 +7,9 @@ import {
   PREVIEW, PRINT, DATE, defaultPrintSettings, CUSTOM_FONT,
 } from './constants'
 
+// eslint-disable-next-line global-require
+const { ipcRenderer } = require('electron')
+
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
   if (type === 'num') {
@@ -36,6 +39,11 @@ const currency = (val) => {
   return isNaN(parsedCurrency) ? 0 : parsedCurrency
 }
 
+ipcRenderer.on('app_version', (event, arg) => {
+  ipcRenderer.removeAllListeners('app_version')
+  localStorage.setItem('version', arg.version)
+})
+
 const initializeSettings = () => {
   localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
@@ -44,11 +52,10 @@ const initializeSettings = () => {
   localStorage.productType = localStorage.productType ?? 'Gold, Silver'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
+  ipcRenderer.send('app_version')
 }
 
 const printPDF = (pdfBytes) => {
-  // eslint-disable-next-line global-require
-  const { ipcRenderer } = require('electron')
   ipcRenderer.send('print-it', pdfBytes)
 }
 
@@ -271,6 +278,25 @@ const groupBy = (array, key) => array.reduce((result, currentValue) => {
   return result
 }, {})
 
+ipcRenderer.on('updateDownloaded', () => {
+  const notification = document.getElementById('notification')
+  const message = document.getElementById('message')
+  const restartButton = document.getElementById('restart-button')
+  console.log('Its Done')
+  message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?'
+  restartButton.classList.remove('hidden')
+  notification.parentElement.parentElement.parentElement.classList.remove('hidden')
+})
+
+const closeNotification = () => {
+  const n = document.getElementById('notification')
+  n.parentElement.parentElement.parentElement.classList.add('hidden')
+}
+
+const restartApp = () => {
+  ipcRenderer.send('restart_app')
+}
+
 export {
   getFromStorage,
   initializeSettings,
@@ -285,4 +311,6 @@ export {
   generateUuid4,
   groupBy,
   currency,
+  closeNotification,
+  restartApp,
 }

@@ -7,8 +7,7 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 import { getFromStorage } from '../../utils/helper'
 
 const stackTokens = { childrenGap: 15 }
-const deviceWidth = document.documentElement.clientWidth
-const stackStyles = { root: { width: deviceWidth * 0.7 } }
+const stackStyles = { root: { width: '40rem' } }
 
 const Settings = () => {
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
@@ -43,7 +42,7 @@ const Settings = () => {
   }
 
   return (
-    <>
+    <div className="settings animation-slide-up">
       <Stack
         className="invoice-page"
         tokens={stackTokens}
@@ -77,7 +76,7 @@ const Settings = () => {
           onChange={onClickUpdates}
         />
       </Stack>
-    </>
+    </div>
   )
 }
 
