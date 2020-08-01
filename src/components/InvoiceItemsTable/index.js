@@ -6,6 +6,7 @@ import {
   DetailsListLayoutMode,
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
+import { FontIcon } from 'office-ui-fabric-react/lib/Icon'
 
 import { invoiceItemsTableColumns } from '../../utils/constants'
 import { getProducts } from '../../utils/helper'
@@ -52,7 +53,7 @@ const InvoiceItemsTable = ({ items, removeInvoiceItem, editInvoiceItem }) => {
       </>
     ),
   }
-  const  columns = [
+  const columns = [
     itemColumn,
     ...invoiceItemsTableColumns,
     actionColumn,
@@ -73,9 +74,13 @@ const InvoiceItemsTable = ({ items, removeInvoiceItem, editInvoiceItem }) => {
           enterModalSelectionOnTouch
         />
       ) : (
-        <p className="invoice-item-table__no-items">
-          No items in invoice
-        </p>
+        <div className="invoice-item-table__no-items">
+          <FontIcon
+            iconName="GiftboxOpen"
+            className="invoice-item-table__no-items_icon"
+          />
+          <p className="invoice-item-table__no-items_text">No items in invoice</p>
+        </div>
       )}
     </div>
   )

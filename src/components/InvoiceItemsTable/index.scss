@@ -4,11 +4,21 @@
   flex-direction: column;
 
   &__no-items {
-    font-size: 5rem;
     margin-top: 2rem;
+    margin-bottom: 2rem;
     padding: 3rem;
     color: var(--color-white);
     border-radius: 1rem;
     background-color: var(--color-black-op-20);
+    text-align: center;
+  }
+
+  &__no-items_icon {
+    font-size: 5rem;
+  }
+
+  &__no-items_text {
+    margin-top: 1rem;
+    font-size: 2rem;
   }
 }
