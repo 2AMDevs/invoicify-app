@@ -1,12 +1,11 @@
 import React, { useCallback, useState, useRef } from 'react'
 
-import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
+import { CommandBarButton, Icon } from 'office-ui-fabric-react'
 import { ComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/index'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
-import { TooltipHost, DirectionalHint } from 'office-ui-fabric-react/lib/Tooltip'
 
-import { getProducts, groupBy } from '../../utils/helper'
+import { getProducts, groupBy, currency } from '../../utils/helper'
 
 import './index.scss'
 
@@ -88,7 +87,7 @@ const InvoiceItems = ({
               min="0"
               label="Pcs"
               value={currentInvoiceItem.quantity}
-              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', value)}
+              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', currency(value))}
               required
             />
           </Stack>
@@ -101,6 +100,7 @@ const InvoiceItems = ({
               label="G. Weight"
               type="number"
               min="0"
+              disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.gWeight}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'gWeight', value)}
               suffix="gms"
@@ -110,6 +110,7 @@ const InvoiceItems = ({
               label="Net Weight"
               type="number"
               min="0"
+              disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.weight}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'weight', value)}
               suffix="gms"
@@ -123,6 +124,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="Rate"
               type="number"
+              disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.price}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'price', value)}
               min="0"
@@ -133,6 +135,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="MKG (%)"
               type="number"
+              disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.mkg}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'mkg', value)}
               min="0"
@@ -147,6 +150,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="Other"
               type="number"
+              disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.other}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'other', value)}
               min="0"
@@ -166,12 +170,13 @@ const InvoiceItems = ({
         </div>
       )}
 
-      <TooltipHost
-        content="Changes are saved automatically"
-        directionalHint={DirectionalHint.leftCenter}
-      >
-        <IconButton iconProps={{ iconName: 'InfoSolid' }} />
-      </TooltipHost>
+      <div className="invoice-items__item__info">
+        <Icon
+          className="invoice-items__item__info--icn"
+          iconName="Info"
+        />
+        Changes are saved automatically
+      </div>
 
       <div className="invoice-items__item invoice-items__item--add-btn animation-slide-up">
         <CommandBarButton

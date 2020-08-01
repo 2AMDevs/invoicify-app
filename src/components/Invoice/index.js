@@ -129,13 +129,13 @@ const Invoice = ({ showPdfPreview }) => {
     addInvoiceItem({
       id: newItemId,
       product: null,
-      quantity: 0,
-      weight: 0,
-      price: 0,
-      mkg: 0,
-      gWeight: 0,
-      other: 0,
-      totalPrice: 0,
+      quantity: ZERO,
+      weight: ZERO,
+      price: ZERO,
+      mkg: ZERO,
+      gWeight: ZERO,
+      other: ZERO,
+      totalPrice: ZERO,
     })
     setCurrentInvoiceItemIndex(invoiceItems.length)
     openInvoiceItemsPanel()
