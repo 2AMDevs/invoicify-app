@@ -28,7 +28,8 @@ const InvoiceSettings = () => {
             tokens: { childrenGap: deviceWidth * 0.02 },
             styles: { root: { width: deviceWidth * 0.9 } },
           }}
-          key={setting.name.toLowerCase()}
+          // eslint-disable-next-line react/no-array-index-key
+          key={idx}
         >
           <TextField
             label="Field Name"
