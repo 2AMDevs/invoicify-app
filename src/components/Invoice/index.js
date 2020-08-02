@@ -232,7 +232,7 @@ const Invoice = ({ showPdfPreview }) => {
           </Stack>
         </Stack>
         <Stack
-          styles={{ root: { width: deviceWidth * 0.6, padding: '0 0 0 4rem' } }}
+          styles={{ root: { width: deviceWidth * 0.7, padding: '0 0 0 4rem' } }}
         >
           <CommandBarButton
             className="invoice__add-item-btn"
