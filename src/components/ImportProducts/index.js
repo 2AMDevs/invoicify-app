@@ -39,17 +39,14 @@ const ImportProducts = ({ refreshProductItems }) => {
     // eslint-disable-next-line global-require
     const { ipcRenderer } = require('electron')
     ipcRenderer.invoke('products-excel-to-json').then((res) => {
-      const newLocalProducts = res.map((item) => {
-        const newItemId = generateUuid4()
-        return {
-          name: item[0],
-          type: item[1],
-          id: newItemId,
-        }
-      })
-      setNewProducts(newLocalProducts)
+      const newLocalProducts = res?.map((item) => ({
+        name: item[0],
+        type: item[1],
+        id: generateUuid4(),
+      }))
+      if (newLocalProducts?.length) setNewProducts(newLocalProducts)
       toggleHideDialog()
-    }).catch((e) => console.error(e))
+    }).catch(console.error)
   }
 
   const saveNewProducts = (replace) => {
