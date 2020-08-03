@@ -83,12 +83,7 @@ const setProduct = (product) => {
 
 const setProducts = (newProducts, replace) => {
   const products = (getFromStorage('products', 'json') || [])
-
-  if (!replace) {
-    localStorage.setItem('products', JSON.stringify([...products, ...newProducts]))
-  } else {
-    localStorage.setItem('products', JSON.stringify(newProducts))
-  }
+  localStorage.setItem('products', JSON.stringify(replace ? newProducts : [...products, ...newProducts]))
 }
 
 const deleteProducts = (ids) => {
