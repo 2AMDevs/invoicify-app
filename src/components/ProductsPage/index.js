@@ -11,8 +11,8 @@ import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 import { productTableColumns } from '../../utils/constants'
 import { getProducts, deleteProducts, setProducts } from '../../utils/helper'
 import ImportProducts from '../ImportProducts'
+import ListEmpty from '../ListEmpty'
 import ProductForm from '../ProductForm'
-
 import './index.scss'
 
 class ProductsPage extends React.Component {
@@ -178,9 +178,10 @@ class ProductsPage extends React.Component {
             enterModalSelectionOnTouch
           />
         ) : (
-          <p className="products-page__no-items">
-            No products added
-          </p>
+          <ListEmpty
+            type="Products"
+            source="Database"
+          />
         )}
       </div>
     )
