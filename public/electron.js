@@ -6,6 +6,7 @@ const {
 } = require('electron')
 const isDev = require('electron-is-dev')
 const { autoUpdater } = require('electron-updater')
+const readXlsxFile = require('read-excel-file/node')
 
 const { print } = require('./printPdf')
 
@@ -94,6 +95,15 @@ ipcMain.handle('select-file', async () => {
   const file = await dialog.showOpenDialog({ properties: ['openFile'] })
   if (file) {
     return file.filePaths[0]
+  }
+})
+
+ipcMain.handle('products-excel-to-json', async () => {
+  const file = await dialog.showOpenDialog({ properties: ['openFile'] })
+  if (file) {
+    return readXlsxFile(file.filePaths[0])
+      .then((rows) => rows)
+      .catch((e) => console.error(e))
   }
 })
 

@@ -7,10 +7,10 @@ import {
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
-import { TooltipHost, DirectionalHint } from 'office-ui-fabric-react/lib/Tooltip'
 
 import { productTableColumns } from '../../utils/constants'
 import { getProducts, deleteProducts } from '../../utils/helper'
+import ImportProducts from '../ImportProducts'
 import ProductForm from '../ProductForm'
 
 import './index.scss'
@@ -149,34 +149,7 @@ class ProductsPage extends React.Component {
             onClick={this.showProductForm}
             checked={false}
           />
-          <TooltipHost
-            content="Import from a excel or csv file."
-            closeDelay={500}
-            directionalHint={DirectionalHint.bottomCenter}
-            id="importBtn"
-          >
-            <CommandBarButton
-              aria-describedby="importBtn"
-              className="products-page__header__btn"
-              iconProps={{ iconName: 'Import' }}
-              text="Import"
-              checked={false}
-            />
-          </TooltipHost>
-          <TooltipHost
-            content="Export from a excel or csv file."
-            closeDelay={500}
-            directionalHint={DirectionalHint.bottomCenter}
-            id="exportBtn"
-          >
-            <CommandBarButton
-              aria-describedby="exportBtn"
-              className="products-page__header__btn"
-              iconProps={{ iconName: 'Export' }}
-              text="Export"
-              checked={false}
-            />
-          </TooltipHost>
+          <ImportProducts />
         </div>
 
         {this.state.items && this.state.items.length > 0 ? (

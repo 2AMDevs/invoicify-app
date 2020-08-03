@@ -50,7 +50,8 @@
     "react-dom": "^16.13.1",
     "react-pdf": "^4.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "read-excel-file": "^4.0.6"
   },
   "scripts": {
     "react-start": "craco start",
