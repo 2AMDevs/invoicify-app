@@ -81,6 +81,11 @@ const setProduct = (product) => {
   localStorage.setItem('products', JSON.stringify(products))
 }
 
+const setProducts = (newProducts, replace) => {
+  const products = (getFromStorage('products', 'json') || [])
+  localStorage.setItem('products', JSON.stringify(replace ? newProducts : [...products, ...newProducts]))
+}
+
 const deleteProducts = (ids) => {
   const products = (getFromStorage('products', 'json') || []).filter((p) => !ids.includes(p.id))
   localStorage.setItem('products', JSON.stringify(products))
@@ -306,6 +311,7 @@ export {
   printPDF,
   getInvoiceDate,
   setProduct,
+  setProducts,
   deleteProducts,
   getProducts,
   getPdf,
