@@ -9,7 +9,7 @@ import {
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 
 import { productTableColumns } from '../../utils/constants'
-import { getProducts, deleteProducts } from '../../utils/helper'
+import { getProducts, deleteProducts, setProducts } from '../../utils/helper'
 import ImportProducts from '../ImportProducts'
 import ProductForm from '../ProductForm'
 
@@ -106,6 +106,11 @@ class ProductsPage extends React.Component {
 
   refreshProductItems = () => this.setState({ items: getProducts() })
 
+  deleteAllProducts = () => {
+    setProducts([], true)
+    this.refreshProductItems()
+  }
+
   onItemClick = (item) => this.setState({ currentItem: item, isProductFormOpen: true })
 
   hideProductForm = () => this.setState({ isProductFormOpen: false, currentItem: null })
@@ -145,11 +150,18 @@ class ProductsPage extends React.Component {
           <CommandBarButton
             className="products-page__header__btn"
             iconProps={{ iconName: 'CircleAddition' }}
-            text="Add New Product"
+            text="Add New"
             onClick={this.showProductForm}
             checked={false}
           />
-          <ImportProducts />
+          <ImportProducts refreshProductItems={this.refreshProductItems} />
+          <CommandBarButton
+            className="products-page__header__btn"
+            iconProps={{ iconName: 'Delete' }}
+            text="Delete All"
+            onClick={this.deleteAllProducts}
+            checked={false}
+          />
         </div>
 
         {this.state.items && this.state.items.length > 0 ? (
