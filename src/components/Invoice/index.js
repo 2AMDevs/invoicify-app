@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker, DefaultButton } from 'office-ui-fabric-react'
-import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import {
   PREVIEW, PRINT, DATE, MASKED, ZERO,
@@ -42,6 +42,9 @@ const Invoice = ({ showPdfPreview }) => {
   const defaultInvoice = {
     'Invoice Number': invoiceNumber,
     'Invoice Date': new Date(),
+  }
+
+  const defaultInvoiceFooter = {
     grossTotal: ZERO,
     igst: ZERO,
     cgst: ZERO,
@@ -53,16 +56,17 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const [invoice, setInvoice] = useState(defaultInvoice)
-
+  const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
   const [invoiceItems, setInvoiceItems] = useState([])
-
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
 
   useEffect(() => {
     localStorage.invoiceNumber = invoiceNumber
   }, [invoiceNumber])
 
-  const fetchPDF = async (mode = PRINT) => getPdf({ meta: invoice, items: invoiceItems }, mode)
+  const fetchPDF = async (mode = PRINT) => getPdf(
+    { meta: invoice, items: invoiceItems, footer: invoiceFooter }, mode,
+  )
 
   const resetForm = () => {
     setInvoice(defaultInvoice)
@@ -90,6 +94,27 @@ const Invoice = ({ showPdfPreview }) => {
     dismissInvoiceItemsPanel()
   }
 
+  const updateInvoiceFooter = (change) => {
+    let updatedInvoiceFooter = invoiceFooter
+    if (change) {
+      updatedInvoiceFooter = { ...invoiceFooter, ...change }
+    }
+    const { oldPurchase, grossTotal } = updatedInvoiceFooter
+    const cgst = updatedInvoiceFooter.interState ? 0 : grossTotal * 0.015
+    const sgst = updatedInvoiceFooter.interState ? 0 : grossTotal * 0.015
+    const igst = updatedInvoiceFooter.interState ? grossTotal * 0.03 : 0
+    const totalAmount = Number((grossTotal + cgst + sgst + igst).toFixed(2))
+    setInvoiceFooter({
+      ...updatedInvoiceFooter,
+      grossTotal: Number(grossTotal.toFixed(2)),
+      cgst,
+      sgst,
+      igst,
+      totalAmount,
+      grandTotal: totalAmount - oldPurchase,
+    })
+  }
+
   const updateInvoiceItem = (index, valueObject) => {
     let grossTotal = 0
     setInvoiceItems(invoiceItems.map((item, i) => {
@@ -98,30 +123,15 @@ const Invoice = ({ showPdfPreview }) => {
         // The logic is price*weight + %MKG + other
         const totalPrice = (currency(newItem.price) * newItem.weight
         * (1 + 0.01 * currency(newItem.mkg)) + currency(newItem.other))
-        grossTotal += totalPrice
+        grossTotal += currency(totalPrice)
         return {
           ...newItem,
           totalPrice,
         }
       }
-      grossTotal += currency(item.totalPrice)
       return item
     }))
-
-    const cgst = invoice.interState ? 0 : grossTotal * 0.015
-    const sgst = invoice.interState ? 0 : grossTotal * 0.015
-    const igst = invoice.interState ? grossTotal * 0.035 : 0
-    const totalAmount = Number((grossTotal + cgst + sgst + igst).toFixed(2))
-    const { oldPurchase } = invoice
-    setInvoice({
-      ...invoice,
-      grossTotal: Number(grossTotal.toFixed(2)),
-      cgst,
-      sgst,
-      igst,
-      totalAmount,
-      grandTotal: totalAmount - oldPurchase,
-    })
+    updateInvoiceFooter({ grossTotal })
   }
 
   const addNewInvoiceItem = () => {
@@ -251,17 +261,16 @@ const Invoice = ({ showPdfPreview }) => {
             verticalAlign="center"
             tokens={{ childrenGap: deviceWidth * 0.01 }}
           >
-            <Checkbox
-              label="Same State?"
-              boxSide="end"
-              checked={!invoice.interState}
-              onChange={(_, val) => setInvoice({ ...invoice, interState: !val })}
+            <Toggle
+              label="Inter State?"
+              checked={invoiceFooter.interState}
+              onChange={(_, value) => updateInvoiceFooter({ interState: value })}
             />
             <TextField
               className="invoice-items__item__field"
               label="Gross Total"
               type="number"
-              value={invoice.grossTotal}
+              value={invoiceFooter.grossTotal}
               disabled
               readOnly
               min="0"
@@ -271,7 +280,7 @@ const Invoice = ({ showPdfPreview }) => {
               className="invoice-items__item__field"
               label="Total Amount"
               type="number"
-              value={invoice.totalAmount}
+              value={invoiceFooter.totalAmount}
               disabled
               readOnly
               min="0"
@@ -281,9 +290,9 @@ const Invoice = ({ showPdfPreview }) => {
               className="invoice-items__item__field"
               label="Old Purchase"
               type="number"
-              value={invoice.oldPurchase}
-              onChange={(_, val) => {
-                setInvoice({ ...invoice, oldPurchase: val })
+              value={invoiceFooter.oldPurchase}
+              onChange={(_, value) => {
+                updateInvoiceFooter({ oldPurchase: value })
               }}
               min="0"
               prefix="₹"
@@ -292,7 +301,7 @@ const Invoice = ({ showPdfPreview }) => {
               className="invoice-items__item__field"
               label="Grand Total"
               type="number"
-              value={invoice.grandTotal}
+              value={invoiceFooter.grandTotal}
               disabled
               readOnly
               min="0"

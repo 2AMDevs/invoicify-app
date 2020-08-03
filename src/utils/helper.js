@@ -107,7 +107,7 @@ const getInvoiceSettings = () => {
 }
 
 const getPdf = async (invoiceDetails, mode = PRINT) => {
-  const { meta, items } = invoiceDetails
+  const { meta, items, footer } = invoiceDetails
   let pdfDoc
   const previewPath = getFromStorage('previewPDFUrl')
   const isPreviewMode = (mode === PREVIEW) && previewPath
@@ -198,7 +198,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   })
 
   // Print Footer
-  const grossTotal = `${meta.grossTotal.toFixed(2)}/-`
+  const grossTotal = `${footer.grossTotal.toFixed(2)}/-`
   page.drawText(grossTotal, {
     x: parseFloat(560 - font.widthOfTextAtSize(grossTotal, fontSize)),
     y: 210,
@@ -206,7 +206,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     font,
   })
 
-  const cgst = `${meta.cgst.toFixed(2)}/-`
+  const cgst = `${footer.cgst.toFixed(2)}/-`
   page.drawText(cgst, {
     x: parseFloat(560 - font.widthOfTextAtSize(cgst, fontSize)),
     y: 190,
@@ -214,7 +214,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     font,
   })
 
-  const sgst = `${meta.sgst.toFixed(2)}/-`
+  const sgst = `${footer.sgst.toFixed(2)}/-`
   page.drawText(sgst, {
     x: parseFloat(560 - font.widthOfTextAtSize(sgst, fontSize)),
     y: 170,
@@ -222,7 +222,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     font,
   })
 
-  const igst = `${meta.igst.toFixed(2)}/-`
+  const igst = `${footer.igst.toFixed(2)}/-`
   page.drawText(igst, {
     x: parseFloat(560 - font.widthOfTextAtSize(igst, fontSize)),
     y: 150,
@@ -230,7 +230,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     font,
   })
 
-  const totalAmount = `${meta.totalAmount.toFixed(2)}/-`
+  const totalAmount = `${footer.totalAmount.toFixed(2)}/-`
   page.drawText(totalAmount, {
     x: parseFloat(560 - font.widthOfTextAtSize(totalAmount, fontSize)),
     y: 130,
@@ -238,7 +238,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     font,
   })
 
-  const oldPurchase = `${currency(meta.oldPurchase).toFixed(2)}/-`
+  const oldPurchase = `${currency(footer.oldPurchase).toFixed(2)}/-`
   page.drawText(oldPurchase, {
     x: parseFloat(560 - font.widthOfTextAtSize(oldPurchase, fontSize)),
     y: 110,
@@ -246,7 +246,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     font,
   })
 
-  const grandTotal = `${meta.grandTotal.toFixed(2)}/-`
+  const grandTotal = `${footer.grandTotal.toFixed(2)}/-`
   page.drawText(grandTotal, {
     x: parseFloat(560 - font.widthOfTextAtSize(grandTotal, fontSize)),
     y: 90,
@@ -254,7 +254,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     font,
   })
 
-  page.drawText(toWords(meta.grandTotal), {
+  page.drawText(toWords(footer.grandTotal), {
     x: 85,
     y: 87,
     size: fontSize,
