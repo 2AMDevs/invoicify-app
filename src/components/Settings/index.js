@@ -36,8 +36,10 @@ const Settings = () => {
     // eslint-disable-next-line global-require
     const { ipcRenderer } = require('electron')
     const path = await ipcRenderer.invoke('select-file')
-    setPreviewBill(path)
-    localStorage.previewPDFUrl = path
+    if (path) {
+      setPreviewBill(path)
+      localStorage.previewPDFUrl = path
+    }
   }
 
   const onProductTypeChange = (_, newValue) => {

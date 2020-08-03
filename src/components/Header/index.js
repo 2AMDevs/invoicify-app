@@ -34,7 +34,7 @@ const Header = ({ className, ...restProps }) => (
           </MessageBarButton>
         </div>
       )}
-      messageBarType={MessageBarType.success}
+      messageBarType={MessageBarType.warning}
       isMultiline={false}
       id="notification"
       className="hidden header-container__update-notification"

@@ -4,7 +4,7 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings, CUSTOM_FONT,
+  PREVIEW, PRINT, DATE, defaultPrintSettings, CUSTOM_FONT, UPDATE_RESTART_MSG,
 } from './constants'
 
 // eslint-disable-next-line global-require
@@ -286,10 +286,16 @@ ipcRenderer.on('updateDownloaded', () => {
   const notification = document.getElementById('notification')
   const message = document.getElementById('message')
   const restartButton = document.getElementById('restart-button')
-  console.log('Its Done')
-  message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?'
+  if (message) message.innerText = UPDATE_RESTART_MSG
   restartButton.classList.remove('hidden')
   notification.parentElement.parentElement.parentElement.classList.remove('hidden')
+})
+
+ipcRenderer.on('message', (_event, msg) => {
+  const notification = document.getElementById('notification')
+  const message = document.getElementById('message')
+  if (message) message.innerText = msg
+  if (notification) notification.parentElement.parentElement.parentElement.classList.remove('hidden')
 })
 
 const quitApp = () => {

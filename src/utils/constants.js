@@ -5,6 +5,7 @@ const TEXT = 'Text'
 const MASKED = 'Masked'
 const CUSTOM_FONT = 'invoicify.ttf'
 const ZERO = parseFloat(0)
+const UPDATE_RESTART_MSG = 'Update Downloaded. It will be installed on restart. Restart now?'
 
 const darkThemePalette = {
   themePrimary: '#209cfa',
@@ -204,5 +205,5 @@ const defaultPrintSettings = [
 export {
   PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns,
   productTableColumns, defaultPrintSettings,
-  defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO,
+  defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
 }
