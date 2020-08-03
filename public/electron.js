@@ -1,7 +1,8 @@
+const fs = require('fs')
 const path = require('path')
 
 const {
-  app, BrowserWindow, Menu, screen, ipcMain,
+  app, BrowserWindow, Menu, screen, ipcMain, dialog,
 } = require('electron')
 const isDev = require('electron-is-dev')
 const { autoUpdater } = require('electron-updater')
@@ -88,6 +89,15 @@ ipcMain.on('bye-bye', () => {
 ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', { version: app.getVersion() })
 })
+
+ipcMain.handle('select-file', async () => {
+  const file = await dialog.showOpenDialog({ properties: ['openFile'] })
+  if (file) {
+    return file.filePaths[0]
+  }
+})
+
+ipcMain.handle('read-pdf', async (_, filePath) => fs.readFileSync(filePath))
 
 ipcMain.on('restart_app', () => {
   autoUpdater.quitAndInstall()

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { DefaultButton } from 'office-ui-fabric-react'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
@@ -31,9 +32,12 @@ const Settings = () => {
     setInvoiceNumber(newValue)
   }
 
-  const onBillURLChange = (_, newValue) => {
-    localStorage.previewPDFUrl = newValue
-    setPreviewBill(newValue)
+  const fileSelected = async () => {
+    // eslint-disable-next-line global-require
+    const { ipcRenderer } = require('electron')
+    const path = await ipcRenderer.invoke('select-file')
+    setPreviewBill(path)
+    localStorage.previewPDFUrl = path
   }
 
   const onProductTypeChange = (_, newValue) => {
@@ -59,9 +63,16 @@ const Settings = () => {
           value={invoiceNumber}
         />
         <TextField
-          label="Preview Bill URL"
-          onChange={onBillURLChange}
+          label="Bill File Path"
+          disabled
           value={previewBill}
+        />
+        <DefaultButton
+          text="Select File"
+          iconProps={{ iconName: 'OpenFile' }}
+          primary
+          onClick={fileSelected}
+          styles={{ root: { width: '13rem' } }}
         />
         <TextField
           label="Product Types"

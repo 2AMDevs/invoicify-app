@@ -104,11 +104,11 @@ const getInvoiceSettings = () => {
 const getPdf = async (invoiceDetails, mode = PRINT) => {
   const { meta, items } = invoiceDetails
   let pdfDoc
-  const previewURL = getFromStorage('previewPDFUrl')
-  const isPreviewMode = (mode === PREVIEW) && previewURL
+  const previewPath = getFromStorage('previewPDFUrl')
+  const isPreviewMode = (mode === PREVIEW) && previewPath
   const ourFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
-    const existingPdfBytes = await fetch(previewURL).then((res) => res.arrayBuffer())
+    const existingPdfBytes = await ipcRenderer.invoke('read-pdf', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
     pdfDoc = await PDFDocument.create()
