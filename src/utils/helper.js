@@ -4,8 +4,8 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings,
-  CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings,
+  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET,
+  CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings,
 } from './constants'
 
 // eslint-disable-next-line global-require
@@ -54,6 +54,8 @@ const initializeSettings = () => {
                                   ?? JSON.stringify(defaultPrintSettings)
   localStorage.morePrintSettings = localStorage.morePrintSettings
   ?? JSON.stringify(morePrintSettings)
+  localStorage.calculationSettings = localStorage.calculationSettings
+  ?? JSON.stringify(calculationSettings)
   ipcRenderer.send('app_version')
 }
 
@@ -89,6 +91,9 @@ const setProducts = (newProducts, replace) => {
   localStorage.setItem('products', JSON.stringify(replace ? newProducts : [...products, ...newProducts]))
 }
 
+const titleCase = (string) => string.replace(/([A-Z])/g, ' $1')
+  .replace(/^./, (str) => str.toUpperCase())
+
 const deleteProducts = (ids) => {
   const products = (getFromStorage('products', 'json') || []).filter((p) => !ids.includes(p.id))
   localStorage.setItem('products', JSON.stringify(products))
@@ -104,9 +109,8 @@ const getProducts = (id) => {
   return product
 }
 
-const getInvoiceSettings = (extra) => {
-  const key = extra ? 'morePrintSettings' : 'invoiceSettings'
-  const invoiceSettings = localStorage.getItem(key)
+const getInvoiceSettings = (type = ISET.MAIN) => {
+  const invoiceSettings = localStorage.getItem(type)
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
@@ -145,7 +149,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   })
 
   // Print Items
-  const printSettings = getInvoiceSettings(true)
+  const printSettings = getInvoiceSettings(ISET.PRINT)
   items.forEach((item, idx) => {
     const commonStuff = (x, text, fromStart) => {
       const stringifiedText = text.toString()
@@ -277,4 +281,5 @@ export {
   restartApp,
   quitApp,
   resetSettings,
+  titleCase,
 }

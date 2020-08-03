@@ -7,6 +7,12 @@ const CUSTOM_FONT = 'invoicify.ttf'
 const ZERO = parseFloat(0)
 const UPDATE_RESTART_MSG = 'Update Downloaded. It will be installed on restart. Restart now?'
 
+const ISET = {
+  MAIN: 'invoiceSettings',
+  PRINT: 'morePrintSettings',
+  CALC: 'calculationSettings',
+}
+
 const darkThemePalette = {
   themePrimary: '#209cfa',
   themeLighterAlt: '#01060a',
@@ -209,8 +215,14 @@ const morePrintSettings = {
   endAmountsX: 560,
 }
 
+const calculationSettings = {
+  cgst: 1.5,
+  sgst: 1.5,
+  igst: 3,
+}
+
 export {
-  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns,
-  productTableColumns, defaultPrintSettings, morePrintSettings,
+  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET,
+  productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
 }

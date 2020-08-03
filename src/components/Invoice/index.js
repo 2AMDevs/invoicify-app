@@ -8,7 +8,7 @@ import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import {
-  PREVIEW, PRINT, DATE, MASKED, ZERO,
+  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET,
 } from '../../utils/constants'
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
@@ -100,9 +100,13 @@ const Invoice = ({ showPdfPreview }) => {
       updatedInvoiceFooter = { ...invoiceFooter, ...change }
     }
     const { oldPurchase, grossTotal } = updatedInvoiceFooter
-    const cgst = updatedInvoiceFooter.interState ? 0 : grossTotal * 0.015
-    const sgst = updatedInvoiceFooter.interState ? 0 : grossTotal * 0.015
-    const igst = updatedInvoiceFooter.interState ? grossTotal * 0.03 : 0
+    const calcSettings = getInvoiceSettings(ISET.CALC)
+    const cgst = updatedInvoiceFooter.interState
+      ? 0 : grossTotal * 0.01 * currency(calcSettings.cgst)
+    const sgst = updatedInvoiceFooter.interState
+      ? 0 : grossTotal * 0.01 * currency(calcSettings.sgst)
+    const igst = updatedInvoiceFooter.interState
+      ? grossTotal * 0.01 * currency(calcSettings.igst) : 0
     const totalAmount = Number((grossTotal + cgst + sgst + igst).toFixed(2))
     setInvoiceFooter({
       ...updatedInvoiceFooter,
