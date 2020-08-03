@@ -253,6 +253,11 @@ const restartApp = () => {
   ipcRenderer.send('restart_app')
 }
 
+const resetSettings = () => {
+  localStorage.clear()
+  initializeSettings()
+}
+
 export {
   getFromStorage,
   initializeSettings,
@@ -271,4 +276,5 @@ export {
   closeNotification,
   restartApp,
   quitApp,
+  resetSettings,
 }
