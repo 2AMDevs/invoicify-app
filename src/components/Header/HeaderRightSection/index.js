@@ -4,6 +4,7 @@ import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton } from 'office-ui-fabric-react'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 
+import { quitApp } from '../../../utils/helper'
 import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 
@@ -41,6 +42,12 @@ const HeaderRightSection = () => {
           text={`v${localStorage.getItem('version')}`}
         />
       )}
+      <CommandBarButton
+        className="header__link__btn__exit"
+        iconProps={{ iconName: 'ChromeClose' }}
+        checked={false}
+        onClick={quitApp}
+      />
       <Panel
         isLightDismiss
         className="header__right-section__products-panel"

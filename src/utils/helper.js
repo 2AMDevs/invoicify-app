@@ -287,6 +287,10 @@ ipcRenderer.on('updateDownloaded', () => {
   notification.parentElement.parentElement.parentElement.classList.remove('hidden')
 })
 
+const quitApp = () => {
+  ipcRenderer.send('bye-bye')
+}
+
 const closeNotification = () => {
   const n = document.getElementById('notification')
   n.parentElement.parentElement.parentElement.classList.add('hidden')
@@ -312,4 +316,5 @@ export {
   currency,
   closeNotification,
   restartApp,
+  quitApp,
 }

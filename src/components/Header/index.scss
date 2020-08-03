@@ -45,6 +45,15 @@
     &__btn {
       height: 100%;
       padding: 0 0.5rem;
+
+      &__exit:hover {
+        background-color: var(--color-red-exit);
+      }
+
+      &__exit:hover > span > i {
+        color: var(--color-white) !important;
+      }
+
     }
   }
 }

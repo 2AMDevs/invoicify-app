@@ -81,6 +81,10 @@ ipcMain.on('print-it', (event, pdfBytes) => {
   print(pdfBytes)
 })
 
+ipcMain.on('bye-bye', () => {
+  win.close()
+})
+
 ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', { version: app.getVersion() })
 })
