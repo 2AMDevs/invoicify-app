@@ -44,8 +44,10 @@ const ImportProducts = ({ refreshProductItems }) => {
         type: item[1],
         id: generateUuid4(),
       }))
-      if (newLocalProducts?.length) setNewProducts(newLocalProducts)
-      toggleHideDialog()
+      if (newLocalProducts?.length) {
+        setNewProducts(newLocalProducts)
+        toggleHideDialog()
+      }
     }).catch(console.error)
   }
 
