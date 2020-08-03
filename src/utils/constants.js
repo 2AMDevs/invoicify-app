@@ -146,7 +146,7 @@ const defaultPrintSettings = [
   {
     name: 'Invoice Number',
     x: 90,
-    y: 695.52,
+    y: 695,
     required: true,
     disabled: true,
     type: TEXT,
@@ -155,7 +155,7 @@ const defaultPrintSettings = [
   {
     name: 'Invoice Date',
     x: 485.42,
-    y: 679.52,
+    y: 694.52,
     required: true,
     disabled: false,
     type: DATE,
@@ -202,8 +202,15 @@ const defaultPrintSettings = [
   },
 ]
 
+const morePrintSettings = {
+  itemStartY: 590,
+  diffBetweenItemsY: 15,
+  diffBetweenAmountsY: 20,
+  endAmountsX: 560,
+}
+
 export {
   PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns,
-  productTableColumns, defaultPrintSettings,
+  productTableColumns, defaultPrintSettings, morePrintSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
 }

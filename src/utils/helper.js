@@ -4,7 +4,8 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings, CUSTOM_FONT, UPDATE_RESTART_MSG,
+  PREVIEW, PRINT, DATE, defaultPrintSettings,
+  CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings,
 } from './constants'
 
 // eslint-disable-next-line global-require
@@ -51,6 +52,8 @@ const initializeSettings = () => {
   localStorage.productType = localStorage.productType ?? 'Gold, Silver'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
+  localStorage.morePrintSettings = localStorage.morePrintSettings
+  ?? JSON.stringify(morePrintSettings)
   ipcRenderer.send('app_version')
 }
 
@@ -101,8 +104,9 @@ const getProducts = (id) => {
   return product
 }
 
-const getInvoiceSettings = () => {
-  const invoiceSettings = localStorage.getItem('invoiceSettings')
+const getInvoiceSettings = (extra) => {
+  const key = extra ? 'morePrintSettings' : 'invoiceSettings'
+  const invoiceSettings = localStorage.getItem(key)
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
@@ -141,118 +145,56 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   })
 
   // Print Items
+  const printSettings = getInvoiceSettings(true)
   items.forEach((item, idx) => {
-    const diff = idx * 15
-    const commonStuff = {
-      y: parseFloat(590 - diff),
-      size: fontSize,
-      font,
+    const commonStuff = (x, text, fromStart) => {
+      const stringifiedText = text.toString()
+      const newX = parseFloat(x
+        - (fromStart ? 0 : font.widthOfTextAtSize(stringifiedText, fontSize)))
+      return [stringifiedText,
+        {
+          x: newX,
+          y: parseFloat(printSettings.itemStartY - idx * printSettings.diffBetweenItemsY),
+          size: fontSize,
+          font,
+        },
+      ]
     }
+
     const product = getProducts(item.product)
     if (product?.name) {
-      page.drawText((idx + 1).toString(), {
-        x: parseFloat(45),
-        ...commonStuff,
-      })
-      page.drawText(`${product?.name} [${product?.type}]`, {
-        x: parseFloat(70),
-        ...commonStuff,
-      })
-      const qtyText = item.quantity.toString()
-      page.drawText(qtyText, {
-        x: parseFloat(232 - font.widthOfTextAtSize(qtyText, fontSize)),
-        ...commonStuff,
-      })
-      page.drawText(`${item.gWeight}gms`, {
-        x: parseFloat(283 - font.widthOfTextAtSize(`${item.gWeight}gms`, fontSize)),
-        ...commonStuff,
-      })
-      page.drawText(`${item.weight}gms`, {
-        x: parseFloat(333 - font.widthOfTextAtSize(`${item.weight}gms`, fontSize)),
-        ...commonStuff,
-      })
-
-      const priceText = `${currency(item.price)}/-`
-      page.drawText(priceText, {
-        x: parseFloat(380 - font.widthOfTextAtSize(priceText, fontSize)),
-        ...commonStuff,
-      })
-
-      const mkgText = `${currency(item.mkg)}%`
-      page.drawText(mkgText, {
-        x: parseFloat(428 - font.widthOfTextAtSize(mkgText, fontSize)),
-        ...commonStuff,
-      })
-
-      page.drawText(`${currency(item.other)}/-`, {
-        x: parseFloat(478 - font.widthOfTextAtSize(`${currency(item.other)}/-`, fontSize)),
-        ...commonStuff,
-      })
-
-      const totalPriceText = `${currency(item.totalPrice).toFixed(2)}/-`
-      page.drawText(totalPriceText, {
-        x: parseFloat(560 - font.widthOfTextAtSize(totalPriceText, fontSize)),
-        ...commonStuff,
-      })
+      page.drawText(...commonStuff(45, (idx + 1)), 1)
+      page.drawText(...commonStuff(170, `${product?.name} [${product?.type}]`), 1)
+      page.drawText(...commonStuff(232, item.quantity))
+      page.drawText(...commonStuff(283, `${item.gWeight}gms`))
+      page.drawText(...commonStuff(333, `${item.weight}gms`))
+      page.drawText(...commonStuff(380, `${currency(item.price)}/-`))
+      page.drawText(...commonStuff(428, `${currency(item.mkg)}%`))
+      page.drawText(...commonStuff(478, `${currency(item.other)}/-`))
+      page.drawText(...commonStuff(560, `${currency(item.totalPrice).toFixed(2)}/-`))
     }
   })
 
   // Print Footer
-  const grossTotal = `${footer.grossTotal.toFixed(2)}/-`
-  page.drawText(grossTotal, {
-    x: parseFloat(560 - font.widthOfTextAtSize(grossTotal, fontSize)),
-    y: 210,
-    size: fontSize,
-    font,
-  })
-
-  const cgst = `${footer.cgst.toFixed(2)}/-`
-  page.drawText(cgst, {
-    x: parseFloat(560 - font.widthOfTextAtSize(cgst, fontSize)),
-    y: 190,
-    size: fontSize,
-    font,
-  })
-
-  const sgst = `${footer.sgst.toFixed(2)}/-`
-  page.drawText(sgst, {
-    x: parseFloat(560 - font.widthOfTextAtSize(sgst, fontSize)),
-    y: 170,
-    size: fontSize,
-    font,
-  })
-
-  const igst = `${footer.igst.toFixed(2)}/-`
-  page.drawText(igst, {
-    x: parseFloat(560 - font.widthOfTextAtSize(igst, fontSize)),
-    y: 150,
-    size: fontSize,
-    font,
-  })
-
-  const totalAmount = `${footer.totalAmount.toFixed(2)}/-`
-  page.drawText(totalAmount, {
-    x: parseFloat(560 - font.widthOfTextAtSize(totalAmount, fontSize)),
-    y: 130,
-    size: fontSize,
-    font,
-  })
-
-  const oldPurchase = `${currency(footer.oldPurchase).toFixed(2)}/-`
-  page.drawText(oldPurchase, {
-    x: parseFloat(560 - font.widthOfTextAtSize(oldPurchase, fontSize)),
-    y: 110,
-    size: fontSize,
-    font,
-  })
-
-  const grandTotal = `${footer.grandTotal.toFixed(2)}/-`
-  page.drawText(grandTotal, {
-    x: parseFloat(560 - font.widthOfTextAtSize(grandTotal, fontSize)),
-    y: 90,
-    size: fontSize,
-    font,
-  })
+  const footerCommonParts = (y, key) => {
+    const text = `${currency(footer[key]).toFixed(2)}/-`
+    return [
+      text,
+      {
+        x: parseFloat(printSettings.endAmountsX - font.widthOfTextAtSize(text, fontSize)),
+        y,
+        size: fontSize,
+        font,
+      },
+    ]
+  }
+  page.drawText(...footerCommonParts(210, 'grossTotal'))
+  page.drawText(...footerCommonParts(190, 'cgst'))
+  page.drawText(...footerCommonParts(170, 'sgst'))
+  page.drawText(...footerCommonParts(148, 'igst'))
+  page.drawText(...footerCommonParts(128, 'totalAmount'))
+  page.drawText(...footerCommonParts(108, 'oldPurchase'))
+  page.drawText(...footerCommonParts(88, 'grandTotal'))
 
   page.drawText(toWords(footer.grandTotal), {
     x: 85,

@@ -46,9 +46,9 @@ const Invoice = ({ showPdfPreview }) => {
 
   const defaultInvoiceFooter = {
     grossTotal: ZERO,
-    igst: ZERO,
     cgst: ZERO,
     sgst: ZERO,
+    igst: ZERO,
     totalAmount: ZERO,
     oldPurchase: ZERO,
     grandTotal: ZERO,
