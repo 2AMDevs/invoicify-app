@@ -118,6 +118,11 @@ ipcMain.on('restart_app', () => {
 })
 
 if (!isDev) {
+  autoUpdater.on('download-progress', (progressObj) => {
+    const progress = `Downloading Update - ${progressObj.percent.toFixed(2)}%`
+    win.webContents.send('message', progress)
+  })
+
   autoUpdater.on('update-downloaded', () => {
     win.webContents.send('updateDownloaded')
   })
