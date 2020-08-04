@@ -136,7 +136,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   pdfDoc.registerFontkit(fontkit)
   const { fontSize } = defaultPageSettings
-  const font = await pdfDoc.embedFont(await getSelectFontBuffer())
+  const font = await pdfDoc.embedFont(await getSelectFontBuffer(), { subset: true })
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
