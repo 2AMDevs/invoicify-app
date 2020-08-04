@@ -120,7 +120,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   let pdfDoc
   const previewPath = getFromStorage(FILE_TYPE.PDF)
   const isPreviewMode = (mode === PREVIEW) && previewPath
-  const ourFont = await ipcRenderer.invoke('read-file-buffer', getFromStorage(FILE_TYPE.TTF))
+  const ourFont = await ipcRenderer.invoke('read-file-buffer', getFromStorage(FILE_TYPE.FONT))
   if (isPreviewMode) {
     const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
