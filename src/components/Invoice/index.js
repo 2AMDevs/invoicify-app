@@ -9,7 +9,7 @@ import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import {
-  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET,
+  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD,
 } from '../../utils/constants'
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
@@ -54,9 +54,10 @@ const Invoice = ({ showPdfPreview }) => {
     totalAmount: ZERO,
     oldPurchase: ZERO,
     grandTotal: ZERO,
-    cheque: ZERO,
-    card: ZERO,
-    upi: ZERO,
+    [PAY_METHOD.CHEQUE]: ZERO,
+    [PAY_METHOD.CARD]: ZERO,
+    [PAY_METHOD.UPI]: ZERO,
+    [PAY_METHOD.CASH]: ZERO,
     interState: false,
   }
 
@@ -106,7 +107,9 @@ const Invoice = ({ showPdfPreview }) => {
     if (change) {
       updatedInvoiceFooter = { ...invoiceFooter, ...change }
     }
-    const { oldPurchase, grossTotal } = updatedInvoiceFooter
+    const {
+      oldPurchase, grossTotal, cheque, card, upi,
+    } = updatedInvoiceFooter
     const calcSettings = getInvoiceSettings(ISET.CALC)
     const cgst = updatedInvoiceFooter.interState
       ? 0 : grossTotal * 0.01 * currency(calcSettings.cgst)
@@ -123,6 +126,7 @@ const Invoice = ({ showPdfPreview }) => {
       igst,
       totalAmount,
       grandTotal: totalAmount - oldPurchase,
+      cash: totalAmount - oldPurchase - card - cheque - upi,
     })
   }
 

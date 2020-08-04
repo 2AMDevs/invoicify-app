@@ -13,6 +13,13 @@ const ISET = {
   CALC: 'calculationSettings',
 }
 
+const PAY_METHOD = {
+  CASH: 'cash',
+  CHEQUE: 'cheque',
+  UPI: 'upi',
+  CARD: 'card',
+}
+
 const FILE_TYPE = {
   PDF: 'previewPDFUrl',
   FONT: 'customFont',
@@ -233,7 +240,7 @@ const calculationSettings = {
 }
 
 export {
-  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE,
+  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE, PAY_METHOD,
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
 }

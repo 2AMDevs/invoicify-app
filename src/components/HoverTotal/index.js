@@ -3,45 +3,28 @@ import React from 'react'
 import { DefaultButton } from 'office-ui-fabric-react'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
+import { PAY_METHOD } from '../../utils/constants'
+import { titleCase } from '../../utils/helper'
+
 const HoverTotal = ({ hoverCard, invoiceFooter, updateInvoiceFooter }) => {
   const dismissCard = () => {
     if (hoverCard.current) hoverCard.current.dismiss()
   }
-  const {
-    cheque, card, upi, totalAmount,
-  } = invoiceFooter
   return (
     <div className="hoverCard">
-      <TextField
-        label="Cash"
-        type="number"
-        disabled
-        value={
-          (totalAmount - cheque - upi - card).toFixed(2)
-        }
-        prefix="₹"
-      />
-      <TextField
-        label="Cheque"
-        type="number"
-        value={cheque}
-        prefix="₹"
-        onChange={(_, val) => updateInvoiceFooter({ cheque: val })}
-      />
-      <TextField
-        label="Card"
-        type="number"
-        value={card}
-        prefix="₹"
-        onChange={(_, val) => updateInvoiceFooter({ card: val })}
-      />
-      <TextField
-        label="UPI"
-        type="number"
-        value={upi}
-        prefix="₹"
-        onChange={(_, val) => updateInvoiceFooter({ upi: val })}
-      />
+      {Object.values(PAY_METHOD).map((key, idx) => (
+        <TextField
+          // eslint-disable-next-line react/no-array-index-key
+          key={idx}
+          label={titleCase(key)}
+          type="number"
+          disabled={key === PAY_METHOD.CASH}
+          value={key === PAY_METHOD.CASH
+            ? parseFloat(invoiceFooter[key]).toFixed(2) : invoiceFooter[key]}
+          prefix="₹"
+          onChange={(_, val) => updateInvoiceFooter({ [key]: val })}
+        />
+      ))}
       <DefaultButton
         onClick={dismissCard}
         text="Done"

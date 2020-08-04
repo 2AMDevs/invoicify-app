@@ -5,7 +5,7 @@ import { PDFDocument } from 'pdf-lib'
 
 import {
   PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE, defaultPageSettings,
-  CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings,
+  CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings, PAY_METHOD,
 } from './constants'
 
 // eslint-disable-next-line global-require
@@ -186,12 +186,12 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   })
 
   // Print Footer
-  const footerCommonParts = (y, key) => {
+  const footerCommonParts = (y, key, x) => {
     const text = `${currency(footer[key]).toFixed(2)}/-`
     return [
       text,
       {
-        x: parseFloat(printSettings.endAmountsX - font.widthOfTextAtSize(text, fontSize)),
+        x: x ?? parseFloat(printSettings.endAmountsX - font.widthOfTextAtSize(text, fontSize)),
         y,
         size: fontSize,
         font,
@@ -212,6 +212,12 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     size: fontSize,
     font,
   })
+
+  // Print Distribution
+  page.drawText(...footerCommonParts(190, PAY_METHOD.CASH, 245))
+  page.drawText(...footerCommonParts(190, PAY_METHOD.CHEQUE, 356))
+  page.drawText(...footerCommonParts(170, PAY_METHOD.UPI, 330))
+  page.drawText(...footerCommonParts(170, PAY_METHOD.CARD, 245))
 
   pdfDoc.setTitle('Invoice Preview')
   pdfDoc.setAuthor('2AM Devs')
