@@ -111,7 +111,7 @@ ipcMain.handle('products-excel-to-json', async () => {
   }
 })
 
-ipcMain.handle('read-pdf', async (_, filePath) => fs.readFileSync(filePath))
+ipcMain.handle('read-file-buffer', async (_, filePath) => fs.readFileSync(filePath))
 
 ipcMain.on('restart_app', () => {
   autoUpdater.quitAndInstall()

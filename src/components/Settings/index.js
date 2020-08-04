@@ -6,6 +6,7 @@ import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import { getFromStorage, resetSettings } from '../../utils/helper'
+import { FILE_TYPE } from '../../utils/constants'
 
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: '40rem' } }
@@ -16,6 +17,7 @@ const Settings = () => {
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
+  const [font, setFont] = useState(getFromStorage('customFont'))
 
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
@@ -32,13 +34,17 @@ const Settings = () => {
     setInvoiceNumber(newValue)
   }
 
-  const fileSelected = async () => {
+  const fileSelected = async (type) => {
     // eslint-disable-next-line global-require
     const { ipcRenderer } = require('electron')
     const path = await ipcRenderer.invoke('select-file')
     if (path) {
-      setPreviewBill(path)
-      localStorage.previewPDFUrl = path
+      if (type === FILE_TYPE.PDF) {
+        setPreviewBill(path)
+      } else if (type === FILE_TYPE.FONT) {
+        setFont(path)
+      }
+      localStorage.setItem(type, path)
     }
   }
 
@@ -82,7 +88,19 @@ const Settings = () => {
           text="Select PDF"
           iconProps={{ iconName: 'PDF' }}
           primary
-          onClick={fileSelected}
+          onClick={() => fileSelected(FILE_TYPE.PDF)}
+          styles={{ root: { width: '15rem' } }}
+        />
+        <TextField
+          label="Font Path"
+          disabled
+          value={font}
+        />
+        <DefaultButton
+          text="Select Font"
+          iconProps={{ iconName: 'Font' }}
+          primary
+          onClick={() => fileSelected(FILE_TYPE.FONT)}
           styles={{ root: { width: '15rem' } }}
         />
         <TextField
