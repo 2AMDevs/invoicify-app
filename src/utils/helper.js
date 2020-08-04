@@ -4,7 +4,7 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET,
+  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE,
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings,
 } from './constants'
 
@@ -50,6 +50,7 @@ const initializeSettings = () => {
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
   localStorage.productType = localStorage.productType ?? 'Gold, Silver'
+  localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
   localStorage.morePrintSettings = localStorage.morePrintSettings
@@ -114,21 +115,27 @@ const getInvoiceSettings = (type = ISET.MAIN) => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
+const getSelectFontBuffer = async () => {
+  const selectedFont = getFromStorage(FILE_TYPE.FONT)
+  return selectedFont === CUSTOM_FONT
+    ? fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
+    : ipcRenderer.invoke('read-file-buffer', selectedFont)
+}
+
 const getPdf = async (invoiceDetails, mode = PRINT) => {
   const { meta, items, footer } = invoiceDetails
   let pdfDoc
-  const previewPath = getFromStorage('previewPDFUrl')
+  const previewPath = getFromStorage(FILE_TYPE.PDF)
   const isPreviewMode = (mode === PREVIEW) && previewPath
-  const ourFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
-    const existingPdfBytes = await ipcRenderer.invoke('read-pdf', previewPath)
+    const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
     pdfDoc = await PDFDocument.create()
   }
 
   pdfDoc.registerFontkit(fontkit)
-  const font = await pdfDoc.embedFont(ourFont)
+  const font = await pdfDoc.embedFont(await getSelectFontBuffer())
   const fontSize = 11
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()

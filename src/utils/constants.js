@@ -13,6 +13,11 @@ const ISET = {
   CALC: 'calculationSettings',
 }
 
+const FILE_TYPE = {
+  PDF: 'previewPDFUrl',
+  FONT: 'customFont',
+}
+
 const darkThemePalette = {
   themePrimary: '#209cfa',
   themeLighterAlt: '#01060a',
@@ -222,7 +227,7 @@ const calculationSettings = {
 }
 
 export {
-  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET,
+  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE,
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
 }
