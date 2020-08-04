@@ -20,7 +20,6 @@ const InvoiceSettings = () => {
   const [calcSettings, setCalcSettings] = useState(getInvoiceSettings(ISET.CALC))
 
   const getNewSettings = (type) => {
-    if (type === ISET.MAIN) return [...currentSettings]
     if (type === ISET.PRINT) return { ...printSettings }
     if (type === ISET.CALC) return { ...calcSettings }
 

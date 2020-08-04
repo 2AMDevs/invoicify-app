@@ -17,7 +17,7 @@ const Settings = () => {
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
 
-  const onClickUpdates = (_, checked) => {
+  const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
   }
@@ -40,6 +40,15 @@ const Settings = () => {
       setPreviewBill(path)
       localStorage.previewPDFUrl = path
     }
+  }
+
+  const resetAndUpdate = () => {
+    resetSettings()
+    setPreviewBill(getFromStorage('previewPDFUrl'))
+    setProductType(getFromStorage('productType'))
+    setInvoiceNumber(getFromStorage('invoiceNumber'))
+    setCompanyName(getFromStorage('companyName'))
+    setHindiDate(getFromStorage('hindiDate'))
   }
 
   const onProductTypeChange = (_, newValue) => {
@@ -86,13 +95,13 @@ const Settings = () => {
           checked={hindiDate}
           onText="हिन्दी"
           offText="English"
-          onChange={onClickUpdates}
+          onChange={onDateLangChange}
         />
         <DefaultButton
           text="Reset Settings"
           iconProps={{ iconName: 'FullHistory' }}
           primary
-          onClick={resetSettings}
+          onClick={resetAndUpdate}
           styles={{ root: { width: '18rem' } }}
         />
       </Stack>
