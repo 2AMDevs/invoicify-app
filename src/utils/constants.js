@@ -13,6 +13,11 @@ const ISET = {
   CALC: 'calculationSettings',
 }
 
+const FILE_TYPE = {
+  PDF: 'previewPDFUrl',
+  FONT: 'customFont',
+}
+
 const darkThemePalette = {
   themePrimary: '#209cfa',
   themeLighterAlt: '#01060a',
@@ -157,6 +162,7 @@ const defaultPrintSettings = [
     disabled: true,
     type: TEXT,
     row: 1,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Invoice Date',
@@ -166,6 +172,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: DATE,
     row: 1,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Customer Name',
@@ -175,6 +182,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: TEXT,
     row: 2,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'GSTIN',
@@ -185,6 +193,7 @@ const defaultPrintSettings = [
     type: MASKED,
     mask: '99-**********-***',
     row: 3,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Mobile',
@@ -196,6 +205,7 @@ const defaultPrintSettings = [
     mask: '+\\91 9999999999',
     startIndex: 3,
     row: 3,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Address',
@@ -205,6 +215,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: TEXT,
     row: 4,
+    size: defaultPageSettings.fontSize,
   },
 ]
 
@@ -223,7 +234,7 @@ const calculationSettings = {
 }
 
 export {
-  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET,
+  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE,
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
 }

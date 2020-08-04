@@ -4,7 +4,7 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET,
+  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE, defaultPageSettings,
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings,
 } from './constants'
 
@@ -46,10 +46,11 @@ ipcRenderer.on('app_version', (event, arg) => {
 })
 
 const initializeSettings = () => {
-  localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
+  localStorage.companyName = localStorage.companyName ?? '2AM Devs'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
-  localStorage.productType = localStorage.productType ?? 'Gold, Silver'
+  localStorage.productType = localStorage.productType ?? 'G, S'
+  localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
   localStorage.morePrintSettings = {
@@ -118,22 +119,28 @@ const getInvoiceSettings = (type = ISET.MAIN) => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
+const getSelectFontBuffer = async () => {
+  const selectedFont = getFromStorage(FILE_TYPE.FONT)
+  return selectedFont === CUSTOM_FONT
+    ? fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
+    : ipcRenderer.invoke('read-file-buffer', selectedFont)
+}
+
 const getPdf = async (invoiceDetails, mode = PRINT) => {
   const { meta, items, footer } = invoiceDetails
   let pdfDoc
-  const previewPath = getFromStorage('previewPDFUrl')
+  const previewPath = getFromStorage(FILE_TYPE.PDF)
   const isPreviewMode = (mode === PREVIEW) && previewPath
-  const ourFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
-    const existingPdfBytes = await ipcRenderer.invoke('read-pdf', previewPath)
+    const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
     pdfDoc = await PDFDocument.create()
   }
 
   pdfDoc.registerFontkit(fontkit)
-  const font = await pdfDoc.embedFont(ourFont)
-  const fontSize = 11
+  const { fontSize } = defaultPageSettings
+  const font = await pdfDoc.embedFont(await getSelectFontBuffer())
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
@@ -146,7 +153,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       page.drawText(value, {
         x: parseFloat(field.x),
         y: parseFloat(field.y),
-        size: fontSize,
+        size: parseFloat(field.size) ?? fontSize,
         font,
       })
     }
@@ -157,11 +164,10 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   items.forEach((item, idx) => {
     const commonStuff = (x, text, fromStart) => {
       const stringifiedText = text.toString()
-      const newX = parseFloat(x
-        - (fromStart ? 0 : font.widthOfTextAtSize(stringifiedText, fontSize)))
+      const adjustment = !fromStart ? (font.widthOfTextAtSize(stringifiedText, fontSize)) : 0
       return [stringifiedText,
         {
-          x: newX,
+          x: parseFloat(x - adjustment),
           y: parseFloat(printSettings.itemStartY - idx * printSettings.diffBetweenItemsY),
           size: fontSize,
           font,
@@ -171,11 +177,11 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
     const product = getProducts(item.product)
     if (product?.name) {
-      page.drawText(...commonStuff(45, (idx + 1)), 1)
-      page.drawText(...commonStuff(170, `${product?.name} [${product?.type}]`), 1)
+      page.drawText(...commonStuff(45, (idx + 1)), true)
+      page.drawText(...commonStuff(70, `${product?.name} [${product?.type}]`, true))
       page.drawText(...commonStuff(232, item.quantity))
-      page.drawText(...commonStuff(283, `${item.gWeight}gms`))
-      page.drawText(...commonStuff(333, `${item.weight}gms`))
+      page.drawText(...commonStuff(283, item.gWeight))
+      page.drawText(...commonStuff(333, item.weight))
       page.drawText(...commonStuff(380, `${currency(item.price)}/-`))
       page.drawText(...commonStuff(428, `${currency(item.mkg)}%`))
       page.drawText(...commonStuff(478, `${currency(item.other)}/-`))
