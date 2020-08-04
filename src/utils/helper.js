@@ -52,10 +52,14 @@ const initializeSettings = () => {
   localStorage.productType = localStorage.productType ?? 'Gold, Silver'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
-  localStorage.morePrintSettings = localStorage.morePrintSettings
-  ?? JSON.stringify(morePrintSettings)
-  localStorage.calculationSettings = localStorage.calculationSettings
-  ?? JSON.stringify(calculationSettings)
+  localStorage.morePrintSettings = {
+    ...JSON.parse(localStorage.morePrintSettings),
+    ...morePrintSettings,
+  }
+  localStorage.calculationSettings = {
+    ...JSON.parse(localStorage.calculationSettings),
+    ...calculationSettings,
+  }
   ipcRenderer.send('app_version')
 }
 
