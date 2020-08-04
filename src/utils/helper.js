@@ -45,7 +45,15 @@ ipcRenderer.on('app_version', (event, arg) => {
   localStorage.setItem('version', arg.version)
 })
 
-const initializeSettings = () => {
+const printerList = async () => {
+  const list = await ipcRenderer.invoke('get-printers')
+  return list.map((key) => ({
+    key,
+    text: key,
+  }))
+}
+
+const initializeSettings = async () => {
   localStorage.companyName = localStorage.companyName ?? '2AM Devs'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
@@ -57,11 +65,13 @@ const initializeSettings = () => {
   ?? JSON.stringify(morePrintSettings)
   localStorage.calculationSettings = localStorage.calculationSettings
   ?? JSON.stringify(calculationSettings)
+  localStorage.printers = localStorage.printers ?? JSON.stringify(await printerList())
+  localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-printers')
   ipcRenderer.send('app_version')
 }
 
 const printPDF = (pdfBytes) => {
-  ipcRenderer.send('print-it', pdfBytes)
+  ipcRenderer.send('print-it', pdfBytes, getFromStorage('printer'))
 }
 
 const getInvoiceDate = (date) => {
