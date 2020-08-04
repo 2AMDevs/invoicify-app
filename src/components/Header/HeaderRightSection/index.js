@@ -4,7 +4,7 @@ import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton } from 'office-ui-fabric-react'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 
-import { quitApp } from '../../../utils/helper'
+import { quitApp, getProducts } from '../../../utils/helper'
 import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 
@@ -55,7 +55,7 @@ const HeaderRightSection = () => {
         isOpen={isProductsOpen}
         onDismiss={dismissProductsPanel}
         closeButtonAriaLabel="Close"
-        headerText="Products"
+        headerText={`Products (${getProducts()?.length ? (getProducts()?.length) : ''})`}
       >
         <ProductsPage />
       </Panel>

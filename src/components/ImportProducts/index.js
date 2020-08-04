@@ -69,8 +69,8 @@ const ImportProducts = ({ refreshProductItems }) => {
         <CommandBarButton
           aria-describedby="importBtn"
           className="import-products__btn"
-          iconProps={{ iconName: 'Import' }}
-          text="Import from excel"
+          iconProps={{ iconName: 'ExcelLogoInverse' }}
+          text="Import"
           checked={false}
           onClick={handleImportBtnClick}
         />

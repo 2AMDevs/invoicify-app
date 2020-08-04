@@ -5,7 +5,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { getFromStorage } from '../../utils/helper'
+import { getFromStorage, resetSettings } from '../../utils/helper'
 
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: '40rem' } }
@@ -70,11 +70,11 @@ const Settings = () => {
           value={previewBill}
         />
         <DefaultButton
-          text="Select File"
-          iconProps={{ iconName: 'OpenFile' }}
+          text="Select PDF"
+          iconProps={{ iconName: 'PDF' }}
           primary
           onClick={fileSelected}
-          styles={{ root: { width: '13rem' } }}
+          styles={{ root: { width: '15rem' } }}
         />
         <TextField
           label="Product Types"
@@ -87,6 +87,13 @@ const Settings = () => {
           onText="हिन्दी"
           offText="English"
           onChange={onClickUpdates}
+        />
+        <DefaultButton
+          text="Reset Settings"
+          iconProps={{ iconName: 'FullHistory' }}
+          primary
+          onClick={resetSettings}
+          styles={{ root: { width: '18rem' } }}
         />
       </Stack>
     </div>
