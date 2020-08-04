@@ -4,7 +4,7 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET,
+  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE,
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings,
 } from './constants'
 
@@ -50,6 +50,7 @@ const initializeSettings = () => {
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
   localStorage.productType = localStorage.productType ?? 'Gold, Silver'
+  localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
   localStorage.morePrintSettings = localStorage.morePrintSettings
@@ -117,11 +118,11 @@ const getInvoiceSettings = (type = ISET.MAIN) => {
 const getPdf = async (invoiceDetails, mode = PRINT) => {
   const { meta, items, footer } = invoiceDetails
   let pdfDoc
-  const previewPath = getFromStorage('previewPDFUrl')
+  const previewPath = getFromStorage(FILE_TYPE.PDF)
   const isPreviewMode = (mode === PREVIEW) && previewPath
-  const ourFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
+  const ourFont = await ipcRenderer.invoke('read-file-buffer', getFromStorage(FILE_TYPE.TTF))
   if (isPreviewMode) {
-    const existingPdfBytes = await ipcRenderer.invoke('read-pdf', previewPath)
+    const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
     pdfDoc = await PDFDocument.create()
