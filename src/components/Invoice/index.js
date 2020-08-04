@@ -133,6 +133,7 @@ const Invoice = ({ showPdfPreview }) => {
           totalPrice,
         }
       }
+      grossTotal += currency(item.totalPrice)
       return item
     }))
     updateInvoiceFooter({ grossTotal })
