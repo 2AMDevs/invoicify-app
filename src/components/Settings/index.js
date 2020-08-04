@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 
+import { DefaultButton } from 'office-ui-fabric-react'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { getFromStorage } from '../../utils/helper'
+import { getFromStorage, resetSettings } from '../../utils/helper'
 
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: '40rem' } }
@@ -16,7 +17,7 @@ const Settings = () => {
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
 
-  const onClickUpdates = (_, checked) => {
+  const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
   }
@@ -31,9 +32,23 @@ const Settings = () => {
     setInvoiceNumber(newValue)
   }
 
-  const onBillURLChange = (_, newValue) => {
-    localStorage.previewPDFUrl = newValue
-    setPreviewBill(newValue)
+  const fileSelected = async () => {
+    // eslint-disable-next-line global-require
+    const { ipcRenderer } = require('electron')
+    const path = await ipcRenderer.invoke('select-file')
+    if (path) {
+      setPreviewBill(path)
+      localStorage.previewPDFUrl = path
+    }
+  }
+
+  const resetAndUpdate = () => {
+    resetSettings()
+    setPreviewBill(getFromStorage('previewPDFUrl'))
+    setProductType(getFromStorage('productType'))
+    setInvoiceNumber(getFromStorage('invoiceNumber'))
+    setCompanyName(getFromStorage('companyName'))
+    setHindiDate(getFromStorage('hindiDate'))
   }
 
   const onProductTypeChange = (_, newValue) => {
@@ -59,9 +74,16 @@ const Settings = () => {
           value={invoiceNumber}
         />
         <TextField
-          label="Preview Bill URL"
-          onChange={onBillURLChange}
+          label="Bill File Path"
+          disabled
           value={previewBill}
+        />
+        <DefaultButton
+          text="Select PDF"
+          iconProps={{ iconName: 'PDF' }}
+          primary
+          onClick={fileSelected}
+          styles={{ root: { width: '15rem' } }}
         />
         <TextField
           label="Product Types"
@@ -73,7 +95,14 @@ const Settings = () => {
           checked={hindiDate}
           onText="हिन्दी"
           offText="English"
-          onChange={onClickUpdates}
+          onChange={onDateLangChange}
+        />
+        <DefaultButton
+          text="Reset Settings"
+          iconProps={{ iconName: 'FullHistory' }}
+          primary
+          onClick={resetAndUpdate}
+          styles={{ root: { width: '18rem' } }}
         />
       </Stack>
     </div>

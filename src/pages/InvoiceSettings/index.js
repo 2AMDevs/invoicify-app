@@ -5,30 +5,52 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { fieldTypes, MASKED } from '../../utils/constants'
-import { getInvoiceSettings } from '../../utils/helper'
+import { fieldTypes, MASKED, ISET } from '../../utils/constants'
+import { getInvoiceSettings, titleCase } from '../../utils/helper'
 
 const deviceWidth = document.documentElement.clientWidth
+const token = {
+  tokens: { childrenGap: deviceWidth * 0.02 },
+  styles: { root: { width: deviceWidth * 0.9 } },
+}
 
 const InvoiceSettings = () => {
-  const settings = getInvoiceSettings()
-  const [currentSettings, setCurrentSettings] = useState(settings)
-  const handleChange = (index, key, value) => {
-    const newSettings = [...currentSettings]
-    newSettings[index][key] = value
-    setCurrentSettings(newSettings)
-    localStorage.setItem('invoiceSettings', JSON.stringify(newSettings))
+  const [currentSettings, setCurrentSettings] = useState(getInvoiceSettings())
+  const [printSettings, setPrintSettings] = useState(getInvoiceSettings(ISET.PRINT))
+  const [calcSettings, setCalcSettings] = useState(getInvoiceSettings(ISET.CALC))
+
+  const getNewSettings = (type) => {
+    if (type === ISET.PRINT) return { ...printSettings }
+    if (type === ISET.CALC) return { ...calcSettings }
+
+    return [...currentSettings]
   }
+
+  const handleChange = (index, key, value, type = ISET.MAIN) => {
+    const newSettings = getNewSettings(type)
+
+    if (type !== ISET.MAIN) {
+      newSettings[key] = value
+      if (type === ISET.PRINT) {
+        setPrintSettings(newSettings)
+      } else {
+        setCalcSettings(newSettings)
+      }
+    } else {
+      newSettings[index][key] = value
+      setCurrentSettings(newSettings)
+    }
+    localStorage.setItem(type, JSON.stringify(newSettings))
+  }
+
   return (
-    <>
-      { currentSettings.map((setting, idx) => (
+    <div className="animation-slide-up">
+      {currentSettings.map((setting, idx) => (
         <Stack
           horizontal
-          {...{
-            tokens: { childrenGap: deviceWidth * 0.02 },
-            styles: { root: { width: deviceWidth * 0.9 } },
-          }}
-          key={setting.name.toLowerCase()}
+          {...token}
+          // eslint-disable-next-line react/no-array-index-key
+          key={idx}
         >
           <TextField
             label="Field Name"
@@ -77,7 +99,35 @@ const InvoiceSettings = () => {
             ) : ''}
         </Stack>
       ))}
-    </>
+      <Stack
+        horizontal
+        {...token}
+        key="Extra"
+      >
+        {Object.keys(printSettings).map((key) => (
+          <TextField
+            label={titleCase(key)}
+            key={key}
+            onChange={(_, val) => handleChange(0, key, val, ISET.PRINT)}
+            value={printSettings[key]}
+          />
+        ))}
+      </Stack>
+      <Stack
+        horizontal
+        {...token}
+        key="Calculation"
+      >
+        {Object.keys(calcSettings).map((key) => (
+          <TextField
+            label={key.toUpperCase()}
+            key={key}
+            onChange={(_, val) => handleChange(0, key, val, ISET.CALC)}
+            value={calcSettings[key]}
+          />
+        ))}
+      </Stack>
+    </div>
   )
 }
 

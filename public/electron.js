@@ -1,10 +1,13 @@
+/* eslint-disable no-console */
+const fs = require('fs')
 const path = require('path')
 
 const {
-  app, BrowserWindow, Menu, screen, ipcMain,
+  app, BrowserWindow, Menu, screen, ipcMain, dialog,
 } = require('electron')
 const isDev = require('electron-is-dev')
 const { autoUpdater } = require('electron-updater')
+const readXlsxFile = require('read-excel-file/node')
 
 const { print } = require('./printPdf')
 
@@ -76,20 +79,50 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+const getFilePath = async () => {
+  const file = await dialog.showOpenDialog({ properties: ['openFile'] })
+  if (file) {
+    return file.filePaths[0]
+  }
+}
+
 ipcMain.on('print-it', (event, pdfBytes) => {
   event.preventDefault()
   print(pdfBytes)
+})
+
+ipcMain.on('bye-bye', () => {
+  win.close()
 })
 
 ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', { version: app.getVersion() })
 })
 
+ipcMain.handle('select-file', getFilePath)
+
+ipcMain.handle('products-excel-to-json', async () => {
+  const file = await getFilePath()
+  if (file) {
+    return readXlsxFile(file)
+      .then((rows) => rows)
+      .catch(console.error)
+  }
+})
+
+ipcMain.handle('read-pdf', async (_, filePath) => fs.readFileSync(filePath))
+
 ipcMain.on('restart_app', () => {
   autoUpdater.quitAndInstall()
 })
 
 if (!isDev) {
+  autoUpdater.on('download-progress', (progressObj) => {
+    const progress = `Downloading Update - ${progressObj.percent.toFixed(2)}%`
+    win.webContents.send('message', progress)
+  })
+
   autoUpdater.on('update-downloaded', () => {
     win.webContents.send('updateDownloaded')
   })

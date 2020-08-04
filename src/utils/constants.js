@@ -5,6 +5,13 @@ const TEXT = 'Text'
 const MASKED = 'Masked'
 const CUSTOM_FONT = 'invoicify.ttf'
 const ZERO = parseFloat(0)
+const UPDATE_RESTART_MSG = 'Update Downloaded. It will be installed on restart. Restart now?'
+
+const ISET = {
+  MAIN: 'invoiceSettings',
+  PRINT: 'morePrintSettings',
+  CALC: 'calculationSettings',
+}
 
 const darkThemePalette = {
   themePrimary: '#209cfa',
@@ -145,7 +152,7 @@ const defaultPrintSettings = [
   {
     name: 'Invoice Number',
     x: 90,
-    y: 695.52,
+    y: 695,
     required: true,
     disabled: true,
     type: TEXT,
@@ -154,7 +161,7 @@ const defaultPrintSettings = [
   {
     name: 'Invoice Date',
     x: 485.42,
-    y: 679.52,
+    y: 694.52,
     required: true,
     disabled: false,
     type: DATE,
@@ -201,8 +208,21 @@ const defaultPrintSettings = [
   },
 ]
 
+const morePrintSettings = {
+  itemStartY: 590,
+  diffBetweenItemsY: 15,
+  diffBetweenAmountsY: 20,
+  endAmountsX: 560,
+}
+
+const calculationSettings = {
+  cgst: 1.5,
+  sgst: 1.5,
+  igst: 3,
+}
+
 export {
-  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns,
-  productTableColumns, defaultPrintSettings,
-  defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO,
+  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET,
+  productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
+  defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
 }
