@@ -18,12 +18,18 @@ const InvoiceSettings = () => {
   const [currentSettings, setCurrentSettings] = useState(getInvoiceSettings())
   const [printSettings, setPrintSettings] = useState(getInvoiceSettings(ISET.PRINT))
   const [calcSettings, setCalcSettings] = useState(getInvoiceSettings(ISET.CALC))
+
+  const getNewSettings = (type) => {
+    if (type === ISET.MAIN) return [...currentSettings]
+    if (type === ISET.PRINT) return { ...printSettings }
+    if (type === ISET.CALC) return { ...calcSettings }
+
+    return [...currentSettings]
+  }
+
   const handleChange = (index, key, value, type = ISET.MAIN) => {
-    const newSettings = [
-      ...(type === ISET.MAIN ? currentSettings : []),
-      ...(type === ISET.PRINT ? printSettings : []),
-      ...(type === ISET.CALC ? calcSettings : []),
-    ]
+    const newSettings = getNewSettings(type)
+
     if (type !== ISET.MAIN) {
       newSettings[key] = value
       if (type === ISET.PRINT) {
@@ -37,9 +43,10 @@ const InvoiceSettings = () => {
     }
     localStorage.setItem(type, JSON.stringify(newSettings))
   }
+
   return (
-    <>
-      { currentSettings.map((setting, idx) => (
+    <div className="animation-slide-up">
+      {currentSettings.map((setting, idx) => (
         <Stack
           horizontal
           {...token}
@@ -121,7 +128,7 @@ const InvoiceSettings = () => {
           />
         ))}
       </Stack>
-    </>
+    </div>
   )
 }
 
