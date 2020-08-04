@@ -235,11 +235,6 @@ const Invoice = ({ showPdfPreview }) => {
               onClick={previewPDF}
             />
             <DefaultButton
-              text="Skip"
-              iconProps={{ iconName: 'forward' }}
-              onClick={() => setInvoiceNumber(invoiceNumber + 1)}
-            />
-            <DefaultButton
               text="Reset"
               iconProps={{ iconName: 'refresh' }}
               onClick={resetForm}
