@@ -4,7 +4,7 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET,
+  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, defaultPageSettings,
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings,
 } from './constants'
 
@@ -46,10 +46,10 @@ ipcRenderer.on('app_version', (event, arg) => {
 })
 
 const initializeSettings = () => {
-  localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
+  localStorage.companyName = localStorage.companyName ?? '2AM Devs'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
-  localStorage.productType = localStorage.productType ?? 'Gold, Silver'
+  localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
   localStorage.morePrintSettings = localStorage.morePrintSettings
@@ -129,7 +129,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   pdfDoc.registerFontkit(fontkit)
   const font = await pdfDoc.embedFont(ourFont)
-  const fontSize = 11
+  const { fontSize } = defaultPageSettings
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
@@ -142,7 +142,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       page.drawText(value, {
         x: parseFloat(field.x),
         y: parseFloat(field.y),
-        size: fontSize,
+        size: parseFloat(field.size) ?? fontSize,
         font,
       })
     }
@@ -153,11 +153,10 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   items.forEach((item, idx) => {
     const commonStuff = (x, text, fromStart) => {
       const stringifiedText = text.toString()
-      const newX = parseFloat(x
-        - (fromStart ? 0 : font.widthOfTextAtSize(stringifiedText, fontSize)))
+      const adjustment = !fromStart ? (font.widthOfTextAtSize(stringifiedText, fontSize)) : 0
       return [stringifiedText,
         {
-          x: newX,
+          x: parseFloat(x - adjustment),
           y: parseFloat(printSettings.itemStartY - idx * printSettings.diffBetweenItemsY),
           size: fontSize,
           font,
@@ -167,11 +166,11 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
     const product = getProducts(item.product)
     if (product?.name) {
-      page.drawText(...commonStuff(45, (idx + 1)), 1)
-      page.drawText(...commonStuff(170, `${product?.name} [${product?.type}]`), 1)
+      page.drawText(...commonStuff(45, (idx + 1)), true)
+      page.drawText(...commonStuff(70, `${product?.name} [${product?.type}]`, true))
       page.drawText(...commonStuff(232, item.quantity))
-      page.drawText(...commonStuff(283, `${item.gWeight}gms`))
-      page.drawText(...commonStuff(333, `${item.weight}gms`))
+      page.drawText(...commonStuff(283, item.gWeight))
+      page.drawText(...commonStuff(333, item.weight))
       page.drawText(...commonStuff(380, `${currency(item.price)}/-`))
       page.drawText(...commonStuff(428, `${currency(item.mkg)}%`))
       page.drawText(...commonStuff(478, `${currency(item.other)}/-`))
