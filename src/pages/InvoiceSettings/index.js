@@ -89,6 +89,11 @@ const InvoiceSettings = () => {
             selectedKey={setting.type}
             onChange={(_, val) => handleChange(idx, 'type', val.key)}
           />
+          <TextField
+            label="Font Size"
+            onChange={(_, val) => handleChange(idx, 'size', val)}
+            value={setting.size}
+          />
           { setting.type === MASKED
             ? (
               <TextField

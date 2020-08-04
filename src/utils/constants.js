@@ -162,6 +162,7 @@ const defaultPrintSettings = [
     disabled: true,
     type: TEXT,
     row: 1,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Invoice Date',
@@ -171,6 +172,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: DATE,
     row: 1,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Customer Name',
@@ -180,6 +182,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: TEXT,
     row: 2,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'GSTIN',
@@ -190,6 +193,7 @@ const defaultPrintSettings = [
     type: MASKED,
     mask: '99-**********-***',
     row: 3,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Mobile',
@@ -201,6 +205,7 @@ const defaultPrintSettings = [
     mask: '+\\91 9999999999',
     startIndex: 3,
     row: 3,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Address',
@@ -210,6 +215,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: TEXT,
     row: 4,
+    size: defaultPageSettings.fontSize,
   },
 ]
 

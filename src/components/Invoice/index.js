@@ -133,6 +133,7 @@ const Invoice = ({ showPdfPreview }) => {
           totalPrice,
         }
       }
+      grossTotal += currency(item.totalPrice)
       return item
     }))
     updateInvoiceFooter({ grossTotal })
@@ -232,11 +233,6 @@ const Invoice = ({ showPdfPreview }) => {
               iconProps={{ iconName: 'LightningBolt' }}
               primary
               onClick={previewPDF}
-            />
-            <DefaultButton
-              text="Skip"
-              iconProps={{ iconName: 'forward' }}
-              onClick={() => setInvoiceNumber(invoiceNumber + 1)}
             />
             <DefaultButton
               text="Reset"
