@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker, DefaultButton } from 'office-ui-fabric-react'
+import { HoverCard, HoverCardType } from 'office-ui-fabric-react/lib/HoverCard'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
@@ -13,6 +14,7 @@ import {
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
 } from '../../utils/helper'
+import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 
@@ -52,6 +54,9 @@ const Invoice = ({ showPdfPreview }) => {
     totalAmount: ZERO,
     oldPurchase: ZERO,
     grandTotal: ZERO,
+    cheque: ZERO,
+    card: ZERO,
+    upi: ZERO,
     interState: false,
   }
 
@@ -59,6 +64,8 @@ const Invoice = ({ showPdfPreview }) => {
   const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
   const [invoiceItems, setInvoiceItems] = useState([])
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
+
+  const hoverCard = useRef(null)
 
   useEffect(() => {
     localStorage.invoiceNumber = invoiceNumber
@@ -297,16 +304,27 @@ const Invoice = ({ showPdfPreview }) => {
               min="0"
               prefix="₹"
             />
-            <TextField
-              className="invoice-items__item__field"
-              label="Grand Total"
-              type="number"
-              value={invoiceFooter.grandTotal}
-              disabled
-              readOnly
-              min="0"
-              prefix="₹"
-            />
+            <HoverCard
+              cardDismissDelay={2000}
+              type={HoverCardType.plain}
+              plainCardProps={{
+                onRenderPlainCard: () => HoverTotal(
+                  { hoverCard, invoiceFooter, updateInvoiceFooter },
+                ),
+              }}
+              componentRef={hoverCard}
+            >
+              <TextField
+                className="invoice-items__item__field"
+                label="Grand Total"
+                type="number"
+                value={invoiceFooter.grandTotal}
+                disabled
+                readOnly
+                min="0"
+                prefix="₹"
+              />
+            </HoverCard>
           </Stack>
         </Stack>
       </Stack>
