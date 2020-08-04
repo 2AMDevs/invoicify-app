@@ -11,6 +11,17 @@ import {
 // eslint-disable-next-line global-require
 const { ipcRenderer } = require('electron')
 
+const getBoolFromString = (value) => {
+  switch (value) {
+  case 'true':
+    return true
+  case 'false':
+    return false
+  default:
+    return value
+  }
+}
+
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
   if (type === 'num') {
@@ -20,14 +31,7 @@ const getFromStorage = (key, type) => {
   if (type === 'json') {
     return JSON.parse(value)
   }
-  switch (value) {
-  case 'true':
-    return true
-  case 'false':
-    return false
-  default:
-    return value
-  }
+  return getBoolFromString(value)
 }
 
 const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((type) => ({
@@ -53,14 +57,14 @@ const initializeSettings = () => {
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
-  localStorage.morePrintSettings = {
-    ...JSON.parse(localStorage.morePrintSettings),
+  localStorage.morePrintSettings = JSON.stringify({
+    ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
     ...morePrintSettings,
-  }
-  localStorage.calculationSettings = {
-    ...JSON.parse(localStorage.calculationSettings),
+  })
+  localStorage.calculationSettings = JSON.stringify({
+    ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
     ...calculationSettings,
-  }
+  })
   ipcRenderer.send('app_version')
 }
 
@@ -210,7 +214,11 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   page.drawText(...footerCommonParts(108, 'oldPurchase'))
   page.drawText(...footerCommonParts(88, 'grandTotal'))
 
-  page.drawText(toWords(footer.grandTotal), {
+  const calcSettings = getInvoiceSettings(ISET.CALC)
+
+  const towWordsText = getBoolFromString(calcSettings.roundOffToWords)
+    ? Math.ceil(footer.grandTotal) : footer.grandTotal
+  page.drawText(toWords(towWordsText), {
     x: 85,
     y: 87,
     size: fontSize,
