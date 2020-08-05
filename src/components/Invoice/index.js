@@ -9,7 +9,7 @@ import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import {
-  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD,
+  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
 } from '../../utils/constants'
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
@@ -41,9 +41,17 @@ const Invoice = ({ showPdfPreview }) => {
 
   const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
 
-  const defaultInvoice = {
-    'Invoice Number': invoiceNumber,
-    'Invoice Date': new Date(),
+  const defaultInvoiceFields = () => {
+    const defaultInvoice = {}
+    defaultPrintSettings.forEach((item) => {
+      defaultInvoice[item.name] = ''
+    })
+
+    return {
+      ...defaultInvoice,
+      'Invoice Number': invoiceNumber,
+      'Invoice Date': new Date(),
+    }
   }
 
   const defaultInvoiceFooter = {
@@ -61,7 +69,7 @@ const Invoice = ({ showPdfPreview }) => {
     interState: false,
   }
 
-  const [invoice, setInvoice] = useState(defaultInvoice)
+  const [invoice, setInvoice] = useState(defaultInvoiceFields())
   const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
   const [invoiceItems, setInvoiceItems] = useState([])
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
@@ -77,7 +85,7 @@ const Invoice = ({ showPdfPreview }) => {
   )
 
   const resetForm = () => {
-    setInvoice(defaultInvoice)
+    setInvoice(defaultInvoiceFields())
     setInvoiceItems([])
   }
 
