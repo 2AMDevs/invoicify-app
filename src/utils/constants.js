@@ -237,6 +237,7 @@ const calculationSettings = {
   cgst: 1.5,
   sgst: 1.5,
   igst: 3,
+  roundOffToWords: true,
 }
 
 export {
