@@ -206,7 +206,10 @@ const Invoice = ({ showPdfPreview }) => {
                   label: field.name,
                   key: field.name,
                   value: invoice[field.name],
+                  prefix: field.prefix,
                   onChange: (_, val) => {
+                    if (field.regex && !new RegExp(field.regex).test(val)) return
+                    if (field.inputLength && val.length > field.inputLength) return
                     setInvoice({ ...invoice, [field.name]: val })
                   },
                   required: field.required,
@@ -252,8 +255,8 @@ const Invoice = ({ showPdfPreview }) => {
               onClick={printAndMove}
             />
             <DefaultButton
-              text="PrintWithBill"
-              iconProps={{ iconName: 'print' }}
+              text="Print+Bill"
+              iconProps={{ iconName: 'PrintfaxPrinterFile' }}
               primary
               onClick={printWithBill}
             />
