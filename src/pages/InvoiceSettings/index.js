@@ -125,7 +125,7 @@ const InvoiceSettings = () => {
       >
         {Object.keys(calcSettings).map((key) => (
           <TextField
-            label={key.toUpperCase()}
+            label={key?.includes('gst') ? `${key.toUpperCase()} (%)` : titleCase(key)}
             key={key}
             onChange={(_, val) => handleChange(0, key, val, ISET.CALC)}
             value={calcSettings[key]}
