@@ -10,6 +10,7 @@ const HoverTotal = ({ hoverCard, invoiceFooter, updateInvoiceFooter }) => {
   const dismissCard = () => {
     if (hoverCard.current) hoverCard.current.dismiss()
   }
+
   return (
     <div className="hoverCard">
       {Object.values(PAY_METHOD).map((key, idx) => (
