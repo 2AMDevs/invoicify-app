@@ -105,6 +105,23 @@ const Invoice = ({ showPdfPreview }) => {
     showPdfPreview(pdfBytes)
   }
 
+  const keyDownHandler = (e) => {
+    if (e.ctrlKey) {
+      if (e.key === 's') previewPDF()
+
+      if (e.key.toLowerCase() === 'p') printAndMove()
+    }
+
+    if (e.shiftKey && e.ctrlKey) {
+      if (e.key.toLowerCase() === 'p') printWithBill()
+    }
+  }
+
+  useEffect(() => {
+    // Binding HotKeys
+    document.addEventListener('keydown', keyDownHandler)
+  })
+
   const addInvoiceItem = (invoiceItem) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
   }
@@ -250,18 +267,21 @@ const Invoice = ({ showPdfPreview }) => {
           >
             <DefaultButton
               text="Print"
+              title="ctrl + p"
               iconProps={{ iconName: 'print' }}
               primary
               onClick={printAndMove}
             />
             <DefaultButton
               text="Print+Bill"
+              title="ctrl + shft + p"
               iconProps={{ iconName: 'PrintfaxPrinterFile' }}
               primary
               onClick={printWithBill}
             />
             <DefaultButton
               text="Preview"
+              title="ctrl + s"
               iconProps={{ iconName: 'LightningBolt' }}
               primary
               onClick={previewPDF}

@@ -54,6 +54,9 @@
         color: var(--color-white) !important;
       }
 
+      &__mini:hover > span > i {
+        color: var(--color-white) !important;
+      }
     }
   }
 }

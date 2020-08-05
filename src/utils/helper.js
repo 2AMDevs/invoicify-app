@@ -282,6 +282,10 @@ const quitApp = () => {
   ipcRenderer.send('bye-bye')
 }
 
+const minimizeApp = () => {
+  ipcRenderer.send('shut-up')
+}
+
 const closeNotification = () => {
   const n = document.getElementById('notification')
   n.parentElement.parentElement.parentElement.classList.add('hidden')
@@ -314,6 +318,7 @@ export {
   closeNotification,
   restartApp,
   quitApp,
+  minimizeApp,
   resetSettings,
   titleCase,
 }
