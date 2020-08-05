@@ -49,7 +49,15 @@ ipcRenderer.on('app_version', (event, arg) => {
   localStorage.setItem('version', arg.version)
 })
 
-const initializeSettings = () => {
+const printerList = async () => {
+  const list = await ipcRenderer.invoke('get-printers')
+  return list.map((key) => ({
+    key,
+    text: key,
+  }))
+}
+
+const initializeSettings = async () => {
   localStorage.companyName = localStorage.companyName ?? '2AM Devs'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
@@ -57,6 +65,8 @@ const initializeSettings = () => {
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
+  localStorage.printers = localStorage.printers ?? JSON.stringify(await printerList())
+  localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-printers')
   localStorage.morePrintSettings = JSON.stringify({
     ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
     ...morePrintSettings,
@@ -69,7 +79,7 @@ const initializeSettings = () => {
 }
 
 const printPDF = (pdfBytes) => {
-  ipcRenderer.send('print-it', pdfBytes)
+  ipcRenderer.send('print-it', pdfBytes, getFromStorage('printer'))
 }
 
 const getInvoiceDate = (date) => {
