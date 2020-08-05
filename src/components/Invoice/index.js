@@ -9,7 +9,7 @@ import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import {
-  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD,
+  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
 } from '../../utils/constants'
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
@@ -41,9 +41,17 @@ const Invoice = ({ showPdfPreview }) => {
 
   const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
 
-  const defaultInvoice = {
-    'Invoice Number': invoiceNumber,
-    'Invoice Date': new Date(),
+  const defaultInvoiceFields = () => {
+    const defaultInvoice = {}
+    defaultPrintSettings.forEach((item) => {
+      defaultInvoice[item.name] = ''
+    })
+
+    return {
+      ...defaultInvoice,
+      'Invoice Number': invoiceNumber,
+      'Invoice Date': new Date(),
+    }
   }
 
   const defaultInvoiceFooter = {
@@ -61,7 +69,7 @@ const Invoice = ({ showPdfPreview }) => {
     interState: false,
   }
 
-  const [invoice, setInvoice] = useState(defaultInvoice)
+  const [invoice, setInvoice] = useState(defaultInvoiceFields())
   const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
   const [invoiceItems, setInvoiceItems] = useState([])
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
@@ -77,21 +85,42 @@ const Invoice = ({ showPdfPreview }) => {
   )
 
   const resetForm = () => {
-    setInvoice(defaultInvoice)
+    setInvoice(defaultInvoiceFields())
     setInvoiceItems([])
   }
 
-  const printAndMove = async () => {
-    const pdfBytes = await fetchPDF()
+  const printAndMove = async (_, includeBill) => {
+    const pdfBytes = includeBill ? await fetchPDF(PREVIEW) : await fetchPDF()
     printPDF(pdfBytes)
     setInvoiceNumber(invoiceNumber + 1)
     resetForm()
+  }
+
+  const printWithBill = (e) => {
+    printAndMove(e, true)
   }
 
   const previewPDF = async () => {
     const pdfBytes = await fetchPDF(PREVIEW)
     showPdfPreview(pdfBytes)
   }
+
+  const keyDownHandler = (e) => {
+    if (e.ctrlKey) {
+      if (e.key === 's') previewPDF()
+
+      if (e.key.toLowerCase() === 'p') printAndMove()
+    }
+
+    if (e.shiftKey && e.ctrlKey) {
+      if (e.key.toLowerCase() === 'p') printWithBill()
+    }
+  }
+
+  useEffect(() => {
+    // Binding HotKeys
+    document.addEventListener('keydown', keyDownHandler)
+  })
 
   const addInvoiceItem = (invoiceItem) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
@@ -194,8 +223,14 @@ const Invoice = ({ showPdfPreview }) => {
                   label: field.name,
                   key: field.name,
                   value: invoice[field.name],
+                  prefix: field.prefix,
                   onChange: (_, val) => {
+                    if (field.inputLength && val.length > field.inputLength) return
                     setInvoice({ ...invoice, [field.name]: val })
+                  },
+                  onGetErrorMessage: (value) => {
+                    if (!value) return
+                    if (field.regex && !new RegExp(field.regex).test(value)) return `Invalid Value For ${field.name}`
                   },
                   required: field.required,
                   disabled: field.disabled,
@@ -235,12 +270,21 @@ const Invoice = ({ showPdfPreview }) => {
           >
             <DefaultButton
               text="Print"
+              title="ctrl + p"
               iconProps={{ iconName: 'print' }}
               primary
               onClick={printAndMove}
             />
             <DefaultButton
+              text="Print+Bill"
+              title="ctrl + shft + p"
+              iconProps={{ iconName: 'PrintfaxPrinterFile' }}
+              primary
+              onClick={printWithBill}
+            />
+            <DefaultButton
               text="Preview"
+              title="ctrl + s"
               iconProps={{ iconName: 'LightningBolt' }}
               primary
               onClick={previewPDF}
@@ -278,7 +322,6 @@ const Invoice = ({ showPdfPreview }) => {
               onChange={(_, value) => updateInvoiceFooter({ interState: value })}
             />
             <TextField
-              className="invoice-items__item__field"
               label="Gross Total"
               type="number"
               value={invoiceFooter.grossTotal}
@@ -288,7 +331,6 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <TextField
-              className="invoice-items__item__field"
               label="Total Amount"
               type="number"
               value={invoiceFooter.totalAmount}
@@ -298,7 +340,6 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <TextField
-              className="invoice-items__item__field"
               label="Old Purchase"
               type="number"
               value={invoiceFooter.oldPurchase}
@@ -309,6 +350,7 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <HoverCard
+              className="invoice__hover-card"
               cardDismissDelay={2000}
               type={HoverCardType.plain}
               plainCardProps={{
@@ -319,7 +361,7 @@ const Invoice = ({ showPdfPreview }) => {
               componentRef={hoverCard}
             >
               <TextField
-                className="invoice-items__item__field"
+                className="no-box-shadow"
                 label="Grand Total"
                 type="number"
                 value={invoiceFooter.grandTotal}

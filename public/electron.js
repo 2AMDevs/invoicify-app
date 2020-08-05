@@ -96,6 +96,10 @@ ipcMain.on('bye-bye', () => {
   win.close()
 })
 
+ipcMain.on('shut-up', () => {
+  win.minimize()
+})
+
 ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', { version: app.getVersion() })
 })

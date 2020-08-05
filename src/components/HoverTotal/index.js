@@ -6,13 +6,18 @@ import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { PAY_METHOD } from '../../utils/constants'
 import { titleCase } from '../../utils/helper'
 
+import './index.scss'
+
 const HoverTotal = ({ hoverCard, invoiceFooter, updateInvoiceFooter }) => {
   const dismissCard = () => {
     if (hoverCard.current) hoverCard.current.dismiss()
   }
 
   return (
-    <div className="hoverCard">
+    <div
+      className="hover-card"
+      onMouseLeave={dismissCard}
+    >
       {Object.values(PAY_METHOD).map((key, idx) => (
         <TextField
           // eslint-disable-next-line react/no-array-index-key
@@ -27,6 +32,7 @@ const HoverTotal = ({ hoverCard, invoiceFooter, updateInvoiceFooter }) => {
         />
       ))}
       <DefaultButton
+        className="hover-card__submmit-btn"
         onClick={dismissCard}
         text="Done"
       />

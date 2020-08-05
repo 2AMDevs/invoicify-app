@@ -9,6 +9,8 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 import { FILE_TYPE } from '../../utils/constants'
 import { getFromStorage, resetSettings } from '../../utils/helper'
 
+import './index.scss'
+
 // eslint-disable-next-line global-require
 const { ipcRenderer } = require('electron')
 
@@ -93,30 +95,42 @@ const Settings = () => {
           onChange={onPrinterChange}
           options={getFromStorage('printers') && JSON.parse(getFromStorage('printers'))}
         />
-        <TextField
-          label="Bill File Path"
-          disabled
-          value={previewBill}
-        />
-        <DefaultButton
-          text="Select PDF"
-          iconProps={{ iconName: 'PDF' }}
-          primary
-          onClick={() => fileSelected(FILE_TYPE.PDF)}
-          styles={{ root: { width: '15rem' } }}
-        />
-        <TextField
-          label="Font Path"
-          disabled
-          value={font}
-        />
-        <DefaultButton
-          text="Select Font"
-          iconProps={{ iconName: 'Font' }}
-          primary
-          onClick={() => fileSelected(FILE_TYPE.FONT)}
-          styles={{ root: { width: '15rem' } }}
-        />
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
+            className="invoice-page__path-input"
+            placeholder="Bill File Path"
+            disabled
+            value={previewBill}
+          />
+          <DefaultButton
+            className="invoice-page__select-btn"
+            text="Select Bill"
+            iconProps={{ iconName: 'PDF' }}
+            primary
+            onClick={() => fileSelected(FILE_TYPE.PDF)}
+          />
+        </Stack>
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
+            className="invoice-page__path-input"
+            placeholder="Font Path"
+            disabled
+            value={font}
+          />
+          <DefaultButton
+            className="invoice-page__select-btn"
+            text="Select Font"
+            iconProps={{ iconName: 'Font' }}
+            primary
+            onClick={() => fileSelected(FILE_TYPE.FONT)}
+          />
+        </Stack>
         <TextField
           label="Product Types"
           onChange={onProductTypeChange}
