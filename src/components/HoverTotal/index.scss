@@ -1,0 +1,10 @@
+.hover-card {
+  display: 'flex';
+  align-items: 'center';
+  justify-content: 'center';
+  padding: 1rem;
+
+  &__submmit-btn {
+    margin-top: 1rem;
+  }
+}

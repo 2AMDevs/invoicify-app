@@ -13,6 +13,18 @@ const ISET = {
   CALC: 'calculationSettings',
 }
 
+const PAY_METHOD = {
+  CASH: 'cash',
+  CHEQUE: 'cheque',
+  UPI: 'upi',
+  CARD: 'card',
+}
+
+const FILE_TYPE = {
+  PDF: 'previewPDFUrl',
+  FONT: 'customFont',
+}
+
 const darkThemePalette = {
   themePrimary: '#209cfa',
   themeLighterAlt: '#01060a',
@@ -157,6 +169,7 @@ const defaultPrintSettings = [
     disabled: true,
     type: TEXT,
     row: 1,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Invoice Date',
@@ -166,6 +179,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: DATE,
     row: 1,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Customer Name',
@@ -175,6 +189,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: TEXT,
     row: 2,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'GSTIN',
@@ -182,9 +197,10 @@ const defaultPrintSettings = [
     y: 645.52,
     required: true,
     disabled: false,
-    type: MASKED,
-    mask: '99-**********-***',
+    type: TEXT,
+    regex: '^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
     row: 3,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Mobile',
@@ -192,10 +208,13 @@ const defaultPrintSettings = [
     y: 645.52,
     required: true,
     disabled: false,
-    type: MASKED,
-    mask: '+\\91 9999999999',
+    type: TEXT,
+    inputLength: 10,
+    prefix: '+91',
+    regex: '\\+?\\d[\\d -]{8,12}\\d',
     startIndex: 3,
     row: 3,
+    size: defaultPageSettings.fontSize,
   },
   {
     name: 'Address',
@@ -205,6 +224,7 @@ const defaultPrintSettings = [
     disabled: false,
     type: TEXT,
     row: 4,
+    size: defaultPageSettings.fontSize,
   },
 ]
 
@@ -219,10 +239,11 @@ const calculationSettings = {
   cgst: 1.5,
   sgst: 1.5,
   igst: 3,
+  roundOffToWords: true,
 }
 
 export {
-  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET,
+  PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE, PAY_METHOD,
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
 }

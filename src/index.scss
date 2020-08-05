@@ -46,6 +46,10 @@ code {
   display: none;
 }
 
+.no-box-shadow {
+  box-shadow: none;
+}
+
 // keyframes animations and classes
 @keyframes slideUp {
   0% {

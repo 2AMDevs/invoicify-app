@@ -9,7 +9,7 @@ const isDev = require('electron-is-dev')
 const { autoUpdater } = require('electron-updater')
 const readXlsxFile = require('read-excel-file/node')
 
-const { print } = require('./printPdf')
+const { print, getPrinters, getDefaultPrinter } = require('./printPdf')
 
 if (isDev) {
   // eslint-disable-next-line global-require
@@ -87,13 +87,17 @@ const getFilePath = async () => {
   }
 }
 
-ipcMain.on('print-it', (event, pdfBytes) => {
+ipcMain.on('print-it', async (event, pdfBytes, selectedPrinter) => {
   event.preventDefault()
-  print(pdfBytes)
+  await print(pdfBytes, selectedPrinter)
 })
 
 ipcMain.on('bye-bye', () => {
   win.close()
+})
+
+ipcMain.on('shut-up', () => {
+  win.minimize()
 })
 
 ipcMain.on('app_version', (event) => {
@@ -101,6 +105,8 @@ ipcMain.on('app_version', (event) => {
 })
 
 ipcMain.handle('select-file', getFilePath)
+ipcMain.handle('get-printers', getPrinters)
+ipcMain.handle('get-def-printer', getDefaultPrinter)
 
 ipcMain.handle('products-excel-to-json', async () => {
   const file = await getFilePath()
@@ -111,7 +117,7 @@ ipcMain.handle('products-excel-to-json', async () => {
   }
 })
 
-ipcMain.handle('read-pdf', async (_, filePath) => fs.readFileSync(filePath))
+ipcMain.handle('read-file-buffer', async (_, filePath) => fs.readFileSync(filePath))
 
 ipcMain.on('restart_app', () => {
   autoUpdater.quitAndInstall()

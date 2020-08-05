@@ -4,12 +4,23 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET,
-  CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings,
+  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE, defaultPageSettings,
+  CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings, PAY_METHOD,
 } from './constants'
 
 // eslint-disable-next-line global-require
 const { ipcRenderer } = require('electron')
+
+const getBoolFromString = (value) => {
+  switch (value) {
+  case 'true':
+    return true
+  case 'false':
+    return false
+  default:
+    return value
+  }
+}
 
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
@@ -20,14 +31,7 @@ const getFromStorage = (key, type) => {
   if (type === 'json') {
     return JSON.parse(value)
   }
-  switch (value) {
-  case 'true':
-    return true
-  case 'false':
-    return false
-  default:
-    return value
-  }
+  return getBoolFromString(value)
 }
 
 const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((type) => ({
@@ -45,22 +49,37 @@ ipcRenderer.on('app_version', (event, arg) => {
   localStorage.setItem('version', arg.version)
 })
 
-const initializeSettings = () => {
-  localStorage.companyName = localStorage.companyName ?? 'Tesla Parchuni'
+const printerList = async () => {
+  const list = await ipcRenderer.invoke('get-printers')
+  return list.map((key) => ({
+    key,
+    text: key,
+  }))
+}
+
+const initializeSettings = async () => {
+  localStorage.companyName = localStorage.companyName ?? '2AM Devs'
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
-  localStorage.productType = localStorage.productType ?? 'Gold, Silver'
+  localStorage.productType = localStorage.productType ?? 'G, S'
+  localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
-  localStorage.morePrintSettings = localStorage.morePrintSettings
-  ?? JSON.stringify(morePrintSettings)
-  localStorage.calculationSettings = localStorage.calculationSettings
-  ?? JSON.stringify(calculationSettings)
+  localStorage.printers = localStorage.printers ?? JSON.stringify(await printerList())
+  localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-printers')
+  localStorage.morePrintSettings = JSON.stringify({
+    ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
+    ...morePrintSettings,
+  })
+  localStorage.calculationSettings = JSON.stringify({
+    ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
+    ...calculationSettings,
+  })
   ipcRenderer.send('app_version')
 }
 
 const printPDF = (pdfBytes) => {
-  ipcRenderer.send('print-it', pdfBytes)
+  ipcRenderer.send('print-it', pdfBytes, getFromStorage('printer'))
 }
 
 const getInvoiceDate = (date) => {
@@ -114,22 +133,28 @@ const getInvoiceSettings = (type = ISET.MAIN) => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
+const getSelectFontBuffer = async () => {
+  const selectedFont = getFromStorage(FILE_TYPE.FONT)
+  return selectedFont === CUSTOM_FONT
+    ? fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
+    : ipcRenderer.invoke('read-file-buffer', selectedFont)
+}
+
 const getPdf = async (invoiceDetails, mode = PRINT) => {
   const { meta, items, footer } = invoiceDetails
   let pdfDoc
-  const previewPath = getFromStorage('previewPDFUrl')
+  const previewPath = getFromStorage(FILE_TYPE.PDF)
   const isPreviewMode = (mode === PREVIEW) && previewPath
-  const ourFont = await fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
   if (isPreviewMode) {
-    const existingPdfBytes = await ipcRenderer.invoke('read-pdf', previewPath)
+    const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
     pdfDoc = await PDFDocument.create()
   }
 
   pdfDoc.registerFontkit(fontkit)
-  const font = await pdfDoc.embedFont(ourFont)
-  const fontSize = 11
+  const { fontSize } = defaultPageSettings
+  const font = await pdfDoc.embedFont(await getSelectFontBuffer(), { subset: true })
 
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
@@ -142,7 +167,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       page.drawText(value, {
         x: parseFloat(field.x),
         y: parseFloat(field.y),
-        size: fontSize,
+        size: parseFloat(field.size) ?? fontSize,
         font,
       })
     }
@@ -153,11 +178,10 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   items.forEach((item, idx) => {
     const commonStuff = (x, text, fromStart) => {
       const stringifiedText = text.toString()
-      const newX = parseFloat(x
-        - (fromStart ? 0 : font.widthOfTextAtSize(stringifiedText, fontSize)))
+      const adjustment = !fromStart ? (font.widthOfTextAtSize(stringifiedText, fontSize)) : 0
       return [stringifiedText,
         {
-          x: newX,
+          x: parseFloat(x - adjustment),
           y: parseFloat(printSettings.itemStartY - idx * printSettings.diffBetweenItemsY),
           size: fontSize,
           font,
@@ -167,11 +191,11 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
     const product = getProducts(item.product)
     if (product?.name) {
-      page.drawText(...commonStuff(45, (idx + 1)), 1)
-      page.drawText(...commonStuff(170, `${product?.name} [${product?.type}]`), 1)
+      page.drawText(...commonStuff(45, (idx + 1)), true)
+      page.drawText(...commonStuff(70, `${product?.name} [${product?.type}]`, true))
       page.drawText(...commonStuff(232, item.quantity))
-      page.drawText(...commonStuff(283, `${item.gWeight}gms`))
-      page.drawText(...commonStuff(333, `${item.weight}gms`))
+      page.drawText(...commonStuff(283, item.gWeight))
+      page.drawText(...commonStuff(333, item.weight))
       page.drawText(...commonStuff(380, `${currency(item.price)}/-`))
       page.drawText(...commonStuff(428, `${currency(item.mkg)}%`))
       page.drawText(...commonStuff(478, `${currency(item.other)}/-`))
@@ -180,12 +204,12 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   })
 
   // Print Footer
-  const footerCommonParts = (y, key) => {
+  const footerCommonParts = (y, key, x) => {
     const text = `${currency(footer[key]).toFixed(2)}/-`
     return [
       text,
       {
-        x: parseFloat(printSettings.endAmountsX - font.widthOfTextAtSize(text, fontSize)),
+        x: x ?? parseFloat(printSettings.endAmountsX - font.widthOfTextAtSize(text, fontSize)),
         y,
         size: fontSize,
         font,
@@ -200,12 +224,22 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   page.drawText(...footerCommonParts(108, 'oldPurchase'))
   page.drawText(...footerCommonParts(88, 'grandTotal'))
 
-  page.drawText(toWords(footer.grandTotal), {
+  const calcSettings = getInvoiceSettings(ISET.CALC)
+
+  const towWordsText = getBoolFromString(calcSettings.roundOffToWords)
+    ? Math.ceil(footer.grandTotal) : footer.grandTotal
+  page.drawText(toWords(towWordsText), {
     x: 85,
     y: 87,
     size: fontSize,
     font,
   })
+
+  // Print Distribution
+  page.drawText(...footerCommonParts(190, PAY_METHOD.CASH, 245))
+  page.drawText(...footerCommonParts(190, PAY_METHOD.CHEQUE, 356))
+  page.drawText(...footerCommonParts(170, PAY_METHOD.UPI, 330))
+  page.drawText(...footerCommonParts(170, PAY_METHOD.CARD, 245))
 
   pdfDoc.setTitle('Invoice Preview')
   pdfDoc.setAuthor('2AM Devs')
@@ -248,6 +282,10 @@ const quitApp = () => {
   ipcRenderer.send('bye-bye')
 }
 
+const minimizeApp = () => {
+  ipcRenderer.send('shut-up')
+}
+
 const closeNotification = () => {
   const n = document.getElementById('notification')
   n.parentElement.parentElement.parentElement.classList.add('hidden')
@@ -280,6 +318,7 @@ export {
   closeNotification,
   restartApp,
   quitApp,
+  minimizeApp,
   resetSettings,
   titleCase,
 }

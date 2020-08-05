@@ -1,4 +1,9 @@
 .invoice-page {
-  color: var(--color-white);
-  background-color: var(--color-black);
+  &__path-input {
+    flex: 1;
+  }
+
+  &__select-btn {
+    width: 14rem;
+  }
 }

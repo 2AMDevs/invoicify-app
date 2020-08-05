@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker, DefaultButton } from 'office-ui-fabric-react'
+import { HoverCard, HoverCardType } from 'office-ui-fabric-react/lib/HoverCard'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import {
-  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET,
+  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
 } from '../../utils/constants'
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
 } from '../../utils/helper'
+import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 
@@ -39,9 +41,17 @@ const Invoice = ({ showPdfPreview }) => {
 
   const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
 
-  const defaultInvoice = {
-    'Invoice Number': invoiceNumber,
-    'Invoice Date': new Date(),
+  const defaultInvoiceFields = () => {
+    const defaultInvoice = {}
+    defaultPrintSettings.forEach((item) => {
+      defaultInvoice[item.name] = ''
+    })
+
+    return {
+      ...defaultInvoice,
+      'Invoice Number': invoiceNumber,
+      'Invoice Date': new Date(),
+    }
   }
 
   const defaultInvoiceFooter = {
@@ -52,13 +62,19 @@ const Invoice = ({ showPdfPreview }) => {
     totalAmount: ZERO,
     oldPurchase: ZERO,
     grandTotal: ZERO,
+    [PAY_METHOD.CHEQUE]: ZERO,
+    [PAY_METHOD.CARD]: ZERO,
+    [PAY_METHOD.UPI]: ZERO,
+    [PAY_METHOD.CASH]: ZERO,
     interState: false,
   }
 
-  const [invoice, setInvoice] = useState(defaultInvoice)
+  const [invoice, setInvoice] = useState(defaultInvoiceFields())
   const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
   const [invoiceItems, setInvoiceItems] = useState([])
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
+
+  const hoverCard = useRef(null)
 
   useEffect(() => {
     localStorage.invoiceNumber = invoiceNumber
@@ -69,21 +85,42 @@ const Invoice = ({ showPdfPreview }) => {
   )
 
   const resetForm = () => {
-    setInvoice(defaultInvoice)
+    setInvoice(defaultInvoiceFields())
     setInvoiceItems([])
   }
 
-  const printAndMove = async () => {
-    const pdfBytes = await fetchPDF()
+  const printAndMove = async (_, includeBill) => {
+    const pdfBytes = includeBill ? await fetchPDF(PREVIEW) : await fetchPDF()
     printPDF(pdfBytes)
     setInvoiceNumber(invoiceNumber + 1)
     resetForm()
+  }
+
+  const printWithBill = (e) => {
+    printAndMove(e, true)
   }
 
   const previewPDF = async () => {
     const pdfBytes = await fetchPDF(PREVIEW)
     showPdfPreview(pdfBytes)
   }
+
+  const keyDownHandler = (e) => {
+    if (e.ctrlKey) {
+      if (e.key === 's') previewPDF()
+
+      if (e.key.toLowerCase() === 'p') printAndMove()
+    }
+
+    if (e.shiftKey && e.ctrlKey) {
+      if (e.key.toLowerCase() === 'p') printWithBill()
+    }
+  }
+
+  useEffect(() => {
+    // Binding HotKeys
+    document.addEventListener('keydown', keyDownHandler)
+  })
 
   const addInvoiceItem = (invoiceItem) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
@@ -99,7 +136,9 @@ const Invoice = ({ showPdfPreview }) => {
     if (change) {
       updatedInvoiceFooter = { ...invoiceFooter, ...change }
     }
-    const { oldPurchase, grossTotal } = updatedInvoiceFooter
+    const {
+      oldPurchase, grossTotal, cheque, card, upi,
+    } = updatedInvoiceFooter
     const calcSettings = getInvoiceSettings(ISET.CALC)
     const cgst = updatedInvoiceFooter.interState
       ? 0 : grossTotal * 0.01 * currency(calcSettings.cgst)
@@ -116,6 +155,7 @@ const Invoice = ({ showPdfPreview }) => {
       igst,
       totalAmount,
       grandTotal: totalAmount - oldPurchase,
+      cash: totalAmount - oldPurchase - card - cheque - upi,
     })
   }
 
@@ -133,6 +173,7 @@ const Invoice = ({ showPdfPreview }) => {
           totalPrice,
         }
       }
+      grossTotal += currency(item.totalPrice)
       return item
     }))
     updateInvoiceFooter({ grossTotal })
@@ -182,8 +223,14 @@ const Invoice = ({ showPdfPreview }) => {
                   label: field.name,
                   key: field.name,
                   value: invoice[field.name],
+                  prefix: field.prefix,
                   onChange: (_, val) => {
+                    if (field.inputLength && val.length > field.inputLength) return
                     setInvoice({ ...invoice, [field.name]: val })
+                  },
+                  onGetErrorMessage: (value) => {
+                    if (!value) return
+                    if (field.regex && !new RegExp(field.regex).test(value)) return `Invalid Value For ${field.name}`
                   },
                   required: field.required,
                   disabled: field.disabled,
@@ -223,20 +270,24 @@ const Invoice = ({ showPdfPreview }) => {
           >
             <DefaultButton
               text="Print"
+              title="ctrl + p"
               iconProps={{ iconName: 'print' }}
               primary
               onClick={printAndMove}
             />
             <DefaultButton
+              text="Print+Bill"
+              title="ctrl + shft + p"
+              iconProps={{ iconName: 'PrintfaxPrinterFile' }}
+              primary
+              onClick={printWithBill}
+            />
+            <DefaultButton
               text="Preview"
+              title="ctrl + s"
               iconProps={{ iconName: 'LightningBolt' }}
               primary
               onClick={previewPDF}
-            />
-            <DefaultButton
-              text="Skip"
-              iconProps={{ iconName: 'forward' }}
-              onClick={() => setInvoiceNumber(invoiceNumber + 1)}
             />
             <DefaultButton
               text="Reset"
@@ -271,7 +322,6 @@ const Invoice = ({ showPdfPreview }) => {
               onChange={(_, value) => updateInvoiceFooter({ interState: value })}
             />
             <TextField
-              className="invoice-items__item__field"
               label="Gross Total"
               type="number"
               value={invoiceFooter.grossTotal}
@@ -281,7 +331,6 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <TextField
-              className="invoice-items__item__field"
               label="Total Amount"
               type="number"
               value={invoiceFooter.totalAmount}
@@ -291,7 +340,6 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <TextField
-              className="invoice-items__item__field"
               label="Old Purchase"
               type="number"
               value={invoiceFooter.oldPurchase}
@@ -301,16 +349,28 @@ const Invoice = ({ showPdfPreview }) => {
               min="0"
               prefix="₹"
             />
-            <TextField
-              className="invoice-items__item__field"
-              label="Grand Total"
-              type="number"
-              value={invoiceFooter.grandTotal}
-              disabled
-              readOnly
-              min="0"
-              prefix="₹"
-            />
+            <HoverCard
+              className="invoice__hover-card"
+              cardDismissDelay={2000}
+              type={HoverCardType.plain}
+              plainCardProps={{
+                onRenderPlainCard: () => HoverTotal(
+                  { hoverCard, invoiceFooter, updateInvoiceFooter },
+                ),
+              }}
+              componentRef={hoverCard}
+            >
+              <TextField
+                className="no-box-shadow"
+                label="Grand Total"
+                type="number"
+                value={invoiceFooter.grandTotal}
+                disabled
+                readOnly
+                min="0"
+                prefix="₹"
+              />
+            </HoverCard>
           </Stack>
         </Stack>
       </Stack>
