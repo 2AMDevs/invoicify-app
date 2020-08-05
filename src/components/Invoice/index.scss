@@ -4,6 +4,12 @@
     width: 15rem;
   }
 
+  &__hover-card {
+    .ms-Callout-main {
+      box-shadow: 0 0 1rem var(--color-black);
+    }
+  }
+
   &__item-panel {
     .ms-Panel-main  {
       width: 50rem;

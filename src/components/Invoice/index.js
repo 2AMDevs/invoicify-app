@@ -278,7 +278,6 @@ const Invoice = ({ showPdfPreview }) => {
               onChange={(_, value) => updateInvoiceFooter({ interState: value })}
             />
             <TextField
-              className="invoice-items__item__field"
               label="Gross Total"
               type="number"
               value={invoiceFooter.grossTotal}
@@ -288,7 +287,6 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <TextField
-              className="invoice-items__item__field"
               label="Total Amount"
               type="number"
               value={invoiceFooter.totalAmount}
@@ -298,7 +296,6 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <TextField
-              className="invoice-items__item__field"
               label="Old Purchase"
               type="number"
               value={invoiceFooter.oldPurchase}
@@ -309,6 +306,7 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <HoverCard
+              className="invoice__hover-card"
               cardDismissDelay={2000}
               type={HoverCardType.plain}
               plainCardProps={{
@@ -319,7 +317,7 @@ const Invoice = ({ showPdfPreview }) => {
               componentRef={hoverCard}
             >
               <TextField
-                className="invoice-items__item__field"
+                className="no-box-shadow"
                 label="Grand Total"
                 type="number"
                 value={invoiceFooter.grandTotal}
