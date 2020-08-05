@@ -225,9 +225,12 @@ const Invoice = ({ showPdfPreview }) => {
                   value: invoice[field.name],
                   prefix: field.prefix,
                   onChange: (_, val) => {
-                    if (field.regex && !new RegExp(field.regex).test(val)) return
                     if (field.inputLength && val.length > field.inputLength) return
                     setInvoice({ ...invoice, [field.name]: val })
+                  },
+                  onGetErrorMessage: (value) => {
+                    if (!value) return
+                    if (field.regex && !new RegExp(field.regex).test(value)) return `Invalid Value For ${field.name}`
                   },
                   required: field.required,
                   disabled: field.disabled,
