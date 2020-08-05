@@ -81,11 +81,15 @@ const Invoice = ({ showPdfPreview }) => {
     setInvoiceItems([])
   }
 
-  const printAndMove = async () => {
-    const pdfBytes = await fetchPDF()
+  const printAndMove = async (_, includeBill) => {
+    const pdfBytes = includeBill ? await fetchPDF(PREVIEW) : await fetchPDF()
     printPDF(pdfBytes)
     setInvoiceNumber(invoiceNumber + 1)
     resetForm()
+  }
+
+  const printWithBill = (e) => {
+    printAndMove(e, true)
   }
 
   const previewPDF = async () => {
@@ -238,6 +242,12 @@ const Invoice = ({ showPdfPreview }) => {
               iconProps={{ iconName: 'print' }}
               primary
               onClick={printAndMove}
+            />
+            <DefaultButton
+              text="PrintWithBill"
+              iconProps={{ iconName: 'print' }}
+              primary
+              onClick={printWithBill}
             />
             <DefaultButton
               text="Preview"
