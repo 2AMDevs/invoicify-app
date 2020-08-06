@@ -6,7 +6,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { FILE_TYPE } from '../../utils/constants'
+import { FILE_TYPE, SELECT_FILE_TYPE } from '../../utils/constants'
 import { getFromStorage, resetSettings } from '../../utils/helper'
 
 import './index.scss'
@@ -48,7 +48,8 @@ const Settings = ({ refreshCompanyName }) => {
   }
 
   const fileSelected = async (type) => {
-    const path = await ipcRenderer.invoke('select-file')
+    const filters = type === FILE_TYPE.PDF ? SELECT_FILE_TYPE.PDF : SELECT_FILE_TYPE.FONT
+    const path = await ipcRenderer.invoke('select-file', filters)
     if (path) {
       if (type === FILE_TYPE.PDF) {
         setPreviewBill(path)
