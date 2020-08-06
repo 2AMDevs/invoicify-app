@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import cn from 'classnames'
 import {
@@ -12,74 +12,80 @@ import HeaderRightSection from './HeaderRightSection'
 
 import './index.scss'
 
-const Header = ({ className, ...restProps }) => (
-  <div className="header-container">
-    <MessageBar
-      actions={(
-        <div>
-          <MessageBarButton
-            id="restart-button"
-            onClick={restartApp}
-            className="hidden"
-            type="submit"
-          >
-            Update & Restart
-          </MessageBarButton>
-          <MessageBarButton
-            id="close-button"
-            onClick={closeNotification}
-            type="submit"
-          >
-            Close
-          </MessageBarButton>
-        </div>
-      )}
-      messageBarType={MessageBarType.warning}
-      isMultiline={false}
-      id="notification"
-      className="hidden header-container__update-notification"
-    >
-      <p id="message" />
-    </MessageBar>
-    <div
-      className={cn('header', className)}
-      {...restProps}
-    >
-      <div className="header__left-section">
-        <Link
-          className="header__link"
-          to="/"
-        >
-          <CommandBarButton
-            className="header__link__btn"
-            iconProps={{ iconName: 'Home' }}
-            text="Home"
-            checked={false}
-          />
-        </Link>
-        <Link
-          className="header__link"
-          to="/configure"
-        >
-          <CommandBarButton
-            className="header__link__btn"
-            iconProps={{ iconName: 'EntitlementPolicy' }}
-            text="Invoice Settings"
-            checked={false}
-          />
-        </Link>
-      </div>
-      <Text
-        variant="xLarge"
-        className="companyName"
-        nowrap
-        block
+const Header = ({ className, ...restProps }) => {
+  const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
+
+  const refreshCompanyName = () => setCompanyName(getFromStorage('companyName'))
+
+  return (
+    <div className="header-container">
+      <MessageBar
+        actions={(
+          <div>
+            <MessageBarButton
+              id="restart-button"
+              onClick={restartApp}
+              className="hidden"
+              type="submit"
+            >
+              Update & Restart
+            </MessageBarButton>
+            <MessageBarButton
+              id="close-button"
+              onClick={closeNotification}
+              type="submit"
+            >
+              Close
+            </MessageBarButton>
+          </div>
+        )}
+        messageBarType={MessageBarType.warning}
+        isMultiline={false}
+        id="notification"
+        className="hidden header-container__update-notification"
       >
-        { getFromStorage('companyName') }
-      </Text>
-      <HeaderRightSection />
+        <p id="message" />
+      </MessageBar>
+      <div
+        className={cn('header', className)}
+        {...restProps}
+      >
+        <div className="header__left-section">
+          <Link
+            className="header__link"
+            to="/"
+          >
+            <CommandBarButton
+              className="header__link__btn"
+              iconProps={{ iconName: 'Home' }}
+              text="Home"
+              checked={false}
+            />
+          </Link>
+          <Link
+            className="header__link"
+            to="/configure"
+          >
+            <CommandBarButton
+              className="header__link__btn"
+              iconProps={{ iconName: 'EntitlementPolicy' }}
+              text="Invoice Settings"
+              checked={false}
+            />
+          </Link>
+        </div>
+        <Text
+          variant="xLarge"
+          className="companyName"
+          nowrap
+          block
+        >
+          {companyName}
+        </Text>
+        <HeaderRightSection refreshCompanyName={refreshCompanyName} />
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default Header

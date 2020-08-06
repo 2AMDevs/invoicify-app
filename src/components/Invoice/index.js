@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
-import { CommandBarButton, DatePicker, DefaultButton } from 'office-ui-fabric-react'
+import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
 import { HoverCard, HoverCardType } from 'office-ui-fabric-react/lib/HoverCard'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
@@ -17,6 +17,7 @@ import {
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
+import InvoicePageFooter from '../InvoicePageFooter'
 
 import './index.scss'
 
@@ -206,7 +207,10 @@ const Invoice = ({ showPdfPreview }) => {
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="animation-slide-up invoice">
-      <Stack horizontal>
+      <Stack
+        horizontal
+        className="invoice__container"
+      >
         <Stack
           vertical
           tokens={stackTokens}
@@ -263,38 +267,6 @@ const Invoice = ({ showPdfPreview }) => {
               })}
             </Stack>
           ))}
-          <Stack
-            horizontal
-            tokens={stackTokens}
-            styles={columnProps.styles}
-          >
-            <DefaultButton
-              text="Print"
-              title="ctrl + p"
-              iconProps={{ iconName: 'print' }}
-              primary
-              onClick={printAndMove}
-            />
-            <DefaultButton
-              text="Print+Bill"
-              title="ctrl + shft + p"
-              iconProps={{ iconName: 'PrintfaxPrinterFile' }}
-              primary
-              onClick={printWithBill}
-            />
-            <DefaultButton
-              text="Preview"
-              title="ctrl + s"
-              iconProps={{ iconName: 'LightningBolt' }}
-              primary
-              onClick={previewPDF}
-            />
-            <DefaultButton
-              text="Reset"
-              iconProps={{ iconName: 'refresh' }}
-              onClick={resetForm}
-            />
-          </Stack>
         </Stack>
         <Stack
           styles={{ root: { width: deviceWidth * 0.7, padding: '0 0 0 4rem' } }}
@@ -374,6 +346,12 @@ const Invoice = ({ showPdfPreview }) => {
           </Stack>
         </Stack>
       </Stack>
+      <InvoicePageFooter
+        printAndMove={printAndMove}
+        printWithBill={printWithBill}
+        previewPDF={previewPDF}
+        resetForm={resetForm}
+      />
       <Panel
         isLightDismiss
         className="invoice__item-panel"
