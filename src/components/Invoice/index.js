@@ -274,6 +274,7 @@ const Invoice = ({ showPdfPreview }) => {
               iconProps={{ iconName: 'print' }}
               primary
               onClick={printAndMove}
+              tabIndex="-1"
             />
             <DefaultButton
               text="Print+Bill"
@@ -281,6 +282,7 @@ const Invoice = ({ showPdfPreview }) => {
               iconProps={{ iconName: 'PrintfaxPrinterFile' }}
               primary
               onClick={printWithBill}
+              tabIndex="-1"
             />
             <DefaultButton
               text="Preview"
@@ -288,11 +290,13 @@ const Invoice = ({ showPdfPreview }) => {
               iconProps={{ iconName: 'LightningBolt' }}
               primary
               onClick={previewPDF}
+              tabIndex="-1"
             />
             <DefaultButton
               text="Reset"
               iconProps={{ iconName: 'refresh' }}
               onClick={resetForm}
+              tabIndex="-1"
             />
           </Stack>
         </Stack>
