@@ -166,9 +166,9 @@ const Invoice = ({ showPdfPreview }) => {
       if (i === index) {
         const newItem = { ...item, ...valueObject }
         // The logic is price*weight + %MKG + other
-        const totalPrice = (currency(newItem.price) * newItem.weight
+        const totalPrice = currency(currency(newItem.price) * newItem.weight
         * (1 + 0.01 * currency(newItem.mkg)) + currency(newItem.other))
-        grossTotal += currency(totalPrice)
+        grossTotal += totalPrice
         return {
           ...newItem,
           totalPrice,
