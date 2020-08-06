@@ -25,6 +25,12 @@ const FILE_TYPE = {
   FONT: 'customFont',
 }
 
+const SELECT_FILE_TYPE = {
+  EXCEL: { name: 'Spreadsheets', extensions: ['xlsx', 'xls'] },
+  PDF: { name: 'PDF', extensions: ['pdf'] },
+  FONT: { name: 'Fonts', extensions: ['ttf', 'otf'] },
+}
+
 const darkThemePalette = {
   themePrimary: '#209cfa',
   themeLighterAlt: '#01060a',
@@ -246,4 +252,5 @@ export {
   PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE, PAY_METHOD,
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
+  SELECT_FILE_TYPE,
 }
