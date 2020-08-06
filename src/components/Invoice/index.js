@@ -138,19 +138,19 @@ const Invoice = ({ showPdfPreview }) => {
       updatedInvoiceFooter = { ...invoiceFooter, ...change }
     }
     const {
-      oldPurchase, grossTotal, cheque, card, upi,
+      oldPurchase, grossTotal, cheque, card, upi, interState,
     } = updatedInvoiceFooter
     const calcSettings = getInvoiceSettings(ISET.CALC)
-    const cgst = updatedInvoiceFooter.interState
+    const cgst = interState
       ? 0 : grossTotal * 0.01 * currency(calcSettings.cgst)
-    const sgst = updatedInvoiceFooter.interState
+    const sgst = interState
       ? 0 : grossTotal * 0.01 * currency(calcSettings.sgst)
-    const igst = updatedInvoiceFooter.interState
+    const igst = interState
       ? grossTotal * 0.01 * currency(calcSettings.igst) : 0
-    const totalAmount = Number((grossTotal + cgst + sgst + igst).toFixed(2))
+    const totalAmount = currency(grossTotal + cgst + sgst + igst)
     setInvoiceFooter({
       ...updatedInvoiceFooter,
-      grossTotal: Number(grossTotal.toFixed(2)),
+      grossTotal: currency(grossTotal),
       cgst,
       sgst,
       igst,
@@ -231,10 +231,16 @@ const Invoice = ({ showPdfPreview }) => {
                   onChange: (_, val) => {
                     if (field.inputLength && val.length > field.inputLength) return
                     setInvoice({ ...invoice, [field.name]: val })
+                    if (field.name.includes('GST') && getFromStorage('nativeGstinPrefix') && val.length > 2) {
+                      setInvoiceFooter({
+                        ...invoiceFooter,
+                        interState: invoice[field.name].substr(0, 2) !== getFromStorage('nativeGstinPrefix'),
+                      })
+                    }
                   },
                   onGetErrorMessage: (value) => {
                     if (!value) return
-                    if (field.regex && !new RegExp(field.regex).test(value)) return `Invalid Value For ${field.name}`
+                    if (field.regex && !new RegExp(field.regex).test(value.toUpperCase())) return `Invalid Value For ${field.name}`
                   },
                   required: field.required,
                   disabled: field.disabled,

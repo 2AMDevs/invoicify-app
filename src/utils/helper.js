@@ -79,6 +79,7 @@ const initializeSettings = async () => {
     ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
     ...calculationSettings,
   })
+  localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
   ipcRenderer.send('app_version')
 }
 
