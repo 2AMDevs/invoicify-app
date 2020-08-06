@@ -17,7 +17,7 @@ const { ipcRenderer } = require('electron')
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: '40rem' } }
 
-const Settings = () => {
+const Settings = ({ refreshCompanyName }) => {
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
   const [productType, setProductType] = useState(getFromStorage('productType'))
   const [printer, setPrinter] = useState(getFromStorage('printer'))
@@ -39,6 +39,7 @@ const Settings = () => {
   const onNameChange = (_, newValue) => {
     localStorage.companyName = newValue
     setCompanyName(newValue)
+    if (refreshCompanyName) refreshCompanyName()
   }
 
   const onInvoiceNoChange = (_, newValue) => {

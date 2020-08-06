@@ -8,7 +8,7 @@ import { minimizeApp, quitApp, getProducts } from '../../../utils/helper'
 import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 
-const HeaderRightSection = () => {
+const HeaderRightSection = ({ refreshCompanyName }) => {
   const [productsCount, setProductsCount] = useState(0)
 
   const [isProductsOpen, setIsProductsOpen] = useState(false)
@@ -80,7 +80,7 @@ const HeaderRightSection = () => {
         closeButtonAriaLabel="Close"
         headerText="Settings"
       >
-        <Settings />
+        <Settings refreshCompanyName={refreshCompanyName} />
       </Panel>
     </div>
   )
