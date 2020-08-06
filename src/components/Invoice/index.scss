@@ -1,4 +1,10 @@
 .invoice {
+  height: 100%;
+
+  &__container {
+    padding: 0 2rem;
+  }
+
   &__add-item-btn{
     height: 4rem;
     width: 15rem;

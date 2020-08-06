@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: calc(100% - 10rem);
+  padding-top: 10rem;
 
   &__preview-panel {
     .ms-Panel-main  {
