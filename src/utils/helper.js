@@ -44,17 +44,25 @@ const currency = (val) => {
   return isNaN(parsedCurrency) ? 0 : parsedCurrency
 }
 
-ipcRenderer.on('app_version', (event, arg) => {
-  ipcRenderer.removeAllListeners('app_version')
-  localStorage.setItem('version', arg.version)
-})
-
 const printerList = async () => {
   const list = await ipcRenderer.invoke('get-printers')
+  const getIcon = (name) => {
+    if (name.includes('Fax')) return 'fax'
+    if (name.includes('to PDF')) return 'pdf'
+    if (name.includes('OneNote')) return 'OneNoteLogo16'
+    if (name.includes('Cloud')) return 'Cloud'
+    return 'print'
+  }
   return list.map((key) => ({
     key,
     text: key,
+    canCheck: true,
+    iconProps: { iconName: getIcon(key) },
   }))
+}
+
+const updatePrinterList = async () => {
+  localStorage.printers = JSON.stringify(await printerList())
 }
 
 const initializeSettings = async () => {
@@ -65,8 +73,8 @@ const initializeSettings = async () => {
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
-  localStorage.printers = localStorage.printers ?? JSON.stringify(await printerList())
-  localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-printers')
+
+  localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-def-printer')
   localStorage.morePrintSettings = JSON.stringify({
     ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
     ...morePrintSettings,
@@ -75,7 +83,8 @@ const initializeSettings = async () => {
     ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
     ...calculationSettings,
   })
-  ipcRenderer.send('app_version')
+  localStorage.version = await ipcRenderer.invoke('app_version')
+  await updatePrinterList()
 }
 
 const printPDF = (pdfBytes) => {
@@ -321,4 +330,5 @@ export {
   minimizeApp,
   resetSettings,
   titleCase,
+  updatePrinterList,
 }

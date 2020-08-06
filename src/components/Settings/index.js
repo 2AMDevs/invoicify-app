@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import { DefaultButton } from 'office-ui-fabric-react'
-import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
@@ -20,7 +19,6 @@ const stackStyles = { root: { width: '40rem' } }
 const Settings = ({ refreshCompanyName }) => {
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
   const [productType, setProductType] = useState(getFromStorage('productType'))
-  const [printer, setPrinter] = useState(getFromStorage('printer'))
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
@@ -29,11 +27,6 @@ const Settings = ({ refreshCompanyName }) => {
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
-  }
-
-  const onPrinterChange = (_, val) => {
-    localStorage.printer = val.key
-    setPrinter(val.key)
   }
 
   const onNameChange = (_, newValue) => {
@@ -67,6 +60,7 @@ const Settings = ({ refreshCompanyName }) => {
     setInvoiceNumber(getFromStorage('invoiceNumber'))
     setCompanyName(getFromStorage('companyName'))
     setHindiDate(getFromStorage('hindiDate'))
+    setFont(getFromStorage('customFont'))
   }
 
   const onProductTypeChange = (_, newValue) => {
@@ -90,12 +84,6 @@ const Settings = ({ refreshCompanyName }) => {
           label="Next Invoice Number"
           onChange={onInvoiceNoChange}
           value={invoiceNumber}
-        />
-        <Dropdown
-          label="Select Printer"
-          selectedKey={printer}
-          onChange={onPrinterChange}
-          options={getFromStorage('printers') && JSON.parse(getFromStorage('printers'))}
         />
         <Stack
           tokens={stackTokens}
