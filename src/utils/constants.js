@@ -26,7 +26,7 @@ const FILE_TYPE = {
 }
 
 const SELECT_FILE_TYPE = {
-  EXCEL: { name: 'Spreadsheets', extensions: ['xlsx', 'csv', 'xls'] },
+  EXCEL: { name: 'Spreadsheets', extensions: ['xlsx', 'xls'] },
   PDF: { name: 'PDF', extensions: ['pdf'] },
   FONT: { name: 'Fonts', extensions: ['ttf', 'otf'] },
 }
