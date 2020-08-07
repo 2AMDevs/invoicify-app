@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -77,18 +77,18 @@ const Invoice = ({ showPdfPreview }) => {
 
   const hoverCard = useRef(null)
 
-  // useEffect(() => {
-  //   localStorage.invoiceNumber = invoiceNumber
-  // }, [invoiceNumber])
+  useEffect(() => {
+    localStorage.invoiceNumber = invoiceNumber
+  }, [invoiceNumber])
 
   const fetchPDF = async (mode = PRINT) => getPdf(
     { meta: invoice, items: invoiceItems, footer: invoiceFooter }, mode,
   )
 
   const resetForm = () => {
-    setInvoice(defaultInvoiceFields())
-    setInvoiceItems([])
     setInvoiceNumber(invoiceNumber + 1)
+    setInvoiceItems([])
+    setInvoice(defaultInvoiceFields())
   }
 
   const printAndMove = (_, includeBill) => {
