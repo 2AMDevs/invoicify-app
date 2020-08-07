@@ -19,6 +19,10 @@ class InvoicePageFooter extends React.Component {
     document.addEventListener('keydown', this.keyDownHandler, true)
   }
 
+  componentWillUnmount () {
+    document.removeEventListener('keydown', this.keyDownHandler, true)
+  }
+
   setPrinter = (printer) => this.setState({ printer })
 
   setUpdating = (updating) => this.setState({ updating })
