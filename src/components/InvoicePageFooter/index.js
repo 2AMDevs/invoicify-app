@@ -39,9 +39,20 @@ class InvoicePageFooter extends React.Component {
     if (e.ctrlKey) {
       const { key, repeat } = e
       if (repeat) return
-      if (key === 's' && this.props.previewPDF) this.props.previewPDF()
 
-      if (key.toLowerCase() === 'p' && this.props.printAndMove) this.props.printAndMove()
+      // toLowerCase here is mandatory otherwise, hotkeys won't work with capslock on. 😁
+      switch (key.toLowerCase()) {
+      case 's':
+        this.props.previewPDF()
+        break
+      case 'p':
+        this.props.printAndMove()
+        break
+      case 'r':
+        this.props.resetForm()
+        break
+      default:
+      }
     }
   }
 
@@ -95,6 +106,7 @@ class InvoicePageFooter extends React.Component {
           <DefaultButton
             className="invoice-page-footer__button_left"
             text="Reset"
+            title="Ctrl + R"
             iconProps={{ iconName: 'refresh' }}
             onClick={this.props.resetForm}
           />
