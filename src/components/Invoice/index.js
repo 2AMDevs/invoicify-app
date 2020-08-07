@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, {
+  useEffect, useState, useRef, useCallback,
+} from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -106,22 +108,27 @@ const Invoice = ({ showPdfPreview }) => {
     showPdfPreview(pdfBytes)
   }
 
-  const keyDownHandler = (e) => {
+  const keyDownHandler = useCallback((e) => {
     if (e.ctrlKey) {
-      if (e.key === 's') previewPDF()
+      const { key, repeat } = e
+      if (repeat) return
+      if (key === 's') previewPDF()
 
-      if (e.key.toLowerCase() === 'p') printAndMove()
+      if (key.toLowerCase() === 'p') printAndMove()
     }
 
     if (e.shiftKey && e.ctrlKey) {
-      if (e.key.toLowerCase() === 'p') printWithBill()
+      const { key, repeat } = e
+      if (repeat) return
+      if (key.toLowerCase() === 'p') printWithBill()
     }
-  }
+  }, [])
 
   useEffect(() => {
     // Binding HotKeys
-    document.addEventListener('keydown', keyDownHandler)
-  })
+    document.addEventListener('keydown', keyDownHandler, true)
+    return () => window.removeEventListener('keydown', keyDownHandler, true)
+  }, [keyDownHandler])
 
   const addInvoiceItem = (invoiceItem) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
