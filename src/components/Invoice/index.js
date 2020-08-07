@@ -109,18 +109,19 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const keyDownHandler = useCallback((e) => {
+    if (e.shiftKey && e.ctrlKey) {
+      const { key, repeat } = e
+      if (repeat) return
+      if (key.toLowerCase() === 'p') printWithBill()
+      return
+    }
+
     if (e.ctrlKey) {
       const { key, repeat } = e
       if (repeat) return
       if (key === 's') previewPDF()
 
       if (key.toLowerCase() === 'p') printAndMove()
-    }
-
-    if (e.shiftKey && e.ctrlKey) {
-      const { key, repeat } = e
-      if (repeat) return
-      if (key.toLowerCase() === 'p') printWithBill()
     }
   }, [])
 
