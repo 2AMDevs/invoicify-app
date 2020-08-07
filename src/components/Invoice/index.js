@@ -88,22 +88,23 @@ const Invoice = ({ showPdfPreview }) => {
   const resetForm = () => {
     setInvoice(defaultInvoiceFields())
     setInvoiceItems([])
+    setInvoiceNumber(invoiceNumber + 1)
   }
 
-  const printAndMove = async (_, includeBill) => {
-    const pdfBytes = includeBill ? await fetchPDF(PREVIEW) : await fetchPDF()
-    printPDF(pdfBytes)
-    setInvoiceNumber(invoiceNumber + 1)
-    resetForm()
+  const printAndMove = (_, includeBill) => {
+    fetchPDF(includeBill && PREVIEW).then((pdfBytes) => {
+      printPDF(pdfBytes)
+    })
   }
 
   const printWithBill = (e) => {
     printAndMove(e, true)
   }
 
-  const previewPDF = async () => {
-    const pdfBytes = await fetchPDF(PREVIEW)
-    showPdfPreview(pdfBytes)
+  const previewPDF = () => {
+    fetchPDF(PREVIEW).then((pdfBytes) => {
+      showPdfPreview(pdfBytes)
+    })
   }
 
   const addInvoiceItem = (invoiceItem) => {
