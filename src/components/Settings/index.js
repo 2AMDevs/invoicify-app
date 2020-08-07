@@ -23,10 +23,17 @@ const Settings = ({ refreshCompanyName }) => {
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
   const [font, setFont] = useState(getFromStorage('customFont'))
+  const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
 
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
+  }
+
+  const onGstinPrefixChange = (_, val) => {
+    if (val.length > 2) return
+    localStorage.nativeGstinPrefix = val
+    setGstinPrefix(val)
   }
 
   const onNameChange = (_, newValue) => {
@@ -93,6 +100,7 @@ const Settings = ({ refreshCompanyName }) => {
             className="invoice-page__path-input"
             placeholder="Bill File Path"
             disabled
+            description="Bill Background to be show in Preview"
             value={previewBill}
           />
           <DefaultButton
@@ -111,6 +119,7 @@ const Settings = ({ refreshCompanyName }) => {
             className="invoice-page__path-input"
             placeholder="Font Path"
             disabled
+            description="Select Indic Font TTF File"
             value={font}
           />
           <DefaultButton
@@ -125,14 +134,26 @@ const Settings = ({ refreshCompanyName }) => {
           label="Product Types"
           onChange={onProductTypeChange}
           value={productType}
+          description="Comma Separated values"
         />
-        <Toggle
-          label="Date Language"
-          checked={hindiDate}
-          onText="हिन्दी"
-          offText="English"
-          onChange={onDateLangChange}
-        />
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
+            label="Native GSTIN Prefix"
+            onChange={onGstinPrefixChange}
+            value={gstinPrefix}
+            description="2 Digit State Code for GSTIN. (Eg: 08 for Raj)"
+          />
+          <Toggle
+            label="Date Language"
+            checked={hindiDate}
+            onText="हिन्दी"
+            offText="English"
+            onChange={onDateLangChange}
+          />
+        </Stack>
         <DefaultButton
           text="Reset Settings"
           iconProps={{ iconName: 'FullHistory' }}

@@ -84,6 +84,7 @@ const InvoiceItems = ({
             <TextField
               className="invoice-items__item__field"
               type="number"
+              step="0.01"
               min="0"
               label="Pcs"
               value={currentInvoiceItem.quantity}
@@ -99,6 +100,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="G. Weight"
               type="number"
+              step="0.01"
               min="0"
               disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.gWeight}
@@ -109,6 +111,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="Net Weight"
               type="number"
+              step="0.01"
               min="0"
               disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.weight}
@@ -124,6 +127,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="Rate"
               type="number"
+              step="0.01"
               disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.price}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'price', value)}
@@ -135,6 +139,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="MKG (%)"
               type="number"
+              step="0.01"
               disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.mkg}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'mkg', value)}
@@ -150,6 +155,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="Other"
               type="number"
+              step="0.01"
               disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.other}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'other', value)}
@@ -160,6 +166,7 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="Total"
               type="number"
+              step="0.01"
               value={currentInvoiceItem.totalPrice}
               disabled
               readOnly
