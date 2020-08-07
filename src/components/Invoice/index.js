@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -36,11 +36,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
 
-  const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
-
   const invoiceSettings = getInvoiceSettings()
-
-  const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
 
   const defaultInvoiceFields = () => {
     const defaultInvoice = {}
@@ -50,7 +46,7 @@ const Invoice = ({ showPdfPreview }) => {
 
     return {
       ...defaultInvoice,
-      'Invoice Number': invoiceNumber,
+      'Invoice Number': getFromStorage('invoiceNumber', 'num'),
       'Invoice Date': new Date(),
     }
   }
@@ -77,51 +73,31 @@ const Invoice = ({ showPdfPreview }) => {
 
   const hoverCard = useRef(null)
 
-  useEffect(() => {
-    localStorage.invoiceNumber = invoiceNumber
-  }, [invoiceNumber])
-
   const fetchPDF = async (mode = PRINT) => getPdf(
     { meta: invoice, items: invoiceItems, footer: invoiceFooter }, mode,
   )
 
   const resetForm = () => {
-    setInvoice(defaultInvoiceFields())
+    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
     setInvoiceItems([])
+    setInvoice(defaultInvoiceFields())
   }
 
-  const printAndMove = async (_, includeBill) => {
-    const pdfBytes = includeBill ? await fetchPDF(PREVIEW) : await fetchPDF()
-    printPDF(pdfBytes)
-    setInvoiceNumber(invoiceNumber + 1)
-    resetForm()
+  const printAndMove = (_, includeBill) => {
+    fetchPDF(includeBill && PREVIEW).then((pdfBytes) => {
+      printPDF(pdfBytes)
+    })
   }
 
   const printWithBill = (e) => {
     printAndMove(e, true)
   }
 
-  const previewPDF = async () => {
-    const pdfBytes = await fetchPDF(PREVIEW)
-    showPdfPreview(pdfBytes)
+  const previewPDF = () => {
+    fetchPDF(PREVIEW).then((pdfBytes) => {
+      showPdfPreview(pdfBytes)
+    })
   }
-
-  const keyDownHandler = (e) => {
-    if (e.ctrlKey) {
-      if (e.key === 's') previewPDF()
-
-      if (e.key.toLowerCase() === 'p') printAndMove()
-    }
-
-    if (e.shiftKey && e.ctrlKey) {
-      if (e.key.toLowerCase() === 'p') printWithBill()
-    }
-  }
-
-  useEffect(() => {
-    // Binding HotKeys
-    document.addEventListener('keydown', keyDownHandler)
-  })
 
   const addInvoiceItem = (invoiceItem) => {
     setInvoiceItems([...invoiceItems, invoiceItem])

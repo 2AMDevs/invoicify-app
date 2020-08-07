@@ -176,6 +176,7 @@ const defaultPrintSettings = [
     type: TEXT,
     row: 1,
     size: defaultPageSettings.fontSize,
+    disableNameChange: true,
   },
   {
     name: 'Invoice Date',
@@ -186,6 +187,7 @@ const defaultPrintSettings = [
     type: DATE,
     row: 1,
     size: defaultPageSettings.fontSize,
+    disableNameChange: true,
   },
   {
     name: 'Customer Name',
