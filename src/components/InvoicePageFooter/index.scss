@@ -8,9 +8,15 @@
   height: 8rem;
   width: 100%;
   box-shadow: 5px 0 5px 2px var(--color-black);
+  justify-content: space-between;
 
-  button {
+  &__button_left {
     margin-left: 2rem;
+    height: 4rem;
+  }
+
+  &__button_right {
+    margin-right: 2rem;
     height: 4rem;
   }
 }

@@ -104,10 +104,7 @@ ipcMain.on('shut-up', () => {
   win.minimize()
 })
 
-ipcMain.on('app_version', (event) => {
-  event.sender.send('app_version', { version: app.getVersion() })
-})
-
+ipcMain.handle('app_version', () => app.getVersion())
 ipcMain.handle('select-file', (_event, args) => getFilePath([args]))
 ipcMain.handle('get-printers', getPrinters)
 ipcMain.handle('get-def-printer', getDefaultPrinter)
