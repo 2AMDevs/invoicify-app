@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -36,11 +36,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
 
-  const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
-
   const invoiceSettings = getInvoiceSettings()
-
-  const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
 
   const defaultInvoiceFields = () => {
     const defaultInvoice = {}
@@ -50,7 +46,7 @@ const Invoice = ({ showPdfPreview }) => {
 
     return {
       ...defaultInvoice,
-      'Invoice Number': invoiceNumber,
+      'Invoice Number': getFromStorage('invoiceNumber', 'num'),
       'Invoice Date': new Date(),
     }
   }
@@ -77,16 +73,12 @@ const Invoice = ({ showPdfPreview }) => {
 
   const hoverCard = useRef(null)
 
-  useEffect(() => {
-    localStorage.invoiceNumber = invoiceNumber
-  }, [invoiceNumber])
-
   const fetchPDF = async (mode = PRINT) => getPdf(
     { meta: invoice, items: invoiceItems, footer: invoiceFooter }, mode,
   )
 
   const resetForm = () => {
-    setInvoiceNumber(invoiceNumber + 1)
+    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
     setInvoiceItems([])
     setInvoice(defaultInvoiceFields())
   }

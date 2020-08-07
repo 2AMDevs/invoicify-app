@@ -58,6 +58,7 @@ const InvoiceSettings = () => {
             label="Field Name"
             onChange={(_, val) => handleChange(idx, 'name', val)}
             value={setting.name}
+            disabled={setting.disableNameChange}
           />
           <TextField
             label="Row Number"
