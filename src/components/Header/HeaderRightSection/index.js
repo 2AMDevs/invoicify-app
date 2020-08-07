@@ -42,10 +42,10 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
         checked={false}
         onClick={openSettingsPanel}
       />
-      {localStorage.getItem('version') && (
+      {localStorage.version && (
         <CommandBarButton
           className="header__link__btn"
-          text={`v${localStorage.getItem('version')}`}
+          text={`v${localStorage.version}`}
         />
       )}
       <CommandBarButton
