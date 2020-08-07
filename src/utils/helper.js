@@ -39,9 +39,13 @@ const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((ty
   text: type.trim(),
 })) || []
 
-const currency = (val) => {
-  const parsedCurrency = parseFloat(val)
-  return isNaN(parsedCurrency) ? 0 : parsedCurrency
+const currency = (val, format) => {
+  const parsedCurrency = isNaN(parseFloat(val))
+    ? 0 : Math.round(parseFloat(val) * 100) / 100
+
+  return format ? new Intl.NumberFormat('en-IN', {
+    currency: 'INR',
+  }).format(parsedCurrency) : parsedCurrency
 }
 
 ipcRenderer.on('app_version', (event, arg) => {
@@ -75,6 +79,7 @@ const initializeSettings = async () => {
     ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
     ...calculationSettings,
   })
+  localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
   ipcRenderer.send('app_version')
 }
 
@@ -196,16 +201,16 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       page.drawText(...commonStuff(232, item.quantity))
       page.drawText(...commonStuff(283, item.gWeight))
       page.drawText(...commonStuff(333, item.weight))
-      page.drawText(...commonStuff(380, `${currency(item.price)}/-`))
+      page.drawText(...commonStuff(380, `${currency(item.price, true)}/-`))
       page.drawText(...commonStuff(428, `${currency(item.mkg)}%`))
-      page.drawText(...commonStuff(478, `${currency(item.other)}/-`))
-      page.drawText(...commonStuff(560, `${currency(item.totalPrice).toFixed(2)}/-`))
+      page.drawText(...commonStuff(478, `${currency(item.other, true)}/-`))
+      page.drawText(...commonStuff(560, `${currency(item.totalPrice, true)}/-`))
     }
   })
 
   // Print Footer
   const footerCommonParts = (y, key, x) => {
-    const text = `${currency(footer[key]).toFixed(2)}/-`
+    const text = `${currency(footer[key], true)}/-`
     return [
       text,
       {
