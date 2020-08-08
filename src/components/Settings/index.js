@@ -24,10 +24,16 @@ const Settings = ({ refreshCompanyName }) => {
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
   const [font, setFont] = useState(getFromStorage('customFont'))
   const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
+  const [currency, setCurrency] = useState(getFromStorage('currency'))
 
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
+  }
+
+  const onCurrencyChange = (_, val) => {
+    localStorage.currency = val
+    setCurrency(val)
   }
 
   const onGstinPrefixChange = (_, val) => {
@@ -144,7 +150,13 @@ const Settings = ({ refreshCompanyName }) => {
             label="Native GSTIN Prefix"
             onChange={onGstinPrefixChange}
             value={gstinPrefix}
-            description="2 Digit State Code for GSTIN. (Eg: 08 for Raj)"
+            description="2 Digit State Code for GSTIN"
+          />
+          <TextField
+            label="Default Currency Symbol"
+            onChange={onCurrencyChange}
+            value={currency}
+            description="Currency Symbol will be used in printing"
           />
           <Toggle
             label="Date Language"

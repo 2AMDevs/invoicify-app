@@ -43,9 +43,9 @@ const currency = (val, format) => {
   const parsedCurrency = isNaN(parseFloat(val))
     ? 0 : Math.round(parseFloat(val) * 100) / 100
 
-  return format ? new Intl.NumberFormat('en-IN', {
+  return format ? `${getFromStorage('currency') || ''}${new Intl.NumberFormat('en-IN', {
     currency: 'INR',
-  }).format(parsedCurrency) : parsedCurrency
+  }).format(parsedCurrency)}` : parsedCurrency
 }
 
 const printerList = async () => {
@@ -75,6 +75,7 @@ const initializeSettings = async () => {
   localStorage.products = localStorage.products ?? '[]'
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
+  localStorage.currency = localStorage.currency ?? '₹'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
 
