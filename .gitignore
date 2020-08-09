@@ -25,3 +25,4 @@ yarn-error.log*
 public/print.pdf
 electron-builder.yml
 .env
+.vscode/
