@@ -8,6 +8,8 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 import { fieldTypes, MASKED, ISET } from '../../utils/constants'
 import { getInvoiceSettings, titleCase } from '../../utils/helper'
 
+import './index.scss'
+
 const deviceWidth = document.documentElement.clientWidth
 const token = {
   tokens: { childrenGap: deviceWidth * 0.02 },
@@ -44,7 +46,7 @@ const InvoiceSettings = () => {
   }
 
   return (
-    <div className="animation-slide-up">
+    <div className="animation-slide-up invoice-settings">
       {currentSettings.map((setting, idx) => (
         <Stack
           horizontal
@@ -56,6 +58,7 @@ const InvoiceSettings = () => {
             label="Field Name"
             onChange={(_, val) => handleChange(idx, 'name', val)}
             value={setting.name}
+            disabled={setting.disableNameChange}
           />
           <TextField
             label="Row Number"

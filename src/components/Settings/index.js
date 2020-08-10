@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 
 import { DefaultButton } from 'office-ui-fabric-react'
-import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { FILE_TYPE } from '../../utils/constants'
+import { FILE_TYPE, SELECT_FILE_TYPE } from '../../utils/constants'
 import { getFromStorage, resetSettings } from '../../utils/helper'
 
 import './index.scss'
@@ -17,28 +16,36 @@ const { ipcRenderer } = require('electron')
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: '40rem' } }
 
-const Settings = () => {
+const Settings = ({ refreshCompanyName }) => {
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
   const [productType, setProductType] = useState(getFromStorage('productType'))
-  const [printer, setPrinter] = useState(getFromStorage('printer'))
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
   const [font, setFont] = useState(getFromStorage('customFont'))
+  const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
+  const [currency, setCurrency] = useState(getFromStorage('currency'))
 
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
   }
 
-  const onPrinterChange = (_, val) => {
-    localStorage.printer = val.key
-    setPrinter(val.key)
+  const onCurrencyChange = (_, val) => {
+    localStorage.currency = val
+    setCurrency(val)
+  }
+
+  const onGstinPrefixChange = (_, val) => {
+    if (val.length > 2) return
+    localStorage.nativeGstinPrefix = val
+    setGstinPrefix(val)
   }
 
   const onNameChange = (_, newValue) => {
     localStorage.companyName = newValue
     setCompanyName(newValue)
+    if (refreshCompanyName) refreshCompanyName()
   }
 
   const onInvoiceNoChange = (_, newValue) => {
@@ -47,7 +54,8 @@ const Settings = () => {
   }
 
   const fileSelected = async (type) => {
-    const path = await ipcRenderer.invoke('select-file')
+    const filters = type === FILE_TYPE.PDF ? SELECT_FILE_TYPE.PDF : SELECT_FILE_TYPE.FONT
+    const path = await ipcRenderer.invoke('select-file', filters)
     if (path) {
       if (type === FILE_TYPE.PDF) {
         setPreviewBill(path)
@@ -65,6 +73,7 @@ const Settings = () => {
     setInvoiceNumber(getFromStorage('invoiceNumber'))
     setCompanyName(getFromStorage('companyName'))
     setHindiDate(getFromStorage('hindiDate'))
+    setFont(getFromStorage('customFont'))
   }
 
   const onProductTypeChange = (_, newValue) => {
@@ -89,12 +98,6 @@ const Settings = () => {
           onChange={onInvoiceNoChange}
           value={invoiceNumber}
         />
-        <Dropdown
-          label="Select Printer"
-          selectedKey={printer}
-          onChange={onPrinterChange}
-          options={getFromStorage('printers') && JSON.parse(getFromStorage('printers'))}
-        />
         <Stack
           tokens={stackTokens}
           horizontal
@@ -103,6 +106,7 @@ const Settings = () => {
             className="invoice-page__path-input"
             placeholder="Bill File Path"
             disabled
+            description="Bill Background to be show in Preview"
             value={previewBill}
           />
           <DefaultButton
@@ -121,6 +125,7 @@ const Settings = () => {
             className="invoice-page__path-input"
             placeholder="Font Path"
             disabled
+            description="Select Indic Font TTF File"
             value={font}
           />
           <DefaultButton
@@ -135,14 +140,32 @@ const Settings = () => {
           label="Product Types"
           onChange={onProductTypeChange}
           value={productType}
+          description="Comma Separated values"
         />
-        <Toggle
-          label="Date Language"
-          checked={hindiDate}
-          onText="हिन्दी"
-          offText="English"
-          onChange={onDateLangChange}
-        />
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
+            label="Native GSTIN Prefix"
+            onChange={onGstinPrefixChange}
+            value={gstinPrefix}
+            description="2 Digit State Code for GSTIN"
+          />
+          <TextField
+            label="Default Currency Symbol"
+            onChange={onCurrencyChange}
+            value={currency}
+            description="Currency Symbol will be used in printing"
+          />
+          <Toggle
+            label="Date Language"
+            checked={hindiDate}
+            onText="हिन्दी"
+            offText="English"
+            onChange={onDateLangChange}
+          />
+        </Stack>
         <DefaultButton
           text="Reset Settings"
           iconProps={{ iconName: 'FullHistory' }}

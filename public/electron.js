@@ -80,8 +80,12 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-const getFilePath = async () => {
-  const file = await dialog.showOpenDialog({ properties: ['openFile'] })
+const getFilePath = async (fileFilters) => {
+  const filters = [
+    ...(fileFilters || []),
+    { name: 'All Files', extensions: ['*'] },
+  ]
+  const file = await dialog.showOpenDialog({ properties: ['openFile'], filters })
   if (file) {
     return file.filePaths[0]
   }
@@ -100,16 +104,13 @@ ipcMain.on('shut-up', () => {
   win.minimize()
 })
 
-ipcMain.on('app_version', (event) => {
-  event.sender.send('app_version', { version: app.getVersion() })
-})
-
-ipcMain.handle('select-file', getFilePath)
+ipcMain.handle('app_version', () => app.getVersion())
+ipcMain.handle('select-file', (_event, args) => getFilePath([args]))
 ipcMain.handle('get-printers', getPrinters)
 ipcMain.handle('get-def-printer', getDefaultPrinter)
 
-ipcMain.handle('products-excel-to-json', async () => {
-  const file = await getFilePath()
+ipcMain.handle('products-excel-to-json', async (_event, filters) => {
+  const file = await getFilePath([filters])
   if (file) {
     return readXlsxFile(file)
       .then((rows) => rows)

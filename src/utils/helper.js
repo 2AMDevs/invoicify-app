@@ -39,22 +39,34 @@ const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((ty
   text: type.trim(),
 })) || []
 
-const currency = (val) => {
-  const parsedCurrency = parseFloat(val)
-  return isNaN(parsedCurrency) ? 0 : parsedCurrency
-}
+const currency = (val, format) => {
+  const parsedCurrency = isNaN(parseFloat(val))
+    ? 0 : Math.round(parseFloat(val) * 100) / 100
 
-ipcRenderer.on('app_version', (event, arg) => {
-  ipcRenderer.removeAllListeners('app_version')
-  localStorage.setItem('version', arg.version)
-})
+  return format ? `${getFromStorage('currency') || ''}${new Intl.NumberFormat('en-IN', {
+    currency: 'INR',
+  }).format(parsedCurrency)}` : parsedCurrency
+}
 
 const printerList = async () => {
   const list = await ipcRenderer.invoke('get-printers')
+  const getIcon = (name) => {
+    if (name.includes('Fax')) return 'fax'
+    if (name.includes('to PDF')) return 'pdf'
+    if (name.includes('OneNote')) return 'OneNoteLogo16'
+    if (name.includes('Cloud')) return 'Cloud'
+    return 'print'
+  }
   return list.map((key) => ({
     key,
     text: key,
+    canCheck: true,
+    iconProps: { iconName: getIcon(key) },
   }))
+}
+
+const updatePrinterList = async () => {
+  localStorage.printers = JSON.stringify(await printerList())
 }
 
 const initializeSettings = async () => {
@@ -63,10 +75,11 @@ const initializeSettings = async () => {
   localStorage.products = localStorage.products ?? '[]'
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
+  localStorage.currency = localStorage.currency ?? '₹'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
-  localStorage.printers = localStorage.printers ?? JSON.stringify(await printerList())
-  localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-printers')
+
+  localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-def-printer')
   localStorage.morePrintSettings = JSON.stringify({
     ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
     ...morePrintSettings,
@@ -75,7 +88,9 @@ const initializeSettings = async () => {
     ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
     ...calculationSettings,
   })
-  ipcRenderer.send('app_version')
+  localStorage.version = await ipcRenderer.invoke('app_version')
+  localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
+  await updatePrinterList()
 }
 
 const printPDF = (pdfBytes) => {
@@ -155,7 +170,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   pdfDoc.registerFontkit(fontkit)
   const { fontSize } = defaultPageSettings
   const font = await pdfDoc.embedFont(await getSelectFontBuffer(), { subset: true })
-
+  const commonFont = { font, size: fontSize }
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
   // Print Invoice Header
@@ -175,7 +190,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   // Print Items
   const printSettings = getInvoiceSettings(ISET.PRINT)
-  items.forEach((item, idx) => {
+  items.filter((it) => !it.isOldItem).forEach((item, idx) => {
     const commonStuff = (x, text, fromStart) => {
       const stringifiedText = text.toString()
       const adjustment = !fromStart ? (font.widthOfTextAtSize(stringifiedText, fontSize)) : 0
@@ -183,8 +198,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
         {
           x: parseFloat(x - adjustment),
           y: parseFloat(printSettings.itemStartY - idx * printSettings.diffBetweenItemsY),
-          size: fontSize,
-          font,
+          ...commonFont,
         },
       ]
     }
@@ -196,23 +210,22 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       page.drawText(...commonStuff(232, item.quantity))
       page.drawText(...commonStuff(283, item.gWeight))
       page.drawText(...commonStuff(333, item.weight))
-      page.drawText(...commonStuff(380, `${currency(item.price)}/-`))
+      page.drawText(...commonStuff(380, `${currency(item.price, true)}/-`))
       page.drawText(...commonStuff(428, `${currency(item.mkg)}%`))
-      page.drawText(...commonStuff(478, `${currency(item.other)}/-`))
-      page.drawText(...commonStuff(560, `${currency(item.totalPrice).toFixed(2)}/-`))
+      page.drawText(...commonStuff(478, `${currency(item.other, true)}/-`))
+      page.drawText(...commonStuff(560, `${currency(item.totalPrice, true)}/-`))
     }
   })
 
   // Print Footer
   const footerCommonParts = (y, key, x) => {
-    const text = `${currency(footer[key]).toFixed(2)}/-`
+    const text = `${currency(footer[key], true)}/-`
     return [
       text,
       {
         x: x ?? parseFloat(printSettings.endAmountsX - font.widthOfTextAtSize(text, fontSize)),
         y,
-        size: fontSize,
-        font,
+        ...commonFont,
       },
     ]
   }
@@ -231,9 +244,54 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   page.drawText(toWords(towWordsText), {
     x: 85,
     y: 87,
-    size: fontSize,
-    font,
+    ...commonFont,
   })
+
+  // oldPurchase Stuff
+  const oldItems = {}
+  const oldItemList = items.filter((it) => it.isOldItem)
+  oldItemList.forEach((item) => {
+    oldItems.names = (oldItems.names?.length ? `${oldItems.names}, ` : '') + item.type
+    oldItems.purity = `${oldItems.purity?.length ? `${oldItems.purity}, ` : ''}${item.purity}%`
+    oldItems.price = `${oldItems.price?.length ? `${oldItems.price}, ` : ''}${currency(item.price)}/-`
+    oldItems.gWeight = `${oldItems.gWeight?.length ? `${oldItems.gWeight}, ` : ''}${item.gWeight}g`
+    oldItems.weight = `${oldItems.weight?.length ? `${oldItems.weight}, ` : ''}${item.weight}g`
+    oldItems.totalPrice = `${oldItems.totalPrice?.length ? `${oldItems.totalPrice}, ` : ''}${currency(item.totalPrice)}/-`
+  })
+
+  if (oldItemList.length) {
+    page.drawText(oldItems.names, {
+      x: 60,
+      y: 137,
+      ...commonFont,
+    })
+
+    page.drawText(oldItems.purity, {
+      x: 65,
+      y: 122,
+      ...commonFont,
+    })
+    page.drawText(oldItems.price, {
+      x: 200,
+      y: 122,
+      ...commonFont,
+    })
+    page.drawText(oldItems.gWeight, {
+      x: 105,
+      y: 107,
+      ...commonFont,
+    })
+    page.drawText(oldItems.weight, {
+      x: 233,
+      y: 107,
+      ...commonFont,
+    })
+    page.drawText(oldItems.totalPrice, {
+      x: 326,
+      y: 107,
+      ...commonFont,
+    })
+  }
 
   // Print Distribution
   page.drawText(...footerCommonParts(190, PAY_METHOD.CASH, 245))
@@ -321,4 +379,5 @@ export {
   minimizeApp,
   resetSettings,
   titleCase,
+  updatePrinterList,
 }

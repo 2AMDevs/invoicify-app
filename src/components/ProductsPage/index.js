@@ -104,7 +104,10 @@ class ProductsPage extends React.Component {
     )
   }
 
-  refreshProductItems = () => this.setState({ items: getProducts() })
+  refreshProductItems = () => {
+    this.setState({ items: getProducts() })
+    if (this.props.refreshProductsCount) this.props.refreshProductsCount()
+  }
 
   deleteAllProducts = () => {
     setProducts([], true)

@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
-import { CommandBarButton, DatePicker, DefaultButton } from 'office-ui-fabric-react'
+import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
 import { HoverCard, HoverCardType } from 'office-ui-fabric-react/lib/HoverCard'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
@@ -17,6 +17,7 @@ import {
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
+import InvoicePageFooter from '../InvoicePageFooter'
 
 import './index.scss'
 
@@ -35,11 +36,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
 
-  const nextInvoiceNumber = getFromStorage('invoiceNumber', 'num')
-
   const invoiceSettings = getInvoiceSettings()
-
-  const [invoiceNumber, setInvoiceNumber] = useState(nextInvoiceNumber)
 
   const defaultInvoiceFields = () => {
     const defaultInvoice = {}
@@ -49,7 +46,7 @@ const Invoice = ({ showPdfPreview }) => {
 
     return {
       ...defaultInvoice,
-      'Invoice Number': invoiceNumber,
+      'Invoice Number': getFromStorage('invoiceNumber', 'num'),
       'Invoice Date': new Date(),
     }
   }
@@ -76,51 +73,31 @@ const Invoice = ({ showPdfPreview }) => {
 
   const hoverCard = useRef(null)
 
-  useEffect(() => {
-    localStorage.invoiceNumber = invoiceNumber
-  }, [invoiceNumber])
-
   const fetchPDF = async (mode = PRINT) => getPdf(
     { meta: invoice, items: invoiceItems, footer: invoiceFooter }, mode,
   )
 
   const resetForm = () => {
-    setInvoice(defaultInvoiceFields())
+    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
     setInvoiceItems([])
+    setInvoice(defaultInvoiceFields())
   }
 
-  const printAndMove = async (_, includeBill) => {
-    const pdfBytes = includeBill ? await fetchPDF(PREVIEW) : await fetchPDF()
-    printPDF(pdfBytes)
-    setInvoiceNumber(invoiceNumber + 1)
-    resetForm()
+  const printAndMove = (_, includeBill) => {
+    fetchPDF(includeBill && PREVIEW).then((pdfBytes) => {
+      printPDF(pdfBytes)
+    })
   }
 
   const printWithBill = (e) => {
     printAndMove(e, true)
   }
 
-  const previewPDF = async () => {
-    const pdfBytes = await fetchPDF(PREVIEW)
-    showPdfPreview(pdfBytes)
+  const previewPDF = () => {
+    fetchPDF(PREVIEW).then((pdfBytes) => {
+      showPdfPreview(pdfBytes)
+    })
   }
-
-  const keyDownHandler = (e) => {
-    if (e.ctrlKey) {
-      if (e.key === 's') previewPDF()
-
-      if (e.key.toLowerCase() === 'p') printAndMove()
-    }
-
-    if (e.shiftKey && e.ctrlKey) {
-      if (e.key.toLowerCase() === 'p') printWithBill()
-    }
-  }
-
-  useEffect(() => {
-    // Binding HotKeys
-    document.addEventListener('keydown', keyDownHandler)
-  })
 
   const addInvoiceItem = (invoiceItem) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
@@ -137,46 +114,65 @@ const Invoice = ({ showPdfPreview }) => {
       updatedInvoiceFooter = { ...invoiceFooter, ...change }
     }
     const {
-      oldPurchase, grossTotal, cheque, card, upi,
+      oldPurchase, grossTotal, cheque, card, upi, interState,
     } = updatedInvoiceFooter
     const calcSettings = getInvoiceSettings(ISET.CALC)
-    const cgst = updatedInvoiceFooter.interState
+    const cgst = interState
       ? 0 : grossTotal * 0.01 * currency(calcSettings.cgst)
-    const sgst = updatedInvoiceFooter.interState
+    const sgst = interState
       ? 0 : grossTotal * 0.01 * currency(calcSettings.sgst)
-    const igst = updatedInvoiceFooter.interState
+    const igst = interState
       ? grossTotal * 0.01 * currency(calcSettings.igst) : 0
-    const totalAmount = Number((grossTotal + cgst + sgst + igst).toFixed(2))
+    const totalAmount = currency(grossTotal + cgst + sgst + igst)
     setInvoiceFooter({
       ...updatedInvoiceFooter,
-      grossTotal: Number(grossTotal.toFixed(2)),
+      grossTotal: currency(grossTotal),
       cgst,
       sgst,
       igst,
       totalAmount,
-      grandTotal: totalAmount - oldPurchase,
-      cash: totalAmount - oldPurchase - card - cheque - upi,
+      grandTotal: currency(totalAmount - oldPurchase),
+      cash: currency(totalAmount - oldPurchase - card - cheque - upi),
     })
   }
 
   const updateInvoiceItem = (index, valueObject) => {
-    let grossTotal = 0
+    let grossTotal = ZERO
+    let oldPurchase = ZERO
+
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
         const newItem = { ...item, ...valueObject }
+        if (valueObject.isOldItem) {
+          newItem.quantity = 1
+          newItem.product = null
+          newItem.other = ZERO
+          newItem.mkg = ZERO
+        }
         // The logic is price*weight + %MKG + other
-        const totalPrice = (currency(newItem.price) * newItem.weight
+        const totalPrice = currency(currency(newItem.price) * newItem.weight
         * (1 + 0.01 * currency(newItem.mkg)) + currency(newItem.other))
-        grossTotal += currency(totalPrice)
+
+        if (!newItem.isOldItem) {
+          grossTotal += totalPrice
+        } else {
+          oldPurchase += totalPrice
+        }
+
         return {
           ...newItem,
           totalPrice,
         }
       }
-      grossTotal += currency(item.totalPrice)
+
+      if (!item.isOldItem) {
+        grossTotal += currency(item.totalPrice)
+      } else {
+        oldPurchase += currency(item.totalPrice)
+      }
       return item
     }))
-    updateInvoiceFooter({ grossTotal })
+    updateInvoiceFooter({ grossTotal, oldPurchase })
   }
 
   const addNewInvoiceItem = () => {
@@ -191,6 +187,10 @@ const Invoice = ({ showPdfPreview }) => {
       gWeight: ZERO,
       other: ZERO,
       totalPrice: ZERO,
+      // old item fields
+      isOldItem: false,
+      type: null,
+      purity: ZERO,
     })
     setCurrentInvoiceItemIndex(invoiceItems.length)
     openInvoiceItemsPanel()
@@ -203,10 +203,17 @@ const Invoice = ({ showPdfPreview }) => {
 
   const groupedSettings = groupBy(invoiceSettings, 'row')
 
+  const getFilteredInvoiceItems = () => invoiceItems.filter((item) => !item.isOldItem)
+
+  const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem)
+
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="animation-slide-up invoice">
-      <Stack horizontal>
+      <Stack
+        horizontal
+        className="invoice__container"
+      >
         <Stack
           vertical
           tokens={stackTokens}
@@ -227,10 +234,16 @@ const Invoice = ({ showPdfPreview }) => {
                   onChange: (_, val) => {
                     if (field.inputLength && val.length > field.inputLength) return
                     setInvoice({ ...invoice, [field.name]: val })
+                    if (field.name.includes('GST') && getFromStorage('nativeGstinPrefix') && val.length > 2) {
+                      setInvoiceFooter({
+                        ...invoiceFooter,
+                        interState: invoice[field.name].substr(0, 2) !== getFromStorage('nativeGstinPrefix'),
+                      })
+                    }
                   },
                   onGetErrorMessage: (value) => {
                     if (!value) return
-                    if (field.regex && !new RegExp(field.regex).test(value)) return `Invalid Value For ${field.name}`
+                    if (field.regex && !new RegExp(field.regex).test(value.toUpperCase())) return `Invalid Value For ${field.name}`
                   },
                   required: field.required,
                   disabled: field.disabled,
@@ -263,38 +276,6 @@ const Invoice = ({ showPdfPreview }) => {
               })}
             </Stack>
           ))}
-          <Stack
-            horizontal
-            tokens={stackTokens}
-            styles={columnProps.styles}
-          >
-            <DefaultButton
-              text="Print"
-              title="ctrl + p"
-              iconProps={{ iconName: 'print' }}
-              primary
-              onClick={printAndMove}
-            />
-            <DefaultButton
-              text="Print+Bill"
-              title="ctrl + shft + p"
-              iconProps={{ iconName: 'PrintfaxPrinterFile' }}
-              primary
-              onClick={printWithBill}
-            />
-            <DefaultButton
-              text="Preview"
-              title="ctrl + s"
-              iconProps={{ iconName: 'LightningBolt' }}
-              primary
-              onClick={previewPDF}
-            />
-            <DefaultButton
-              text="Reset"
-              iconProps={{ iconName: 'refresh' }}
-              onClick={resetForm}
-            />
-          </Stack>
         </Stack>
         <Stack
           styles={{ root: { width: deviceWidth * 0.7, padding: '0 0 0 4rem' } }}
@@ -306,10 +287,19 @@ const Invoice = ({ showPdfPreview }) => {
             onClick={addNewInvoiceItem}
           />
           <InvoiceItemsTable
-            items={invoiceItems}
+            items={getFilteredInvoiceItems()}
             removeInvoiceItem={removeInvoiceItem}
             editInvoiceItem={editInvoiceItem}
           />
+          <hr />
+          {getOldInvoiceItems().length > 0 && (
+            <InvoiceItemsTable
+              oldItemsTable
+              items={getOldInvoiceItems()}
+              removeInvoiceItem={removeInvoiceItem}
+              editInvoiceItem={editInvoiceItem}
+            />
+          )}
           <br />
           <Stack
             horizontal
@@ -374,6 +364,12 @@ const Invoice = ({ showPdfPreview }) => {
           </Stack>
         </Stack>
       </Stack>
+      <InvoicePageFooter
+        printAndMove={printAndMove}
+        printWithBill={printWithBill}
+        previewPDF={previewPDF}
+        resetForm={resetForm}
+      />
       <Panel
         isLightDismiss
         className="invoice__item-panel"

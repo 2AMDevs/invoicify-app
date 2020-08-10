@@ -8,7 +8,9 @@ import { minimizeApp, quitApp, getProducts } from '../../../utils/helper'
 import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 
-const HeaderRightSection = () => {
+const HeaderRightSection = ({ refreshCompanyName }) => {
+  const [productsCount, setProductsCount] = useState(0)
+
   const [isProductsOpen, setIsProductsOpen] = useState(false)
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -20,6 +22,10 @@ const HeaderRightSection = () => {
   const openSettingsPanel = useConstCallback(() => setIsSettingsOpen(true))
 
   const dismissSettingsPanel = useConstCallback(() => setIsSettingsOpen(false))
+
+  const refreshProductsCount = () => {
+    setProductsCount(getProducts().length || 0)
+  }
 
   return (
     <div className="header__right-section">
@@ -36,10 +42,10 @@ const HeaderRightSection = () => {
         checked={false}
         onClick={openSettingsPanel}
       />
-      {localStorage.getItem('version') && (
+      {localStorage.version && (
         <CommandBarButton
           className="header__link__btn"
-          text={`v${localStorage.getItem('version')}`}
+          text={`v${localStorage.version}`}
         />
       )}
       <CommandBarButton
@@ -61,9 +67,9 @@ const HeaderRightSection = () => {
         isOpen={isProductsOpen}
         onDismiss={dismissProductsPanel}
         closeButtonAriaLabel="Close"
-        headerText={`Products (${getProducts()?.length ? (getProducts()?.length) : ''})`}
+        headerText={`Products (${productsCount})`}
       >
-        <ProductsPage />
+        <ProductsPage refreshProductsCount={refreshProductsCount} />
       </Panel>
       <Panel
         isLightDismiss
@@ -74,7 +80,7 @@ const HeaderRightSection = () => {
         closeButtonAriaLabel="Close"
         headerText="Settings"
       >
-        <Settings />
+        <Settings refreshCompanyName={refreshCompanyName} />
       </Panel>
     </div>
   )

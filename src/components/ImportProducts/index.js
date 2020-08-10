@@ -6,6 +6,7 @@ import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog'
 import { TooltipHost, DirectionalHint } from 'office-ui-fabric-react/lib/Tooltip'
 
+import { SELECT_FILE_TYPE } from '../../utils/constants'
 import { generateUuid4, setProducts } from '../../utils/helper'
 
 import './index.scss'
@@ -38,7 +39,7 @@ const ImportProducts = ({ refreshProductItems }) => {
   const handleImportBtnClick = () => {
     // eslint-disable-next-line global-require
     const { ipcRenderer } = require('electron')
-    ipcRenderer.invoke('products-excel-to-json').then((res) => {
+    ipcRenderer.invoke('products-excel-to-json', SELECT_FILE_TYPE.EXCEL).then((res) => {
       const newLocalProducts = res?.map((item) => ({
         name: item[0],
         type: item[1],
