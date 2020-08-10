@@ -63,7 +63,7 @@ const InvoiceItems = ({
       {currentInvoiceItem && (
         <div className="invoice-items__item animation-slide-up">
           <Checkbox
-            label="Is old purchase"
+            label="Old Purchase"
             checked={currentInvoiceItem.isOldItem}
             onChange={(_, isChecked) => onChangeField(currentInvoiceItemIndex, 'isOldItem', isChecked)}
           />
