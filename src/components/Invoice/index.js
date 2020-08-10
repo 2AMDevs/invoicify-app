@@ -53,7 +53,6 @@ const Invoice = ({ showPdfPreview }) => {
 
   const defaultInvoiceFooter = {
     grossTotal: ZERO,
-    oldItemTotal: ZERO,
     cgst: ZERO,
     sgst: ZERO,
     igst: ZERO,
@@ -139,7 +138,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const updateInvoiceItem = (index, valueObject) => {
     let grossTotal = ZERO
-    let oldItemTotal = ZERO
+    let oldPurchase = ZERO
 
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
@@ -157,7 +156,7 @@ const Invoice = ({ showPdfPreview }) => {
         if (!newItem.isOldItem) {
           grossTotal += totalPrice
         } else {
-          oldItemTotal += totalPrice
+          oldPurchase += totalPrice
         }
 
         return {
@@ -169,11 +168,11 @@ const Invoice = ({ showPdfPreview }) => {
       if (!item.isOldItem) {
         grossTotal += currency(item.totalPrice)
       } else {
-        oldItemTotal += currency(item.totalPrice)
+        oldPurchase += currency(item.totalPrice)
       }
       return item
     }))
-    updateInvoiceFooter({ grossTotal, oldItemTotal })
+    updateInvoiceFooter({ grossTotal, oldPurchase })
   }
 
   const addNewInvoiceItem = () => {
