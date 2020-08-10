@@ -108,6 +108,7 @@ const InvoiceItems = ({
               <>
                 <Dropdown
                   placeholder="Item Type"
+                  className="invoice-items__item__field"
                   required
                   label="Type"
                   options={getProductTypes()}
@@ -154,60 +155,66 @@ const InvoiceItems = ({
               suffix="gms"
             />
           </Stack>
+
           <Stack
-            horizontal
+            horizontal={currentInvoiceItem.isOldItem}
             {...columnProps}
           >
-            <TextField
-              className="invoice-items__item__field"
-              label="Rate"
-              type="number"
-              disabled={!currentInvoiceItem.quantity}
-              value={currentInvoiceItem.price}
-              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'price', value)}
-              min="0"
-              prefix="₹"
-              required
-            />
-            {!currentInvoiceItem.isOldItem && (
+            <Stack
+              horizontal
+              {...columnProps}
+            >
               <TextField
                 className="invoice-items__item__field"
-                label="MKG (%)"
+                label="Rate"
                 type="number"
                 disabled={!currentInvoiceItem.quantity}
-                value={currentInvoiceItem.mkg}
-                onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'mkg', value)}
+                value={currentInvoiceItem.price}
+                onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'price', value)}
                 min="0"
-                suffix="%"
+                prefix="₹"
+                required
               />
-            )}
-          </Stack>
-          <Stack
-            horizontal
-            {...columnProps}
-          >
-            {!currentInvoiceItem.isOldItem && (
+              {!currentInvoiceItem.isOldItem && (
+                <TextField
+                  className="invoice-items__item__field"
+                  label="MKG (%)"
+                  type="number"
+                  disabled={!currentInvoiceItem.quantity}
+                  value={currentInvoiceItem.mkg}
+                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'mkg', value)}
+                  min="0"
+                  suffix="%"
+                />
+              )}
+            </Stack>
+            <Stack
+              horizontal
+              styles={!currentInvoiceItem.isOldItem && columnProps.styles}
+            >
+              {!currentInvoiceItem.isOldItem && (
+                <TextField
+                  className="invoice-items__item__field"
+                  label="Other"
+                  type="number"
+                  disabled={!currentInvoiceItem.quantity}
+                  value={currentInvoiceItem.other}
+                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'other', value)}
+                  min="0"
+                  prefix="₹"
+                />
+              )}
               <TextField
                 className="invoice-items__item__field"
-                label="Other"
+                label="Total"
                 type="number"
-                disabled={!currentInvoiceItem.quantity}
-                value={currentInvoiceItem.other}
-                onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'other', value)}
+                value={currentInvoiceItem.totalPrice}
+                disabled
+                readOnly
                 min="0"
                 prefix="₹"
               />
-            )}
-            <TextField
-              className="invoice-items__item__field"
-              label="Total"
-              type="number"
-              value={currentInvoiceItem.totalPrice}
-              disabled
-              readOnly
-              min="0"
-              prefix="₹"
-            />
+            </Stack>
           </Stack>
         </div>
       )}
