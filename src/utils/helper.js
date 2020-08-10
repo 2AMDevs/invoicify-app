@@ -170,7 +170,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   pdfDoc.registerFontkit(fontkit)
   const { fontSize } = defaultPageSettings
   const font = await pdfDoc.embedFont(await getSelectFontBuffer(), { subset: true })
-
+  const commonFont = { font, size: fontSize }
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
   // Print Invoice Header
@@ -190,7 +190,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   // Print Items
   const printSettings = getInvoiceSettings(ISET.PRINT)
-  items.forEach((item, idx) => {
+  items.filter((it) => !it.isOldItem).forEach((item, idx) => {
     const commonStuff = (x, text, fromStart) => {
       const stringifiedText = text.toString()
       const adjustment = !fromStart ? (font.widthOfTextAtSize(stringifiedText, fontSize)) : 0
@@ -198,8 +198,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
         {
           x: parseFloat(x - adjustment),
           y: parseFloat(printSettings.itemStartY - idx * printSettings.diffBetweenItemsY),
-          size: fontSize,
-          font,
+          ...commonFont,
         },
       ]
     }
@@ -226,8 +225,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       {
         x: x ?? parseFloat(printSettings.endAmountsX - font.widthOfTextAtSize(text, fontSize)),
         y,
-        size: fontSize,
-        font,
+        ...commonFont,
       },
     ]
   }
@@ -246,9 +244,54 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   page.drawText(toWords(towWordsText), {
     x: 85,
     y: 87,
-    size: fontSize,
-    font,
+    ...commonFont,
   })
+
+  // oldPurchase Stuff
+  const oldItems = {}
+  const oldItemList = items.filter((it) => it.isOldItem)
+  oldItemList.forEach((item) => {
+    oldItems.names = (oldItems.names?.length ? `${oldItems.names}, ` : '') + item.type
+    oldItems.purity = `${oldItems.purity?.length ? `${oldItems.purity}, ` : ''}${item.purity}%`
+    oldItems.price = `${oldItems.price?.length ? `${oldItems.price}, ` : ''}${currency(item.price)}/-`
+    oldItems.gWeight = `${oldItems.gWeight?.length ? `${oldItems.gWeight}, ` : ''}${item.gWeight}g`
+    oldItems.weight = `${oldItems.weight?.length ? `${oldItems.weight}, ` : ''}${item.weight}g`
+    oldItems.totalPrice = `${oldItems.totalPrice?.length ? `${oldItems.totalPrice}, ` : ''}${currency(item.totalPrice)}/-`
+  })
+
+  if (oldItemList.length) {
+    page.drawText(oldItems.names, {
+      x: 60,
+      y: 137,
+      ...commonFont,
+    })
+
+    page.drawText(oldItems.purity, {
+      x: 65,
+      y: 122,
+      ...commonFont,
+    })
+    page.drawText(oldItems.price, {
+      x: 200,
+      y: 122,
+      ...commonFont,
+    })
+    page.drawText(oldItems.gWeight, {
+      x: 105,
+      y: 107,
+      ...commonFont,
+    })
+    page.drawText(oldItems.weight, {
+      x: 233,
+      y: 107,
+      ...commonFont,
+    })
+    page.drawText(oldItems.totalPrice, {
+      x: 326,
+      y: 107,
+      ...commonFont,
+    })
+  }
 
   // Print Distribution
   page.drawText(...footerCommonParts(190, PAY_METHOD.CASH, 245))

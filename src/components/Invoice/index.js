@@ -131,8 +131,8 @@ const Invoice = ({ showPdfPreview }) => {
       sgst,
       igst,
       totalAmount,
-      grandTotal: totalAmount - oldPurchase,
-      cash: totalAmount - oldPurchase - card - cheque - upi,
+      grandTotal: currency(totalAmount - oldPurchase),
+      cash: currency(totalAmount - oldPurchase - card - cheque - upi),
     })
   }
 
