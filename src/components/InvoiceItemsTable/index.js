@@ -7,13 +7,13 @@ import {
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
 
-import { invoiceItemsTableColumns } from '../../utils/constants'
+import { invoiceItemsTableColumns, oldInvoiceItemsTableColumns } from '../../utils/constants'
 import { getProducts } from '../../utils/helper'
 import ListEmpty from '../ListEmpty'
 
 import './index.scss'
 
-const InvoiceItemsTable = ({ items, removeInvoiceItem, editInvoiceItem }) => {
+const InvoiceItemsTable = ({ items, oldItemsTable, removeInvoiceItem, editInvoiceItem }) => {
   const actionColumn = {
     key: 'action-column',
     name: 'Actions',
@@ -53,9 +53,21 @@ const InvoiceItemsTable = ({ items, removeInvoiceItem, editInvoiceItem }) => {
       </>
     ),
   }
+
+  const oldItemNameColumn = {
+    key: 'column1',
+    name: 'Type',
+    fieldName: 'type',
+    isResizable: true,
+    maxWidth: 120,
+    minWidth: 120,
+    data: 'string',
+    isPadded: true,
+  }
+
   const columns = [
-    itemColumn,
-    ...invoiceItemsTableColumns,
+    oldItemsTable ? oldItemNameColumn : itemColumn,
+    ...(oldItemsTable ? oldInvoiceItemsTableColumns : invoiceItemsTableColumns),
     actionColumn,
   ]
 

@@ -138,7 +138,6 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const updateInvoiceItem = (index, valueObject) => {
-    console.log(valueObject)
     let grossTotal = ZERO
     let oldItemTotal = ZERO
 
@@ -204,6 +203,10 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const groupedSettings = groupBy(invoiceSettings, 'row')
+
+  const getFilteredInvoiceItems = () => invoiceItems.filter((item) => !item.isOldItem)
+
+  const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem)
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
@@ -285,10 +288,19 @@ const Invoice = ({ showPdfPreview }) => {
             onClick={addNewInvoiceItem}
           />
           <InvoiceItemsTable
-            items={invoiceItems}
+            items={getFilteredInvoiceItems()}
             removeInvoiceItem={removeInvoiceItem}
             editInvoiceItem={editInvoiceItem}
           />
+          <hr />
+          {getOldInvoiceItems().length > 0 && (
+            <InvoiceItemsTable
+              oldItemsTable
+              items={getOldInvoiceItems()}
+              removeInvoiceItem={removeInvoiceItem}
+              editInvoiceItem={editInvoiceItem}
+            />
+          )}
           <br />
           <Stack
             horizontal
