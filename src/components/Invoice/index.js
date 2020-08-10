@@ -53,6 +53,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const defaultInvoiceFooter = {
     grossTotal: ZERO,
+    oldItemTotal: ZERO,
     cgst: ZERO,
     sgst: ZERO,
     igst: ZERO,
@@ -137,23 +138,43 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const updateInvoiceItem = (index, valueObject) => {
-    let grossTotal = 0
+    console.log(valueObject)
+    let grossTotal = ZERO
+    let oldItemTotal = ZERO
+
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
         const newItem = { ...item, ...valueObject }
+        if (valueObject.isOldItem) {
+          newItem.quantity = 1
+          newItem.product = null
+          newItem.other = ZERO
+          newItem.mkg = ZERO
+        }
         // The logic is price*weight + %MKG + other
         const totalPrice = currency(currency(newItem.price) * newItem.weight
         * (1 + 0.01 * currency(newItem.mkg)) + currency(newItem.other))
-        grossTotal += totalPrice
+
+        if (!newItem.isOldItem) {
+          grossTotal += totalPrice
+        } else {
+          oldItemTotal += totalPrice
+        }
+
         return {
           ...newItem,
           totalPrice,
         }
       }
-      grossTotal += currency(item.totalPrice)
+
+      if (!item.isOldItem) {
+        grossTotal += currency(item.totalPrice)
+      } else {
+        oldItemTotal += currency(item.totalPrice)
+      }
       return item
     }))
-    updateInvoiceFooter({ grossTotal })
+    updateInvoiceFooter({ grossTotal, oldItemTotal })
   }
 
   const addNewInvoiceItem = () => {
@@ -168,6 +189,10 @@ const Invoice = ({ showPdfPreview }) => {
       gWeight: ZERO,
       other: ZERO,
       totalPrice: ZERO,
+      // old item fields
+      isOldItem: false,
+      type: null,
+      purity: ZERO,
     })
     setCurrentInvoiceItemIndex(invoiceItems.length)
     openInvoiceItemsPanel()

@@ -1,11 +1,15 @@
 import React, { useCallback, useState, useRef } from 'react'
 
 import { CommandBarButton, Icon } from 'office-ui-fabric-react'
+import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
+import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 import { ComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/index'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
-import { getProducts, groupBy, currency } from '../../utils/helper'
+import {
+  getProducts, groupBy, currency, getProductTypes,
+} from '../../utils/helper'
 
 import './index.scss'
 
@@ -58,39 +62,72 @@ const InvoiceItems = ({
     <div className="invoice-items animation-slide-up">
       {currentInvoiceItem && (
         <div className="invoice-items__item animation-slide-up">
+          <Checkbox
+            label="Is old purchase"
+            checked={currentInvoiceItem.isOldItem}
+            onChange={(_, isChecked) => onChangeField(currentInvoiceItemIndex, 'isOldItem', isChecked)}
+          />
+
           <Stack
             horizontal
             {...columnProps}
           >
-            <ComboBox
-              componentRef={itemsComboBoxRef}
-              onClick={openComboboxDropdown}
-              allowFreeform
-              autoComplete={false}
-              className="invoice-items__item__field"
-              placeholder="Select a type"
-              label="Item name"
-              options={filterComboBoxOptions(currentInvoiceItem.product)}
-              selectedKey={currentInvoiceItem.product}
-              onChange={(_, option) => option && onChangeField(currentInvoiceItemIndex, 'product', option.id)}
-              onKeyUp={(e) => {
-                if (!e.key.includes('Arrow')) {
-                  setItemsFilterValue(e.target.value)
-                }
-              }}
-              required
-              style={{ maxWidth: 300 }}
-            />
-            <TextField
-              className="invoice-items__item__field"
-              type="number"
-              step="0.01"
-              min="0"
-              label="Pcs"
-              value={currentInvoiceItem.quantity}
-              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', currency(value))}
-              required
-            />
+            {!currentInvoiceItem.isOldItem && (
+              <>
+                <ComboBox
+                  componentRef={itemsComboBoxRef}
+                  onClick={openComboboxDropdown}
+                  allowFreeform
+                  autoComplete={false}
+                  className="invoice-items__item__field"
+                  placeholder="Select an item"
+                  label="Item name"
+                  options={filterComboBoxOptions(currentInvoiceItem.product)}
+                  selectedKey={currentInvoiceItem.product}
+                  onChange={(_, option) => option && onChangeField(currentInvoiceItemIndex, 'product', option.id)}
+                  onKeyUp={(e) => {
+                    if (!e.key.includes('Arrow')) {
+                      setItemsFilterValue(e.target.value)
+                    }
+                  }}
+                  required
+                  style={{ maxWidth: 300 }}
+                />
+                <TextField
+                  className="invoice-items__item__field"
+                  type="number"
+                  min="0"
+                  label="Pcs"
+                  value={currentInvoiceItem.quantity}
+                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', currency(value))}
+                  required
+                />
+              </>
+            )}
+            {currentInvoiceItem.isOldItem && (
+              <>
+                <Dropdown
+                  placeholder="Item Type"
+                  required
+                  label="Type"
+                  options={getProductTypes()}
+                  value={currentInvoiceItem.type}
+                  selectedKey={currentInvoiceItem.type}
+                  style={{ maxWidth: 300 }}
+                  onChange={(_, selectedType) => onChangeField(currentInvoiceItemIndex, 'type', selectedType.text)}
+                />
+                <TextField
+                  className="invoice-items__item__field"
+                  min="0"
+                  max="100"
+                  label="Purity"
+                  suffix="%"
+                  value={currentInvoiceItem.purity}
+                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'purity', value)}
+                  required
+                />
+              </>
+            )}
           </Stack>
           <Stack
             horizontal
@@ -100,7 +137,6 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="G. Weight"
               type="number"
-              step="0.01"
               min="0"
               disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.gWeight}
@@ -111,7 +147,6 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="Net Weight"
               type="number"
-              step="0.01"
               min="0"
               disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.weight}
@@ -127,7 +162,6 @@ const InvoiceItems = ({
               className="invoice-items__item__field"
               label="Rate"
               type="number"
-              step="0.01"
               disabled={!currentInvoiceItem.quantity}
               value={currentInvoiceItem.price}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'price', value)}
@@ -135,38 +169,39 @@ const InvoiceItems = ({
               prefix="₹"
               required
             />
-            <TextField
-              className="invoice-items__item__field"
-              label="MKG (%)"
-              type="number"
-              step="0.01"
-              disabled={!currentInvoiceItem.quantity}
-              value={currentInvoiceItem.mkg}
-              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'mkg', value)}
-              min="0"
-              suffix="%"
-            />
+            {!currentInvoiceItem.isOldItem && (
+              <TextField
+                className="invoice-items__item__field"
+                label="MKG (%)"
+                type="number"
+                disabled={!currentInvoiceItem.quantity}
+                value={currentInvoiceItem.mkg}
+                onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'mkg', value)}
+                min="0"
+                suffix="%"
+              />
+            )}
           </Stack>
           <Stack
             horizontal
             {...columnProps}
           >
-            <TextField
-              className="invoice-items__item__field"
-              label="Other"
-              type="number"
-              step="0.01"
-              disabled={!currentInvoiceItem.quantity}
-              value={currentInvoiceItem.other}
-              onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'other', value)}
-              min="0"
-              prefix="₹"
-            />
+            {!currentInvoiceItem.isOldItem && (
+              <TextField
+                className="invoice-items__item__field"
+                label="Other"
+                type="number"
+                disabled={!currentInvoiceItem.quantity}
+                value={currentInvoiceItem.other}
+                onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'other', value)}
+                min="0"
+                prefix="₹"
+              />
+            )}
             <TextField
               className="invoice-items__item__field"
               label="Total"
               type="number"
-              step="0.01"
               value={currentInvoiceItem.totalPrice}
               disabled
               readOnly
