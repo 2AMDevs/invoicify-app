@@ -94,10 +94,46 @@ const Settings = ({ refreshCompanyName }) => {
           value={companyName}
         />
         <TextField
-          label="Next Invoice Number"
-          onChange={onInvoiceNoChange}
-          value={invoiceNumber}
+          label="Product Types"
+          onChange={onProductTypeChange}
+          value={productType}
+          description="Comma Separated values"
         />
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
+            label="Next Invoice Number"
+            onChange={onInvoiceNoChange}
+            value={invoiceNumber}
+            description="You can change next invoice number here"
+          />
+          <TextField
+            label="Default Currency Symbol"
+            onChange={onCurrencyChange}
+            value={currency}
+            description="Currency Symbol will be used in printing"
+          />
+        </Stack>
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
+            label="Native GSTIN Prefix"
+            onChange={onGstinPrefixChange}
+            value={gstinPrefix}
+            description="2 Digit State Code for GSTIN"
+          />
+          <Toggle
+            label="Date Language"
+            checked={hindiDate}
+            onText="हिन्दी"
+            offText="English"
+            onChange={onDateLangChange}
+          />
+        </Stack>
         <Stack
           tokens={stackTokens}
           horizontal
@@ -134,36 +170,6 @@ const Settings = ({ refreshCompanyName }) => {
             iconProps={{ iconName: 'Font' }}
             primary
             onClick={() => fileSelected(FILE_TYPE.FONT)}
-          />
-        </Stack>
-        <TextField
-          label="Product Types"
-          onChange={onProductTypeChange}
-          value={productType}
-          description="Comma Separated values"
-        />
-        <Stack
-          tokens={stackTokens}
-          horizontal
-        >
-          <TextField
-            label="Native GSTIN Prefix"
-            onChange={onGstinPrefixChange}
-            value={gstinPrefix}
-            description="2 Digit State Code for GSTIN"
-          />
-          <TextField
-            label="Default Currency Symbol"
-            onChange={onCurrencyChange}
-            value={currency}
-            description="Currency Symbol will be used in printing"
-          />
-          <Toggle
-            label="Date Language"
-            checked={hindiDate}
-            onText="हिन्दी"
-            offText="English"
-            onChange={onDateLangChange}
           />
         </Stack>
         <DefaultButton
