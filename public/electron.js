@@ -108,6 +108,7 @@ ipcMain.handle('app_version', () => app.getVersion())
 ipcMain.handle('select-file', (_event, args) => getFilePath([args]))
 ipcMain.handle('get-printers', getPrinters)
 ipcMain.handle('get-def-printer', getDefaultPrinter)
+ipcMain.handle('is-valid', (_event, args) => fs.existsSync(args))
 
 ipcMain.handle('products-excel-to-json', async (_event, filters) => {
   const file = await getFilePath([filters])

@@ -148,22 +148,28 @@ const getInvoiceSettings = (type = ISET.MAIN) => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
+const isValidPath = async (path) => path && ipcRenderer.invoke('is-valid', path)
+
 const getSelectFontBuffer = async () => {
   const selectedFont = getFromStorage(FILE_TYPE.FONT)
-  return selectedFont === CUSTOM_FONT
-    ? fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
-    : ipcRenderer.invoke('read-file-buffer', selectedFont)
+  return (selectedFont !== CUSTOM_FONT && isValidPath(selectedFont))
+    ? ipcRenderer.invoke('read-file-buffer', selectedFont)
+    : fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
 }
 
 const getPdf = async (invoiceDetails, mode = PRINT) => {
   const { meta, items, footer } = invoiceDetails
   let pdfDoc
   const previewPath = getFromStorage(FILE_TYPE.PDF)
-  const isPreviewMode = (mode === PREVIEW) && previewPath
+  const isPreviewMode = (mode === PREVIEW) && await isValidPath(previewPath)
   if (isPreviewMode) {
     const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
+    if (previewPath) {
+      // eslint-disable-next-line no-alert
+      alert('Please fix Preview PDF Path in Settings')
+    }
     pdfDoc = await PDFDocument.create()
   }
 
@@ -380,4 +386,5 @@ export {
   resetSettings,
   titleCase,
   updatePrinterList,
+  isValidPath,
 }
