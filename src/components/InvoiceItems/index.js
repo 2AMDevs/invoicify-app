@@ -26,7 +26,12 @@ const InvoiceItems = ({
   const itemsComboBoxRef = useRef(null)
 
   const onChangeField = (itemIndex, stateKey, value) => {
-    updateInvoiceItem(itemIndex, { [stateKey]: value })
+    const updateObject = {
+      [stateKey]: value,
+      ...((stateKey === 'gWeight' && currentInvoiceItem.isOldItem)
+      && { weight: currency(value * currentInvoiceItem.purity * 0.01) }),
+    }
+    updateInvoiceItem(itemIndex, updateObject)
     setItemsFilterValue('')
   }
 
@@ -149,11 +154,12 @@ const InvoiceItems = ({
               label="Net Weight"
               type="number"
               min="0"
-              disabled={!currentInvoiceItem.quantity}
+              disabled={!currentInvoiceItem.quantity || currentInvoiceItem.isOldItem}
               value={currentInvoiceItem.weight}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'weight', value)}
               suffix="gms"
             />
+
           </Stack>
 
           <Stack
