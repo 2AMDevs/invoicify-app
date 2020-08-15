@@ -113,8 +113,9 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const removeInvoiceItem = (id) => {
-    setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
-    dismissInvoiceItemsPanelAndRemoveEmptyItems()
+    setInvoiceItems(invoiceItems.filter((item) => item.id !== id), () => {
+      dismissInvoiceItemsPanelAndRemoveEmptyItems()
+    })
   }
 
   const updateInvoiceFooter = (change) => {
