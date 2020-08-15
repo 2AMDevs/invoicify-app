@@ -37,15 +37,6 @@ const Invoice = ({ showPdfPreview }) => {
 
   const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
 
-  const dismissInvoiceItemsPanelAndRemoveEmptyItems = () => {
-    // remove items without baap on panel dismiss
-    setInvoiceItems(invoiceItems.filter((item) => {
-      if (!item.isOldItem) return !!item.product
-      return !!item.type
-    }))
-    dismissInvoiceItemsPanel()
-  }
-
   const invoiceSettings = getInvoiceSettings()
 
   const defaultInvoiceFields = () => {
@@ -112,11 +103,6 @@ const Invoice = ({ showPdfPreview }) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
   }
 
-  const removeInvoiceItem = (id) => {
-    setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
-    dismissInvoiceItemsPanel()
-  }
-
   const updateInvoiceFooter = (change) => {
     let updatedInvoiceFooter = invoiceFooter
     if (change) {
@@ -143,6 +129,38 @@ const Invoice = ({ showPdfPreview }) => {
       grandTotal: currency(totalAmount - oldPurchase),
       cash: currency(totalAmount - oldPurchase - card - cheque - upi),
     })
+  }
+
+  const calcInvoiceFooter = (items) => {
+    let grossTotal = ZERO
+    let oldPurchase = ZERO
+    items.forEach((item) => {
+      if (!item.isOldItem) {
+        grossTotal += currency(item.totalPrice)
+      } else {
+        oldPurchase += currency(item.totalPrice)
+      }
+    })
+
+    updateInvoiceFooter({ grossTotal, oldPurchase })
+  }
+
+  const removeInvoiceItem = (id) => {
+    const filteredItems = invoiceItems.filter((item) => item.id !== id)
+    setInvoiceItems(filteredItems)
+    calcInvoiceFooter(filteredItems)
+    dismissInvoiceItemsPanel()
+  }
+
+  const dismissInvoiceItemsPanelAndRemoveEmptyItems = () => {
+    // remove items without baap on panel dismiss
+    const filteredItems = invoiceItems.filter((item) => {
+      if (!item.isOldItem) return !!item.product
+      return !!item.type
+    })
+    setInvoiceItems(filteredItems)
+    dismissInvoiceItemsPanel()
+    calcInvoiceFooter(filteredItems)
   }
 
   const updateInvoiceItem = (index, valueObject) => {
