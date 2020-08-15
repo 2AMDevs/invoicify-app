@@ -14,11 +14,11 @@ import {
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
 } from '../../utils/helper'
+import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 import InvoicePageFooter from '../InvoicePageFooter'
-
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -37,6 +37,8 @@ const Invoice = ({ showPdfPreview }) => {
   const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
 
   const invoiceSettings = getInvoiceSettings()
+
+  const [alertDetails, setAlertDetails] = useState({ hide: true })
 
   const defaultInvoiceFields = () => {
     const defaultInvoice = {}
@@ -85,6 +87,14 @@ const Invoice = ({ showPdfPreview }) => {
 
   const printAndMove = (_, includeBill) => {
     fetchPDF(includeBill && PREVIEW).then((pdfBytes) => {
+      if (pdfBytes?.error) {
+        setAlertDetails({
+          hide: false,
+          title: 'Error in Preview PDF Path',
+          subText: 'Go to Settings -> Check if path to Bill PDF is valid.',
+        })
+        return
+      }
       printPDF(pdfBytes)
     })
   }
@@ -95,6 +105,14 @@ const Invoice = ({ showPdfPreview }) => {
 
   const previewPDF = () => {
     fetchPDF(PREVIEW).then((pdfBytes) => {
+      if (pdfBytes?.error) {
+        setAlertDetails({
+          hide: false,
+          title: 'Error in Preview PDF Path',
+          subText: 'Go to Settings -> Check if path to Bill PDF is valid.',
+        })
+        return
+      }
       showPdfPreview(pdfBytes)
     })
   }
@@ -210,6 +228,7 @@ const Invoice = ({ showPdfPreview }) => {
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="animation-slide-up invoice">
+      <Alert {...alertDetails} />
       <Stack
         horizontal
         className="invoice__container"

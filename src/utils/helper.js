@@ -167,8 +167,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
     if (previewPath) {
-      // eslint-disable-next-line no-alert
-      alert('Please fix Preview PDF Path in Settings')
+      return ({ error: 'Please fix Preview PDF Path in Settings' })
     }
     pdfDoc = await PDFDocument.create()
   }
