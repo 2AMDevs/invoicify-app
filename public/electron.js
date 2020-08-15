@@ -24,9 +24,8 @@ const createWindow = () => {
   Menu.setApplicationMenu(null)
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   win = new BrowserWindow({
-    height,
     width,
-    resizable: false,
+    height,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
@@ -98,6 +97,10 @@ ipcMain.on('print-it', async (event, pdfBytes, selectedPrinter) => {
 
 ipcMain.on('bye-bye', () => {
   win.close()
+})
+
+ipcMain.on('toggle-fullscreen', () => {
+  win.setFullScreen(!win.isFullScreen())
 })
 
 ipcMain.on('shut-up', () => {

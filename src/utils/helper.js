@@ -97,6 +97,10 @@ const printPDF = (pdfBytes) => {
   ipcRenderer.send('print-it', pdfBytes, getFromStorage('printer'))
 }
 
+const toggleFullScreen = () => {
+  ipcRenderer.send('toggle-fullscreen')
+}
+
 const getInvoiceDate = (date) => {
   const options = {
     year: 'numeric', month: 'long', day: 'numeric',
@@ -386,4 +390,5 @@ export {
   titleCase,
   updatePrinterList,
   isValidPath,
+  toggleFullScreen,
 }

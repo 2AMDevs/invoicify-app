@@ -4,7 +4,9 @@ import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton } from 'office-ui-fabric-react'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 
-import { minimizeApp, quitApp, getProducts } from '../../../utils/helper'
+import {
+  minimizeApp, toggleFullScreen, quitApp, getProducts,
+} from '../../../utils/helper'
 import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 
@@ -41,6 +43,12 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
         iconProps={{ iconName: 'Settings' }}
         checked={false}
         onClick={openSettingsPanel}
+      />
+      <CommandBarButton
+        className="header__link__btn"
+        iconProps={{ iconName: 'ChromeFullScreen' }}
+        checked={false}
+        onClick={toggleFullScreen}
       />
       {localStorage.version && (
         <CommandBarButton
