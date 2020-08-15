@@ -1,4 +1,4 @@
-import React, { useState, useRef, useBoolean } from 'react'
+import React, { useState, useRef } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
