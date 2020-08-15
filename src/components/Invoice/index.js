@@ -215,7 +215,7 @@ const Invoice = ({ showPdfPreview }) => {
   const getFilteredInvoiceItems = () => invoiceItems
     .filter((item) => !item.isOldItem && item.product)
 
-  const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem)
+  const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem && item.type)
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
