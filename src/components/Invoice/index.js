@@ -35,6 +35,7 @@ const PdfPathError = {
 }
 
 const Invoice = ({ showPdfPreview }) => {
+  const [invoiceItems, setInvoiceItems] = useState([])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
 
   const openInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(true))
@@ -76,7 +77,6 @@ const Invoice = ({ showPdfPreview }) => {
 
   const [invoice, setInvoice] = useState(defaultInvoiceFields())
   const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
-  const [invoiceItems, setInvoiceItems] = useState([])
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
 
   const hoverCard = useRef(null)
@@ -121,11 +121,6 @@ const Invoice = ({ showPdfPreview }) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
   }
 
-  const removeInvoiceItem = (id) => {
-    setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
-    dismissInvoiceItemsPanel()
-  }
-
   const updateInvoiceFooter = (change) => {
     let updatedInvoiceFooter = invoiceFooter
     if (change) {
@@ -152,6 +147,38 @@ const Invoice = ({ showPdfPreview }) => {
       grandTotal: currency(totalAmount - oldPurchase),
       cash: currency(totalAmount - oldPurchase - card - cheque - upi),
     })
+  }
+
+  const calcInvoiceFooter = (items) => {
+    let grossTotal = ZERO
+    let oldPurchase = ZERO
+    items.forEach((item) => {
+      if (!item.isOldItem) {
+        grossTotal += currency(item.totalPrice)
+      } else {
+        oldPurchase += currency(item.totalPrice)
+      }
+    })
+
+    updateInvoiceFooter({ grossTotal, oldPurchase })
+  }
+
+  const removeInvoiceItem = (id) => {
+    const filteredItems = invoiceItems.filter((item) => item.id !== id)
+    setInvoiceItems(filteredItems)
+    calcInvoiceFooter(filteredItems)
+    dismissInvoiceItemsPanel()
+  }
+
+  const dismissInvoiceItemsPanelAndRemoveEmptyItems = () => {
+    // remove items without baap on panel dismiss
+    const filteredItems = invoiceItems.filter((item) => {
+      if (!item.isOldItem) return !!item.product
+      return !!item.type
+    })
+    setInvoiceItems(filteredItems)
+    dismissInvoiceItemsPanel()
+    calcInvoiceFooter(filteredItems)
   }
 
   const updateInvoiceItem = (index, valueObject) => {
@@ -221,9 +248,10 @@ const Invoice = ({ showPdfPreview }) => {
 
   const groupedSettings = groupBy(invoiceSettings, 'row')
 
-  const getFilteredInvoiceItems = () => invoiceItems.filter((item) => !item.isOldItem)
+  const getFilteredInvoiceItems = () => invoiceItems
+    .filter((item) => !item.isOldItem && item.product)
 
-  const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem)
+  const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem && item.type)
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
@@ -398,7 +426,7 @@ const Invoice = ({ showPdfPreview }) => {
         className="invoice__item-panel"
         headerClassName="invoice__item-panel__header"
         isOpen={isInvoiceItemFormOpen}
-        onDismiss={dismissInvoiceItemsPanel}
+        onDismiss={dismissInvoiceItemsPanelAndRemoveEmptyItems}
         closeButtonAriaLabel="Close"
         headerText="Invoice item"
       >
@@ -409,7 +437,7 @@ const Invoice = ({ showPdfPreview }) => {
           setInvoiceItems={setInvoiceItems}
           removeInvoiceItem={removeInvoiceItem}
           updateInvoiceItem={updateInvoiceItem}
-          dismissInvoiceItemsPanel={dismissInvoiceItemsPanel}
+          dismissInvoiceItemsPanel={dismissInvoiceItemsPanelAndRemoveEmptyItems}
           addNewInvoiceItem={addNewInvoiceItem}
         />
       </Panel>
