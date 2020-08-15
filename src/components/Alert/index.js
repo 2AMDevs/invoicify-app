@@ -1,14 +1,14 @@
 import * as React from 'react'
 
-import { useId, useBoolean } from '@uifabric/react-hooks'
+import { useId } from '@uifabric/react-hooks'
 import { PrimaryButton } from 'office-ui-fabric-react/lib/Button'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog'
 
 const dialogStyles = { main: { maxWidth: 450 } }
 
-const Alert = ({ hide, title, subText }) => {
-  console.log({ hide, title, subText })
-  const [isHidden, { toggle: hideIt }] = useBoolean(hide)
+const Alert = ({
+  hide, title, subText, setHideAlert,
+}) => {
   const labelId = useId('dialogLabel')
   const subTextId = useId('subTextLabel')
 
@@ -30,14 +30,14 @@ const Alert = ({ hide, title, subText }) => {
 
   return (
     <Dialog
-      hidden={isHidden}
-      onDismiss={hideIt}
+      hidden={hide}
+      onDismiss={() => setHideAlert(!hide)}
       dialogContentProps={dialogContentProps}
       modalProps={modalProps}
     >
       <DialogFooter>
         <PrimaryButton
-          onClick={hideIt}
+          onClick={() => setHideAlert(!hide)}
           text="Okie Dokie"
         />
       </DialogFooter>
