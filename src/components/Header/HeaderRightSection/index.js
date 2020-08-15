@@ -44,18 +44,18 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
         checked={false}
         onClick={openSettingsPanel}
       />
-      <CommandBarButton
-        className="header__link__btn"
-        iconProps={{ iconName: 'ChromeFullScreen' }}
-        checked={false}
-        onClick={toggleFullScreen}
-      />
       {localStorage.version && (
         <CommandBarButton
           className="header__link__btn"
           text={`v${localStorage.version}`}
         />
       )}
+      <CommandBarButton
+        className="header__link__btn"
+        iconProps={{ iconName: 'ChromeFullScreen' }}
+        checked={false}
+        onClick={toggleFullScreen}
+      />
       <CommandBarButton
         className="header__link__btn__mini"
         iconProps={{ iconName: 'ChromeMinimize' }}
