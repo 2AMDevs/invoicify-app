@@ -86,9 +86,9 @@ const Invoice = ({ showPdfPreview }) => {
   )
 
   const resetForm = () => {
-    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
     setInvoiceItems([])
     setInvoice(defaultInvoiceFields())
+    setInvoiceFooter(defaultInvoiceFooter)
   }
 
   const printAndMove = (_, includeBill) => {
@@ -100,6 +100,8 @@ const Invoice = ({ showPdfPreview }) => {
       }
       printPDF(pdfBytes)
     })
+    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
+    resetForm()
   }
 
   const printWithBill = (e) => {
