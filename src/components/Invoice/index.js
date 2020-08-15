@@ -30,11 +30,21 @@ const columnProps = {
 }
 
 const Invoice = ({ showPdfPreview }) => {
+  const [invoiceItems, setInvoiceItems] = useState([])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
 
   const openInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(true))
 
   const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
+
+  const dismissInvoiceItemsPanelAndRemoveEmptyItems = () => {
+    // remove items without baap on panel dismiss
+    setInvoiceItems(invoiceItems.filter((item) => {
+      if (!item.isOldItem) return !!item.product
+      return !!item.type
+    }))
+    dismissInvoiceItemsPanel()
+  }
 
   const invoiceSettings = getInvoiceSettings()
 
@@ -68,7 +78,6 @@ const Invoice = ({ showPdfPreview }) => {
 
   const [invoice, setInvoice] = useState(defaultInvoiceFields())
   const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
-  const [invoiceItems, setInvoiceItems] = useState([])
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
 
   const hoverCard = useRef(null)
@@ -105,7 +114,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const removeInvoiceItem = (id) => {
     setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
-    dismissInvoiceItemsPanel()
+    dismissInvoiceItemsPanelAndRemoveEmptyItems()
   }
 
   const updateInvoiceFooter = (change) => {
@@ -203,7 +212,8 @@ const Invoice = ({ showPdfPreview }) => {
 
   const groupedSettings = groupBy(invoiceSettings, 'row')
 
-  const getFilteredInvoiceItems = () => invoiceItems.filter((item) => !item.isOldItem)
+  const getFilteredInvoiceItems = () => invoiceItems
+    .filter((item) => !item.isOldItem && item.product)
 
   const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem)
 
@@ -375,7 +385,7 @@ const Invoice = ({ showPdfPreview }) => {
         className="invoice__item-panel"
         headerClassName="invoice__item-panel__header"
         isOpen={isInvoiceItemFormOpen}
-        onDismiss={dismissInvoiceItemsPanel}
+        onDismiss={dismissInvoiceItemsPanelAndRemoveEmptyItems}
         closeButtonAriaLabel="Close"
         headerText="Invoice item"
       >
@@ -386,7 +396,7 @@ const Invoice = ({ showPdfPreview }) => {
           setInvoiceItems={setInvoiceItems}
           removeInvoiceItem={removeInvoiceItem}
           updateInvoiceItem={updateInvoiceItem}
-          dismissInvoiceItemsPanel={dismissInvoiceItemsPanel}
+          dismissInvoiceItemsPanel={dismissInvoiceItemsPanelAndRemoveEmptyItems}
           addNewInvoiceItem={addNewInvoiceItem}
         />
       </Panel>
