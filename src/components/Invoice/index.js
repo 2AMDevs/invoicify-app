@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useBoolean } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -14,11 +14,11 @@ import {
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
 } from '../../utils/helper'
+import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 import InvoicePageFooter from '../InvoicePageFooter'
-
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -29,6 +29,11 @@ const columnProps = {
   styles: { root: { width: deviceWidth * 0.3, display: 'flex', justifyContent: 'space-between' } },
 }
 
+const PdfPathError = {
+  title: 'Error in Preview PDF Path',
+  subText: 'Go to Settings -> Check if path to Bill PDF is valid.',
+}
+
 const Invoice = ({ showPdfPreview }) => {
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
 
@@ -37,6 +42,9 @@ const Invoice = ({ showPdfPreview }) => {
   const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
 
   const invoiceSettings = getInvoiceSettings()
+
+  const [hideAlert, setHideAlert] = useState(true)
+  const [alertDetails, setAlertDetails] = useState({})
 
   const defaultInvoiceFields = () => {
     const defaultInvoice = {}
@@ -85,6 +93,11 @@ const Invoice = ({ showPdfPreview }) => {
 
   const printAndMove = (_, includeBill) => {
     fetchPDF(includeBill && PREVIEW).then((pdfBytes) => {
+      if (pdfBytes?.error) {
+        setAlertDetails(PdfPathError)
+        setHideAlert(false)
+        return
+      }
       printPDF(pdfBytes)
     })
   }
@@ -95,6 +108,11 @@ const Invoice = ({ showPdfPreview }) => {
 
   const previewPDF = () => {
     fetchPDF(PREVIEW).then((pdfBytes) => {
+      if (pdfBytes?.error) {
+        setAlertDetails(PdfPathError)
+        setHideAlert(false)
+        return
+      }
       showPdfPreview(pdfBytes)
     })
   }
@@ -210,6 +228,11 @@ const Invoice = ({ showPdfPreview }) => {
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="animation-slide-up invoice">
+      <Alert
+        hide={hideAlert}
+        setHideAlert={setHideAlert}
+        {...alertDetails}
+      />
       <Stack
         horizontal
         className="invoice__container"

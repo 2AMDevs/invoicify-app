@@ -13,6 +13,10 @@ const ISET = {
   CALC: 'calculationSettings',
 }
 
+const ERROR = {
+  FILE_MOVED: 'File Selected is either moved or renamed.',
+}
+
 const PAY_METHOD = {
   CASH: 'cash',
   CHEQUE: 'cheque',
@@ -275,5 +279,5 @@ export {
   PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE, PAY_METHOD,
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
-  SELECT_FILE_TYPE, oldInvoiceItemsTableColumns,
+  SELECT_FILE_TYPE, oldInvoiceItemsTableColumns, ERROR,
 }

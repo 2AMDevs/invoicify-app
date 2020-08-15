@@ -1,3 +1,4 @@
+import Alert from './Alert'
 import Header from './Header'
 import HoverTotal from './HoverTotal'
 import ImportProducts from './ImportProducts'
@@ -11,6 +12,7 @@ import ProductsPage from './ProductsPage'
 import Settings from './Settings'
 
 export {
+  Alert,
   Header,
   ImportProducts,
   Invoice,
