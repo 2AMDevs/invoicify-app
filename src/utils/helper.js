@@ -216,7 +216,9 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     const product = getProducts(item.product)
     if (product?.name) {
       page.drawText(...commonStuff(45, (idx + 1)), true)
-      page.drawText(...commonStuff(70, `${product?.name} [${product?.type}]`, true))
+      page.drawText(...commonStuff(70, `${product?.name}`, true))
+      // type at the end of col
+      page.drawText(...commonStuff(190, `[${product?.type}]`, true))
       page.drawText(...commonStuff(232, item.quantity))
       page.drawText(...commonStuff(283, item.gWeight))
       page.drawText(...commonStuff(333, item.weight))
@@ -239,6 +241,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       },
     ]
   }
+
   page.drawText(...footerCommonParts(210, 'grossTotal'))
   page.drawText(...footerCommonParts(190, 'cgst'))
   page.drawText(...footerCommonParts(170, 'sgst'))
