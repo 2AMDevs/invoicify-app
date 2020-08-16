@@ -12,6 +12,9 @@
   --color-red-exit: rgba(238, 62, 79, 0.75);
 
   --color-bg: #23272A;
+
+  --color-scrollbar-background: #36393F;
+  --color-scrollbar-thumb: #202225;
 }
 
 *,
@@ -20,6 +23,21 @@
     margin: 0;
     padding: 0;
     box-sizing: inherit;
+}
+
+*::-webkit-scrollbar {
+  width: 1.2rem;
+  border-radius: 1rem;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: var(--color-scrollbar-background);
+  border-radius: 1rem;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-thumb);
+  border-radius: 1rem;
 }
 
 main {
