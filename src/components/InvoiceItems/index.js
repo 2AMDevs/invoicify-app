@@ -235,14 +235,14 @@ const InvoiceItems = ({
 
       <div className="invoice-items__item invoice-items__item--add-btn animation-slide-up">
         <CommandBarButton
+          iconProps={{ iconName: 'CheckedOutByYou12' }}
+          text="Exit"
+          onClick={dismissInvoiceItemsPanel}
+        />
+        <CommandBarButton
           iconProps={{ iconName: 'Save' }}
           text="Add another"
           onClick={addNewInvoiceItem}
-        />
-        <CommandBarButton
-          iconProps={{ iconName: 'CheckedOutByYou12' }}
-          text="Exit form"
-          onClick={dismissInvoiceItemsPanel}
         />
         <CommandBarButton
           iconProps={{ iconName: 'Delete' }}
