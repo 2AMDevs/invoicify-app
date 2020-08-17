@@ -232,11 +232,13 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       if (font.widthOfTextAtSize(`${product?.name}`, fontSize) > MAX_ITEM_WIDTH) {
         let toPrint = ''
         const bits = product?.name?.split(' ')
+        let maxWidth = MAX_ITEM_WIDTH
         bits.forEach((bit) => {
-          if (font.widthOfTextAtSize(`${toPrint} ${bit}`, fontSize) > MAX_ITEM_WIDTH) {
+          if (font.widthOfTextAtSize(`${toPrint} ${bit}`, fontSize) > maxWidth) {
             page.drawText(...commonStuff(70, toPrint, true))
             toPrint = ''
             idx += 1
+            maxWidth = MAX_ITEM_WIDTH + font.widthOfTextAtSize(`[${product?.type}]`, fontSize)
           }
           toPrint += `${toPrint.length ? ' ' : ''}${bit}`
         })
