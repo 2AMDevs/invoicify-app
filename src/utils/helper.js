@@ -230,9 +230,19 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       page.drawText(...commonStuff(560, `${currency(item.totalPrice, true)}/-`))
 
       if (font.widthOfTextAtSize(`${product?.name}`, fontSize) > MAX_ITEM_WIDTH) {
-        page.drawText(...commonStuff(70, `${product?.name.split('(')[0].trim()}`, true))
-        idx += 1
-        page.drawText(...commonStuff(70, `(${product?.name.split('(')[1].trim()}`, true))
+        let toPrint = ''
+        const bits = product?.name?.split(' ')
+        bits.forEach((bit) => {
+          if (font.widthOfTextAtSize(`${toPrint} ${bit}`, fontSize) > MAX_ITEM_WIDTH) {
+            page.drawText(...commonStuff(70, toPrint, true))
+            toPrint = ''
+            idx += 1
+          }
+          toPrint += `${toPrint.length ? ' ' : ''}${bit}`
+        })
+        if (toPrint) {
+          page.drawText(...commonStuff(70, toPrint, true))
+        }
       } else {
         page.drawText(...commonStuff(70, `${product?.name}`, true))
       }
