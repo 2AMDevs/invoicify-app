@@ -170,10 +170,10 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   let pdfDoc
   const previewPath = getFromStorage(FILE_TYPE.PDF)
   const legit = await isValidPath(previewPath)
-  const isPreviewMode = (mode === PREVIEW) && legit
+  const isPreviewMode = (mode === PREVIEW)
   if (isPreviewMode) {
     if (previewPath && !legit) {
-      return ({ error: 'Please fix Preview PDF Path in Settings' })
+      return { error: 'Please fix Preview PDF Path in Settings' }
     }
     const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
