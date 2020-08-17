@@ -103,6 +103,7 @@ const InvoiceItems = ({
                   type="number"
                   min="0"
                   label="Pcs"
+                  disabled={!currentInvoiceItem.product}
                   value={currentInvoiceItem.quantity}
                   onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', quantize(value))}
                   required
@@ -240,6 +241,7 @@ const InvoiceItems = ({
           onClick={dismissInvoiceItemsPanel}
         />
         <CommandBarButton
+          disabled={!currentInvoiceItem?.quantity}
           iconProps={{ iconName: 'Save' }}
           text="Add another"
           onClick={addNewInvoiceItem}
