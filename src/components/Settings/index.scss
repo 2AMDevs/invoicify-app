@@ -1,3 +1,10 @@
+.settings-loader {
+  height: calc(100vh - 10rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .invoice-page {
   &__path-input {
     flex: 1;
