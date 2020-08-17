@@ -49,6 +49,9 @@ const currency = (val, format) => {
   }).format(parsedCurrency)}` : parsedCurrency
 }
 
+const quantize = (val) => (isNaN(parseFloat(val))
+  ? 0 : +val)
+
 const printerList = async () => {
   const list = await ipcRenderer.invoke('get-printers')
   const getIcon = (name) => {
@@ -275,7 +278,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   const calcSettings = getInvoiceSettings(ISET.CALC)
 
   const towWordsText = getBoolFromString(calcSettings.roundOffToWords)
-    ? Math.ceil(footer.grandTotal) : footer.grandTotal
+    ? Math.round(footer.grandTotal) : footer.grandTotal
   page.drawText(toWords(towWordsText), {
     x: 85,
     y: 87,
@@ -417,4 +420,5 @@ export {
   updatePrinterList,
   isValidPath,
   toggleFullScreen,
+  quantize,
 }

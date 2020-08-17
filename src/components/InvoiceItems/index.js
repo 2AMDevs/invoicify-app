@@ -8,7 +8,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import {
-  getProducts, groupBy, currency, getProductTypes,
+  getProducts, groupBy, currency, getProductTypes, quantize,
 } from '../../utils/helper'
 
 import './index.scss'
@@ -61,7 +61,7 @@ const InvoiceItems = ({
   const openComboboxDropdown = useCallback(() => itemsComboBoxRef.current?.focus(true), [])
 
   const filterComboBoxOptions = (product) => (generateProductOptions(product) || [])
-    .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase()))
+    .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase().trim()))
 
   return (
     <div className="invoice-items animation-slide-up">
@@ -104,7 +104,7 @@ const InvoiceItems = ({
                   min="0"
                   label="Pcs"
                   value={currentInvoiceItem.quantity}
-                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', currency(value))}
+                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', quantize(value))}
                   required
                 />
               </>
