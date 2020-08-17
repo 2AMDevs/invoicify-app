@@ -12,7 +12,16 @@
   font-size: 2rem;
   background-color: var(--color-bg);
   height: 5rem;
-  box-shadow: 0 2px 3px 2px var(--color-black);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0.2rem;
+    background: var(--after-header-gradient)
+  }
 
   &__left-section {
     display: flex;
