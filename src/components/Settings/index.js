@@ -95,10 +95,12 @@ const Settings = ({ refreshCompanyName }) => {
 
   if (checkingPath) {
     return (
-      <Spinner
-        size={SpinnerSize.large}
-        styles={{ verticalAlign: 'center' }}
-      />
+      <div className="settings-loader animation-slide-up">
+        <Spinner
+          size={SpinnerSize.large}
+          styles={{ verticalAlign: 'center' }}
+        />
+      </div>
     )
   }
   return (
