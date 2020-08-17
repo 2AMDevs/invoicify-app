@@ -6,6 +6,7 @@ import { PDFDocument } from 'pdf-lib'
 import {
   PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE, defaultPageSettings,
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings, PAY_METHOD,
+  MAX_ITEM_WIDTH,
 } from './constants'
 
 // eslint-disable-next-line global-require
@@ -200,7 +201,9 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   // Print Items
   const printSettings = getInvoiceSettings(ISET.PRINT)
-  items.filter((it) => !it.isOldItem).forEach((item, idx) => {
+  let idx = -1
+  items.filter((it) => !it.isOldItem).forEach((item, serial) => {
+    idx += 1
     const commonStuff = (x, text, fromStart) => {
       const stringifiedText = text.toString()
       const adjustment = !fromStart ? (font.widthOfTextAtSize(stringifiedText, fontSize)) : 0
@@ -215,8 +218,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
     const product = getProducts(item.product)
     if (product?.name) {
-      page.drawText(...commonStuff(45, (idx + 1)), true)
-      page.drawText(...commonStuff(70, `${product?.name}`, true))
+      page.drawText(...commonStuff(45, (serial + 1)), true)
       // type at the end of col
       page.drawText(...commonStuff(190, `[${product?.type}]`, true))
       page.drawText(...commonStuff(232, item.quantity))
@@ -226,6 +228,14 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       page.drawText(...commonStuff(428, `${currency(item.mkg)}%`))
       page.drawText(...commonStuff(478, `${currency(item.other, true)}/-`))
       page.drawText(...commonStuff(560, `${currency(item.totalPrice, true)}/-`))
+
+      if (font.widthOfTextAtSize(`${product?.name}`, fontSize) > MAX_ITEM_WIDTH) {
+        page.drawText(...commonStuff(70, `${product?.name.split('(')[0].trim()}`, true))
+        idx += 1
+        page.drawText(...commonStuff(70, `(${product?.name.split('(')[1].trim()}`, true))
+      } else {
+        page.drawText(...commonStuff(70, `${product?.name}`, true))
+      }
     }
   })
 
