@@ -11,7 +11,7 @@ import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 
 const HeaderRightSection = ({ refreshCompanyName }) => {
-  const [productsCount, setProductsCount] = useState(0)
+  const [productsCount, setProductsCount] = useState(getProducts()?.length)
 
   const [isProductsOpen, setIsProductsOpen] = useState(false)
 
