@@ -12,10 +12,12 @@ const print = async (pdfBytes, selectedPrinter) => {
   const printer = selectedPrinter ?? await getDefaultPrinter()
   const filePath = path.join(os.tmpdir(), 'print.pdf')
   fs.writeFile(filePath, pdfBytes, () => {})
-  ptp
-    .print(filePath, { printer, win32: ['-print-settings "2x"'] })
-    .then(console.log)
-    .catch(console.error)
+  try {
+    await ptp.print(filePath, { printer })
+    return true
+  } catch (e) {
+    return false
+  }
 }
 
 module.exports = {

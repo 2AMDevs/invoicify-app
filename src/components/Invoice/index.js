@@ -98,10 +98,13 @@ const Invoice = ({ showPdfPreview }) => {
         setHideAlert(false)
         return
       }
-      printPDF(pdfBytes)
+      printPDF(pdfBytes).then((res) => {
+        if (res) {
+          localStorage.invoiceNumber = invoice['Invoice Number'] + 1
+          resetForm()
+        }
+      })
     })
-    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
-    resetForm()
   }
 
   const printWithBill = (e) => {
