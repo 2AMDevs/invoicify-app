@@ -255,6 +255,22 @@ const Invoice = ({ showPdfPreview }) => {
 
   const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem && item.type)
 
+  const validateInvoiceField = (field) => {
+    if (field.disabled) return true
+
+    if (!invoice[field.name]) return false
+
+    if (field.inputLength) return invoice[field.name].length === field.inputLength
+
+    if (field.regex
+      && !new RegExp(field.regex).test(invoice[field.name].toUpperCase())) return false
+
+    return true
+  }
+
+  const validateMandatoryMeta = () => !invoiceSettings
+    .some((field) => field.required && !validateInvoiceField(field))
+
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="animation-slide-up invoice">
@@ -296,7 +312,7 @@ const Invoice = ({ showPdfPreview }) => {
                   },
                   onGetErrorMessage: (value) => {
                     if (!value) return
-                    if (field.regex && !new RegExp(field.regex).test(value.toUpperCase())) return `Invalid Value For ${field.name}`
+                    if (!validateInvoiceField(field)) return `Invalid Value For ${field.name}`
                   },
                   required: field.required,
                   disabled: field.disabled,
@@ -418,7 +434,7 @@ const Invoice = ({ showPdfPreview }) => {
         </Stack>
       </Stack>
       <InvoicePageFooter
-        disablePrintButton={!invoice['Customer Name'] || !invoice.Mobile}
+        disablePrintButton={!validateMandatoryMeta()}
         printAndMove={printAndMove}
         printWithBill={printWithBill}
         previewPDF={previewPDF}
