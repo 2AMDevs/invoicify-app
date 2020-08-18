@@ -33,7 +33,7 @@ const Settings = ({ refreshCompanyName }) => {
     // eslint-disable-next-line func-names
     (async function () {
       setCheckingPath(true)
-      setPreviewBillErr(await isValidPath(previewBill) ? '' : ERROR.FILE_MOVED)
+      if (previewBill) setPreviewBillErr(await isValidPath(previewBill) ? '' : ERROR.FILE_MOVED)
       setCheckingPath(false)
     }())
   }, [previewBill])
@@ -162,7 +162,7 @@ const Settings = ({ refreshCompanyName }) => {
         >
           <TextField
             className="invoice-page__path-input"
-            placeholder="Bill File Path"
+            placeholder="Bill File Path (Default is no file)"
             disabled
             description="Bill Background to be show in Preview"
             value={previewBill}
