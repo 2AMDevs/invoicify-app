@@ -63,6 +63,12 @@ const InvoiceItems = ({
   const filterComboBoxOptions = (product) => (generateProductOptions(product) || [])
     .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase().trim()))
 
+  const addAnotherItem = () => {
+    addNewInvoiceItem()
+    // move focus to item selection and open it if adding another item
+    if (itemsComboBoxRef.current) itemsComboBoxRef.current.focus(true)
+  }
+
   return (
     <div className="invoice-items animation-slide-up">
       {currentInvoiceItem && (
@@ -244,7 +250,7 @@ const InvoiceItems = ({
           disabled={!currentInvoiceItem?.quantity}
           iconProps={{ iconName: 'Save' }}
           text="Add another"
-          onClick={addNewInvoiceItem}
+          onClick={addAnotherItem}
         />
         <CommandBarButton
           iconProps={{ iconName: 'Delete' }}
