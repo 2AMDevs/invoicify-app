@@ -418,6 +418,7 @@ const Invoice = ({ showPdfPreview }) => {
         </Stack>
       </Stack>
       <InvoicePageFooter
+        disablePrintButton={!invoice['Customer Name'] || !invoice.Mobile}
         printAndMove={printAndMove}
         printWithBill={printWithBill}
         previewPDF={previewPDF}
