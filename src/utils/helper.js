@@ -6,7 +6,7 @@ import { PDFDocument } from 'pdf-lib'
 import {
   PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE, defaultPageSettings,
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings, PAY_METHOD,
-  MAX_ITEM_WIDTH,
+  MAX_ITEM_WIDTH, COMPANY_NAME,
 } from './constants'
 
 // eslint-disable-next-line global-require
@@ -74,7 +74,7 @@ const updatePrinterList = async () => {
 }
 
 const initializeSettings = async () => {
-  localStorage.companyName = localStorage.companyName ?? '2AM Devs'
+  localStorage.companyName = localStorage.companyName ?? COMPANY_NAME
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
   localStorage.productType = localStorage.productType ?? 'G, S'
@@ -97,9 +97,7 @@ const initializeSettings = async () => {
   await updatePrinterList()
 }
 
-const printPDF = (pdfBytes) => {
-  ipcRenderer.send('print-it', pdfBytes, getFromStorage('printer'))
-}
+const printPDF = (pdfBytes) => ipcRenderer.invoke('print-it', pdfBytes, getFromStorage('printer'))
 
 const toggleFullScreen = () => {
   ipcRenderer.send('toggle-fullscreen')
@@ -170,9 +168,9 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   let pdfDoc
   const previewPath = getFromStorage(FILE_TYPE.PDF)
   const legit = await isValidPath(previewPath)
-  const isPreviewMode = (mode === PREVIEW)
+  const isPreviewMode = (mode === PREVIEW) && previewPath
   if (isPreviewMode) {
-    if (previewPath && !legit) {
+    if (!legit) {
       return { error: 'Please fix Preview PDF Path in Settings' }
     }
     const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
@@ -338,7 +336,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   page.drawText(...footerCommonParts(170, PAY_METHOD.CARD, 245))
 
   pdfDoc.setTitle('Invoice Preview')
-  pdfDoc.setAuthor('2AM Devs')
+  pdfDoc.setAuthor(COMPANY_NAME)
 
   // Serialize the PDFDocument to base64
   return pdfDoc.save()

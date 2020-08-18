@@ -4,6 +4,7 @@ const DATE = 'Date'
 const TEXT = 'Text'
 const MASKED = 'Masked'
 const CUSTOM_FONT = 'invoicify.ttf'
+const COMPANY_NAME = '2AM Devs'
 const ZERO = parseFloat(0)
 const UPDATE_RESTART_MSG = 'Update Downloaded. It will be installed on restart. Restart now?'
 
@@ -282,5 +283,5 @@ export {
   PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE, PAY_METHOD,
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
-  SELECT_FILE_TYPE, oldInvoiceItemsTableColumns, ERROR, MAX_ITEM_WIDTH,
+  SELECT_FILE_TYPE, oldInvoiceItemsTableColumns, ERROR, MAX_ITEM_WIDTH, COMPANY_NAME,
 }
