@@ -164,6 +164,7 @@ const Settings = ({ refreshCompanyName }) => {
             className="invoice-page__path-input"
             placeholder="Bill File Path (Default is no file)"
             disabled
+            readOnly
             description="Bill Background to be show in Preview"
             value={previewBill}
             errorMessage={previewBillErr}
@@ -184,6 +185,7 @@ const Settings = ({ refreshCompanyName }) => {
             className="invoice-page__path-input"
             placeholder="Font Path"
             disabled
+            readOnly
             description="Select Indic Font TTF File, this will fallback to default if invalid path is found."
             value={font}
           />
