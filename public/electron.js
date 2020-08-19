@@ -131,7 +131,7 @@ if (!isDev) {
     win.webContents.send('message', progress)
   })
 
-  autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('updateDownloaded')
+  autoUpdater.on('update-downloaded', (info) => {
+    win.webContents.send('updateDownloaded', info)
   })
 }
