@@ -6,6 +6,7 @@ import { PDFDocument } from 'pdf-lib'
 import {
   PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE, defaultPageSettings,
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings, PAY_METHOD,
+  MAX_ITEM_WIDTH, COMPANY_NAME,
 } from './constants'
 
 // eslint-disable-next-line global-require
@@ -48,6 +49,9 @@ const currency = (val, format) => {
   }).format(parsedCurrency)}` : parsedCurrency
 }
 
+const quantize = (val) => (isNaN(parseFloat(val))
+  ? 0 : +val)
+
 const printerList = async () => {
   const list = await ipcRenderer.invoke('get-printers')
   const getIcon = (name) => {
@@ -70,7 +74,7 @@ const updatePrinterList = async () => {
 }
 
 const initializeSettings = async () => {
-  localStorage.companyName = localStorage.companyName ?? '2AM Devs'
+  localStorage.companyName = localStorage.companyName ?? COMPANY_NAME
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
   localStorage.productType = localStorage.productType ?? 'G, S'
@@ -93,8 +97,10 @@ const initializeSettings = async () => {
   await updatePrinterList()
 }
 
-const printPDF = (pdfBytes) => {
-  ipcRenderer.send('print-it', pdfBytes, getFromStorage('printer'))
+const printPDF = (pdfBytes) => ipcRenderer.invoke('print-it', pdfBytes, getFromStorage('printer'))
+
+const toggleFullScreen = () => {
+  ipcRenderer.send('toggle-fullscreen')
 }
 
 const getInvoiceDate = (date) => {
@@ -148,19 +154,25 @@ const getInvoiceSettings = (type = ISET.MAIN) => {
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
+const isValidPath = async (path) => path && ipcRenderer.invoke('is-valid', path)
+
 const getSelectFontBuffer = async () => {
   const selectedFont = getFromStorage(FILE_TYPE.FONT)
-  return selectedFont === CUSTOM_FONT
-    ? fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
-    : ipcRenderer.invoke('read-file-buffer', selectedFont)
+  return (selectedFont !== CUSTOM_FONT && isValidPath(selectedFont))
+    ? ipcRenderer.invoke('read-file-buffer', selectedFont)
+    : fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
 }
 
 const getPdf = async (invoiceDetails, mode = PRINT) => {
   const { meta, items, footer } = invoiceDetails
   let pdfDoc
   const previewPath = getFromStorage(FILE_TYPE.PDF)
+  const legit = await isValidPath(previewPath)
   const isPreviewMode = (mode === PREVIEW) && previewPath
   if (isPreviewMode) {
+    if (!legit) {
+      return { error: 'Please fix Preview PDF Path in Settings' }
+    }
     const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
@@ -190,7 +202,9 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   // Print Items
   const printSettings = getInvoiceSettings(ISET.PRINT)
-  items.filter((it) => !it.isOldItem).forEach((item, idx) => {
+  let idx = -1
+  items.filter((it) => !it.isOldItem).forEach((item, serial) => {
+    idx += 1
     const commonStuff = (x, text, fromStart) => {
       const stringifiedText = text.toString()
       const adjustment = !fromStart ? (font.widthOfTextAtSize(stringifiedText, fontSize)) : 0
@@ -205,8 +219,9 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
     const product = getProducts(item.product)
     if (product?.name) {
-      page.drawText(...commonStuff(45, (idx + 1)), true)
-      page.drawText(...commonStuff(70, `${product?.name} [${product?.type}]`, true))
+      page.drawText(...commonStuff(45, (serial + 1)), true)
+      // type at the end of col
+      page.drawText(...commonStuff(190, `[${product?.type}]`, true))
       page.drawText(...commonStuff(232, item.quantity))
       page.drawText(...commonStuff(283, item.gWeight))
       page.drawText(...commonStuff(333, item.weight))
@@ -214,6 +229,26 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       page.drawText(...commonStuff(428, `${currency(item.mkg)}%`))
       page.drawText(...commonStuff(478, `${currency(item.other, true)}/-`))
       page.drawText(...commonStuff(560, `${currency(item.totalPrice, true)}/-`))
+
+      if (font.widthOfTextAtSize(`${product?.name}`, fontSize) > MAX_ITEM_WIDTH) {
+        let toPrint = ''
+        const bits = product?.name?.split(' ')
+        let maxWidth = MAX_ITEM_WIDTH
+        bits.forEach((bit) => {
+          if (font.widthOfTextAtSize(`${toPrint} ${bit}`, fontSize) > maxWidth) {
+            page.drawText(...commonStuff(70, toPrint, true))
+            toPrint = ''
+            idx += 1
+            maxWidth = MAX_ITEM_WIDTH + font.widthOfTextAtSize(`[${product?.type}]`, fontSize)
+          }
+          toPrint += `${toPrint.length ? ' ' : ''}${bit}`
+        })
+        if (toPrint) {
+          page.drawText(...commonStuff(70, toPrint, true))
+        }
+      } else {
+        page.drawText(...commonStuff(70, `${product?.name}`, true))
+      }
     }
   })
 
@@ -229,6 +264,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
       },
     ]
   }
+
   page.drawText(...footerCommonParts(210, 'grossTotal'))
   page.drawText(...footerCommonParts(190, 'cgst'))
   page.drawText(...footerCommonParts(170, 'sgst'))
@@ -240,7 +276,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   const calcSettings = getInvoiceSettings(ISET.CALC)
 
   const towWordsText = getBoolFromString(calcSettings.roundOffToWords)
-    ? Math.ceil(footer.grandTotal) : footer.grandTotal
+    ? Math.round(footer.grandTotal) : footer.grandTotal
   page.drawText(toWords(towWordsText), {
     x: 85,
     y: 87,
@@ -300,7 +336,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   page.drawText(...footerCommonParts(170, PAY_METHOD.CARD, 245))
 
   pdfDoc.setTitle('Invoice Preview')
-  pdfDoc.setAuthor('2AM Devs')
+  pdfDoc.setAuthor(COMPANY_NAME)
 
   // Serialize the PDFDocument to base64
   return pdfDoc.save()
@@ -320,12 +356,13 @@ const groupBy = (array, key) => array.reduce((result, currentValue) => {
   return result
 }, {})
 
-ipcRenderer.on('updateDownloaded', () => {
+ipcRenderer.on('updateDownloaded', (_event, info) => {
   const notification = document.getElementById('notification')
   const message = document.getElementById('message')
   const restartButton = document.getElementById('restart-button')
   if (message) message.innerText = UPDATE_RESTART_MSG
   restartButton.classList.remove('hidden')
+  localStorage.version = info.version
   notification.parentElement.parentElement.parentElement.classList.remove('hidden')
 })
 
@@ -380,4 +417,7 @@ export {
   resetSettings,
   titleCase,
   updatePrinterList,
+  isValidPath,
+  toggleFullScreen,
+  quantize,
 }

@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { DefaultButton } from 'office-ui-fabric-react'
+import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { FILE_TYPE, SELECT_FILE_TYPE } from '../../utils/constants'
-import { getFromStorage, resetSettings } from '../../utils/helper'
+import { FILE_TYPE, SELECT_FILE_TYPE, ERROR } from '../../utils/constants'
+import { getFromStorage, resetSettings, isValidPath } from '../../utils/helper'
 
 import './index.scss'
 
@@ -17,7 +18,9 @@ const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: '40rem' } }
 
 const Settings = ({ refreshCompanyName }) => {
+  const [checkingPath, setCheckingPath] = useState(false)
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
+  const [previewBillErr, setPreviewBillErr] = useState('')
   const [productType, setProductType] = useState(getFromStorage('productType'))
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
@@ -25,6 +28,15 @@ const Settings = ({ refreshCompanyName }) => {
   const [font, setFont] = useState(getFromStorage('customFont'))
   const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
   const [currency, setCurrency] = useState(getFromStorage('currency'))
+
+  useEffect(() => {
+    // eslint-disable-next-line func-names
+    (async function () {
+      setCheckingPath(true)
+      if (previewBill) setPreviewBillErr(await isValidPath(previewBill) ? '' : ERROR.FILE_MOVED)
+      setCheckingPath(false)
+    }())
+  }, [previewBill])
 
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
@@ -81,6 +93,16 @@ const Settings = ({ refreshCompanyName }) => {
     setProductType(newValue)
   }
 
+  if (checkingPath) {
+    return (
+      <div className="settings-loader animation-slide-up">
+        <Spinner
+          size={SpinnerSize.large}
+          styles={{ verticalAlign: 'center' }}
+        />
+      </div>
+    )
+  }
   return (
     <div className="settings animation-slide-up">
       <Stack
@@ -94,20 +116,57 @@ const Settings = ({ refreshCompanyName }) => {
           value={companyName}
         />
         <TextField
-          label="Next Invoice Number"
-          onChange={onInvoiceNoChange}
-          value={invoiceNumber}
+          label="Product Types"
+          onChange={onProductTypeChange}
+          value={productType}
+          description="Comma Separated values"
         />
         <Stack
           tokens={stackTokens}
           horizontal
         >
           <TextField
+            label="Next Invoice Number"
+            onChange={onInvoiceNoChange}
+            value={invoiceNumber}
+            description="You can change next invoice number here"
+          />
+          <TextField
+            label="Default Currency Symbol"
+            onChange={onCurrencyChange}
+            value={currency}
+            description="Currency Symbol will be used in printing"
+          />
+        </Stack>
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
+            label="Native GSTIN Prefix"
+            onChange={onGstinPrefixChange}
+            value={gstinPrefix}
+            description="2 Digit State Code for GSTIN"
+          />
+          <Toggle
+            label="Date Language"
+            checked={hindiDate}
+            onText="हिन्दी"
+            offText="English"
+            onChange={onDateLangChange}
+          />
+        </Stack>
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
             className="invoice-page__path-input"
-            placeholder="Bill File Path"
+            placeholder="Bill File Path (Default is no file)"
             disabled
             description="Bill Background to be show in Preview"
             value={previewBill}
+            errorMessage={previewBillErr}
           />
           <DefaultButton
             className="invoice-page__select-btn"
@@ -125,7 +184,7 @@ const Settings = ({ refreshCompanyName }) => {
             className="invoice-page__path-input"
             placeholder="Font Path"
             disabled
-            description="Select Indic Font TTF File"
+            description="Select Indic Font TTF File, this will fallback to default if invalid path is found."
             value={font}
           />
           <DefaultButton
@@ -134,36 +193,6 @@ const Settings = ({ refreshCompanyName }) => {
             iconProps={{ iconName: 'Font' }}
             primary
             onClick={() => fileSelected(FILE_TYPE.FONT)}
-          />
-        </Stack>
-        <TextField
-          label="Product Types"
-          onChange={onProductTypeChange}
-          value={productType}
-          description="Comma Separated values"
-        />
-        <Stack
-          tokens={stackTokens}
-          horizontal
-        >
-          <TextField
-            label="Native GSTIN Prefix"
-            onChange={onGstinPrefixChange}
-            value={gstinPrefix}
-            description="2 Digit State Code for GSTIN"
-          />
-          <TextField
-            label="Default Currency Symbol"
-            onChange={onCurrencyChange}
-            value={currency}
-            description="Currency Symbol will be used in printing"
-          />
-          <Toggle
-            label="Date Language"
-            checked={hindiDate}
-            onText="हिन्दी"
-            offText="English"
-            onChange={onDateLangChange}
           />
         </Stack>
         <DefaultButton

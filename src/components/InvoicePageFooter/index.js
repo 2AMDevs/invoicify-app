@@ -89,6 +89,7 @@ class InvoicePageFooter extends React.Component {
             splitButtonAriaLabel="Select Printer"
             menuProps={menuProps}
             onClick={this.props.printAndMove}
+            disabled={this.props.disablePrintButton}
           />
           <DefaultButton
             className="invoice-page-footer__button_left"
@@ -98,6 +99,7 @@ class InvoicePageFooter extends React.Component {
             primary
             primaryDisabled={!this.state.printer}
             onClick={this.props.printWithBill}
+            disabled={this.props.disablePrintButton}
           />
           <DefaultButton
             className="invoice-page-footer__button_left"

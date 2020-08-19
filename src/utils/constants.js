@@ -4,6 +4,7 @@ const DATE = 'Date'
 const TEXT = 'Text'
 const MASKED = 'Masked'
 const CUSTOM_FONT = 'invoicify.ttf'
+const COMPANY_NAME = '2AM Devs'
 const ZERO = parseFloat(0)
 const UPDATE_RESTART_MSG = 'Update Downloaded. It will be installed on restart. Restart now?'
 
@@ -11,6 +12,10 @@ const ISET = {
   MAIN: 'invoiceSettings',
   PRINT: 'morePrintSettings',
   CALC: 'calculationSettings',
+}
+
+const ERROR = {
+  FILE_MOVED: 'File Selected is either moved or renamed.',
 }
 
 const PAY_METHOD = {
@@ -30,6 +35,8 @@ const SELECT_FILE_TYPE = {
   PDF: { name: 'PDF', extensions: ['pdf'] },
   FONT: { name: 'Fonts', extensions: ['ttf', 'otf'] },
 }
+
+const MAX_ITEM_WIDTH = 117
 
 const darkThemePalette = {
   themePrimary: '#209cfa',
@@ -227,6 +234,7 @@ const defaultPrintSettings = [
     required: true,
     disabled: false,
     type: TEXT,
+    inputLength: 15,
     regex: '^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$',
     row: 3,
     size: defaultPageSettings.fontSize,
@@ -275,5 +283,5 @@ export {
   PRINT, PREVIEW, darkThemePalette, invoiceItemsTableColumns, ISET, FILE_TYPE, PAY_METHOD,
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
-  SELECT_FILE_TYPE, oldInvoiceItemsTableColumns,
+  SELECT_FILE_TYPE, oldInvoiceItemsTableColumns, ERROR, MAX_ITEM_WIDTH, COMPANY_NAME,
 }

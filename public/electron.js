@@ -24,10 +24,10 @@ const createWindow = () => {
   Menu.setApplicationMenu(null)
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   win = new BrowserWindow({
-    height,
     width,
-    resizable: false,
+    height,
     frame: false,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       devTools: !!isDev,
@@ -91,13 +91,12 @@ const getFilePath = async (fileFilters) => {
   }
 }
 
-ipcMain.on('print-it', async (event, pdfBytes, selectedPrinter) => {
-  event.preventDefault()
-  await print(pdfBytes, selectedPrinter)
-})
-
 ipcMain.on('bye-bye', () => {
   win.close()
+})
+
+ipcMain.on('toggle-fullscreen', () => {
+  win.setFullScreen(!win.isFullScreen())
 })
 
 ipcMain.on('shut-up', () => {
@@ -108,6 +107,8 @@ ipcMain.handle('app_version', () => app.getVersion())
 ipcMain.handle('select-file', (_event, args) => getFilePath([args]))
 ipcMain.handle('get-printers', getPrinters)
 ipcMain.handle('get-def-printer', getDefaultPrinter)
+ipcMain.handle('is-valid', (_event, args) => fs.existsSync(args))
+ipcMain.handle('print-it', async (_e, pdfBytes, selectedPrinter) => print(pdfBytes, selectedPrinter))
 
 ipcMain.handle('products-excel-to-json', async (_event, filters) => {
   const file = await getFilePath([filters])
@@ -130,7 +131,7 @@ if (!isDev) {
     win.webContents.send('message', progress)
   })
 
-  autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('updateDownloaded')
+  autoUpdater.on('update-downloaded', (info) => {
+    win.webContents.send('updateDownloaded', info)
   })
 }

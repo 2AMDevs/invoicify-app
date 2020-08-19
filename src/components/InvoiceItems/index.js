@@ -8,7 +8,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import {
-  getProducts, groupBy, currency, getProductTypes,
+  getProducts, groupBy, currency, getProductTypes, quantize,
 } from '../../utils/helper'
 
 import './index.scss'
@@ -26,7 +26,12 @@ const InvoiceItems = ({
   const itemsComboBoxRef = useRef(null)
 
   const onChangeField = (itemIndex, stateKey, value) => {
-    updateInvoiceItem(itemIndex, { [stateKey]: value })
+    const updateObject = {
+      [stateKey]: value,
+      ...((stateKey === 'gWeight' && currentInvoiceItem.isOldItem)
+      && { weight: currency(value * currentInvoiceItem.purity * 0.01) }),
+    }
+    updateInvoiceItem(itemIndex, updateObject)
     setItemsFilterValue('')
   }
 
@@ -56,7 +61,13 @@ const InvoiceItems = ({
   const openComboboxDropdown = useCallback(() => itemsComboBoxRef.current?.focus(true), [])
 
   const filterComboBoxOptions = (product) => (generateProductOptions(product) || [])
-    .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase()))
+    .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase().trim()))
+
+  const addAnotherItem = () => {
+    addNewInvoiceItem()
+    // move focus to item selection and open it if adding another item
+    if (itemsComboBoxRef.current) itemsComboBoxRef.current.focus(true)
+  }
 
   return (
     <div className="invoice-items animation-slide-up">
@@ -98,8 +109,9 @@ const InvoiceItems = ({
                   type="number"
                   min="0"
                   label="Pcs"
+                  disabled={!currentInvoiceItem.product}
                   value={currentInvoiceItem.quantity}
-                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', currency(value))}
+                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', quantize(value))}
                   required
                 />
               </>
@@ -149,11 +161,12 @@ const InvoiceItems = ({
               label="Net Weight"
               type="number"
               min="0"
-              disabled={!currentInvoiceItem.quantity}
+              disabled={!currentInvoiceItem.quantity || currentInvoiceItem.isOldItem}
               value={currentInvoiceItem.weight}
               onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'weight', value)}
               suffix="gms"
             />
+
           </Stack>
 
           <Stack
@@ -229,14 +242,15 @@ const InvoiceItems = ({
 
       <div className="invoice-items__item invoice-items__item--add-btn animation-slide-up">
         <CommandBarButton
-          iconProps={{ iconName: 'Save' }}
-          text="Add another"
-          onClick={addNewInvoiceItem}
+          iconProps={{ iconName: 'CheckedOutByYou12' }}
+          text="Exit"
+          onClick={dismissInvoiceItemsPanel}
         />
         <CommandBarButton
-          iconProps={{ iconName: 'CheckedOutByYou12' }}
-          text="Exit form"
-          onClick={dismissInvoiceItemsPanel}
+          disabled={!currentInvoiceItem?.quantity}
+          iconProps={{ iconName: 'Save' }}
+          text="Add another"
+          onClick={addAnotherItem}
         />
         <CommandBarButton
           iconProps={{ iconName: 'Delete' }}

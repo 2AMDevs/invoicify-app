@@ -14,11 +14,11 @@ import {
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
 } from '../../utils/helper'
+import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 import InvoicePageFooter from '../InvoicePageFooter'
-
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -29,7 +29,13 @@ const columnProps = {
   styles: { root: { width: deviceWidth * 0.3, display: 'flex', justifyContent: 'space-between' } },
 }
 
+const PdfPathError = {
+  title: 'Error in Preview PDF Path',
+  subText: 'Go to Settings -> Check if path to Bill PDF is valid.',
+}
+
 const Invoice = ({ showPdfPreview }) => {
+  const [invoiceItems, setInvoiceItems] = useState([])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
 
   const openInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(true))
@@ -37,6 +43,9 @@ const Invoice = ({ showPdfPreview }) => {
   const dismissInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(false))
 
   const invoiceSettings = getInvoiceSettings()
+
+  const [hideAlert, setHideAlert] = useState(true)
+  const [alertDetails, setAlertDetails] = useState({})
 
   const defaultInvoiceFields = () => {
     const defaultInvoice = {}
@@ -68,7 +77,6 @@ const Invoice = ({ showPdfPreview }) => {
 
   const [invoice, setInvoice] = useState(defaultInvoiceFields())
   const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
-  const [invoiceItems, setInvoiceItems] = useState([])
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
 
   const hoverCard = useRef(null)
@@ -78,14 +86,24 @@ const Invoice = ({ showPdfPreview }) => {
   )
 
   const resetForm = () => {
-    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
     setInvoiceItems([])
     setInvoice(defaultInvoiceFields())
+    setInvoiceFooter(defaultInvoiceFooter)
   }
 
   const printAndMove = (_, includeBill) => {
     fetchPDF(includeBill && PREVIEW).then((pdfBytes) => {
-      printPDF(pdfBytes)
+      if (pdfBytes?.error) {
+        setAlertDetails(PdfPathError)
+        setHideAlert(false)
+        return
+      }
+      printPDF(pdfBytes).then((res) => {
+        if (res) {
+          localStorage.invoiceNumber = invoice['Invoice Number'] + 1
+          resetForm()
+        }
+      })
     })
   }
 
@@ -95,17 +113,17 @@ const Invoice = ({ showPdfPreview }) => {
 
   const previewPDF = () => {
     fetchPDF(PREVIEW).then((pdfBytes) => {
+      if (pdfBytes?.error) {
+        setAlertDetails(PdfPathError)
+        setHideAlert(false)
+        return
+      }
       showPdfPreview(pdfBytes)
     })
   }
 
   const addInvoiceItem = (invoiceItem) => {
     setInvoiceItems([...invoiceItems, invoiceItem])
-  }
-
-  const removeInvoiceItem = (id) => {
-    setInvoiceItems(invoiceItems.filter((item) => item.id !== id))
-    dismissInvoiceItemsPanel()
   }
 
   const updateInvoiceFooter = (change) => {
@@ -134,6 +152,38 @@ const Invoice = ({ showPdfPreview }) => {
       grandTotal: currency(totalAmount - oldPurchase),
       cash: currency(totalAmount - oldPurchase - card - cheque - upi),
     })
+  }
+
+  const calcInvoiceFooter = (items) => {
+    let grossTotal = ZERO
+    let oldPurchase = ZERO
+    items.forEach((item) => {
+      if (!item.isOldItem) {
+        grossTotal += currency(item.totalPrice)
+      } else {
+        oldPurchase += currency(item.totalPrice)
+      }
+    })
+
+    updateInvoiceFooter({ grossTotal, oldPurchase })
+  }
+
+  const removeInvoiceItem = (id) => {
+    const filteredItems = invoiceItems.filter((item) => item.id !== id)
+    setInvoiceItems(filteredItems)
+    calcInvoiceFooter(filteredItems)
+    dismissInvoiceItemsPanel()
+  }
+
+  const dismissInvoiceItemsPanelAndRemoveEmptyItems = () => {
+    // remove items without baap on panel dismiss
+    const filteredItems = invoiceItems.filter((item) => {
+      if (!item.isOldItem) return !!item.product
+      return !!item.type
+    })
+    setInvoiceItems(filteredItems)
+    dismissInvoiceItemsPanel()
+    calcInvoiceFooter(filteredItems)
   }
 
   const updateInvoiceItem = (index, valueObject) => {
@@ -203,13 +253,35 @@ const Invoice = ({ showPdfPreview }) => {
 
   const groupedSettings = groupBy(invoiceSettings, 'row')
 
-  const getFilteredInvoiceItems = () => invoiceItems.filter((item) => !item.isOldItem)
+  const getFilteredInvoiceItems = () => invoiceItems
+    .filter((item) => !item.isOldItem && item.product)
 
-  const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem)
+  const getOldInvoiceItems = () => invoiceItems.filter((item) => item.isOldItem && item.type)
+
+  const validateInvoiceField = (field) => {
+    if (field.disabled) return true
+
+    if (!invoice[field.name]) return false
+
+    if (field.inputLength) return invoice[field.name].length === field.inputLength
+
+    if (field.regex
+      && !new RegExp(field.regex).test(invoice[field.name].toUpperCase())) return false
+
+    return true
+  }
+
+  const validateMandatoryMeta = () => !invoiceSettings
+    .some((field) => field.required && !validateInvoiceField(field))
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="animation-slide-up invoice">
+      <Alert
+        hide={hideAlert}
+        setHideAlert={setHideAlert}
+        {...alertDetails}
+      />
       <Stack
         horizontal
         className="invoice__container"
@@ -243,7 +315,7 @@ const Invoice = ({ showPdfPreview }) => {
                   },
                   onGetErrorMessage: (value) => {
                     if (!value) return
-                    if (field.regex && !new RegExp(field.regex).test(value.toUpperCase())) return `Invalid Value For ${field.name}`
+                    if (!validateInvoiceField(field)) return `Invalid Value For ${field.name}`
                   },
                   required: field.required,
                   disabled: field.disabled,
@@ -365,6 +437,7 @@ const Invoice = ({ showPdfPreview }) => {
         </Stack>
       </Stack>
       <InvoicePageFooter
+        disablePrintButton={!validateMandatoryMeta()}
         printAndMove={printAndMove}
         printWithBill={printWithBill}
         previewPDF={previewPDF}
@@ -375,7 +448,7 @@ const Invoice = ({ showPdfPreview }) => {
         className="invoice__item-panel"
         headerClassName="invoice__item-panel__header"
         isOpen={isInvoiceItemFormOpen}
-        onDismiss={dismissInvoiceItemsPanel}
+        onDismiss={dismissInvoiceItemsPanelAndRemoveEmptyItems}
         closeButtonAriaLabel="Close"
         headerText="Invoice item"
       >
@@ -386,7 +459,7 @@ const Invoice = ({ showPdfPreview }) => {
           setInvoiceItems={setInvoiceItems}
           removeInvoiceItem={removeInvoiceItem}
           updateInvoiceItem={updateInvoiceItem}
-          dismissInvoiceItemsPanel={dismissInvoiceItemsPanel}
+          dismissInvoiceItemsPanel={dismissInvoiceItemsPanelAndRemoveEmptyItems}
           addNewInvoiceItem={addNewInvoiceItem}
         />
       </Panel>
