@@ -1,4 +1,6 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React, {
+  useCallback, useState, useRef, useEffect,
+} from 'react'
 
 import { CommandBarButton, Icon } from 'office-ui-fabric-react'
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
@@ -59,6 +61,10 @@ const InvoiceItems = ({
   }
 
   const openComboboxDropdown = useCallback(() => itemsComboBoxRef.current?.focus(true), [])
+
+  useEffect(() => {
+    openComboboxDropdown()
+  }, [])
 
   const filterComboBoxOptions = (product) => (generateProductOptions(product) || [])
     .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase().trim()))
