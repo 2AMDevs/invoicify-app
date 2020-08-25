@@ -1,4 +1,6 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React, {
+  useCallback, useState, useRef,
+} from 'react'
 
 import { CommandBarButton, Icon } from 'office-ui-fabric-react'
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox'
@@ -101,6 +103,7 @@ const InvoiceItems = ({
                       setItemsFilterValue(e.target.value)
                     }
                   }}
+                  onFocus={openComboboxDropdown}
                   required
                   style={{ maxWidth: 300 }}
                 />
