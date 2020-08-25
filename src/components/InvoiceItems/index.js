@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useState, useRef, useEffect,
+  useCallback, useState, useRef,
 } from 'react'
 
 import { CommandBarButton, Icon } from 'office-ui-fabric-react'
@@ -62,10 +62,6 @@ const InvoiceItems = ({
 
   const openComboboxDropdown = useCallback(() => itemsComboBoxRef.current?.focus(true), [])
 
-  useEffect(() => {
-    openComboboxDropdown()
-  }, [])
-
   const filterComboBoxOptions = (product) => (generateProductOptions(product) || [])
     .filter((op) => op.text.toLowerCase().includes(itemsFilterValue.toLowerCase().trim()))
 
@@ -107,6 +103,7 @@ const InvoiceItems = ({
                       setItemsFilterValue(e.target.value)
                     }
                   }}
+                  onFocus={openComboboxDropdown}
                   required
                   style={{ maxWidth: 300 }}
                 />
