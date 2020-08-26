@@ -28,7 +28,7 @@ const HoverTotal = ({ hoverCard, invoiceFooter, updateInvoiceFooter }) => {
             || (key === PAY_METHOD.CHEQUENO && !invoiceFooter.cheque)}
           value={key === PAY_METHOD.CASH
             ? parseFloat(invoiceFooter[key]).toFixed(2) : invoiceFooter[key]}
-          prefix={key === PAY_METHOD.CHEQUENO && '₹'}
+          prefix={key !== PAY_METHOD.CHEQUENO && '₹'}
           onChange={(_, val) => updateInvoiceFooter({ [key]: val })}
         />
       ))}
