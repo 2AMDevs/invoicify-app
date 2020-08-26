@@ -21,6 +21,7 @@ const ERROR = {
 const PAY_METHOD = {
   CASH: 'cash',
   CHEQUE: 'cheque',
+  CHEQUENO: 'chequeNumber',
   UPI: 'upi',
   CARD: 'card',
 }
