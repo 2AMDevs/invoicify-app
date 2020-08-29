@@ -35,11 +35,11 @@ ReactDOM.render(
             path="/"
             component={HomePage}
           />
-          <Route
-            path="/configure"
-            component={InvoiceSettings}
-          />
         </InvoiceStateProvider>
+        <Route
+          path="/configure"
+          component={InvoiceSettings}
+        />
       </main>
     </div>
   </Router>,
