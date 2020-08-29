@@ -6,9 +6,8 @@ const InvoiceUpdateContext = React.createContext()
 const InvoiceStateProvider = ({ children }) => {
   const [invoiceState, setInvoiceState] = useState({})
 
-  const updateInvoice = (state) => {
-    console.log(state)
-    setInvoiceState(state)
+  const updateInvoice = (newInvoiceState) => {
+    setInvoiceState(newInvoiceState)
   }
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -38,8 +38,8 @@ const PdfPathError = {
 
 const Invoice = ({ showPdfPreview }) => {
   const [invoiceState, updateInvoiceState] = useInvoiceContext()
-  console.log(invoiceState, updateInvoiceState)
-  const [invoiceItems, setInvoiceItems] = useState([])
+
+  const [invoiceItems, setInvoiceItems] = useState(invoiceState.invoiceItems ?? [])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
 
   const openInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(true))
@@ -79,9 +79,15 @@ const Invoice = ({ showPdfPreview }) => {
     interState: false,
   }
 
-  const [invoice, setInvoice] = useState(defaultInvoiceFields())
+  const [invoice, setInvoice] = useState(invoiceState.invoice ?? defaultInvoiceFields())
   const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
+
+  useEffect(() => {
+    updateInvoiceState({
+      invoice, invoiceItems,
+    })
+  }, [invoice, invoiceItems])
 
   const hoverCard = useRef(null)
 
