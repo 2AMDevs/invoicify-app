@@ -8,6 +8,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
+import { useInvoiceContext } from '../../contexts'
 import {
   PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
 } from '../../utils/constants'
@@ -19,6 +20,7 @@ import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 import InvoicePageFooter from '../InvoicePageFooter'
+
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -35,6 +37,8 @@ const PdfPathError = {
 }
 
 const Invoice = ({ showPdfPreview }) => {
+  const [invoiceState, updateInvoiceState] = useInvoiceContext()
+  console.log(invoiceState, updateInvoiceState)
   const [invoiceItems, setInvoiceItems] = useState([])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
 
