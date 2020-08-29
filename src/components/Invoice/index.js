@@ -80,14 +80,15 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const [invoice, setInvoice] = useState(invoiceState.invoice ?? defaultInvoiceFields())
-  const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
+  const [invoiceFooter, setInvoiceFooter] = useState(invoiceState.invoiceFooter
+    ?? defaultInvoiceFooter)
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
 
   useEffect(() => {
     updateInvoiceState({
-      invoice, invoiceItems,
+      invoice, invoiceItems, invoiceFooter,
     })
-  }, [invoice, invoiceItems])
+  }, [invoice, invoiceItems, invoiceFooter])
 
   const hoverCard = useRef(null)
 
