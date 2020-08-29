@@ -85,16 +85,16 @@ const initializeSettings = async () => {
 
   localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-def-printer')
   localStorage.morePrintSettings = JSON.stringify({
-    ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
     ...morePrintSettings,
+    ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
   })
   localStorage.footerPrintSettings = JSON.stringify({
-    ...(localStorage.footerPrintSettings && JSON.parse(localStorage.footerPrintSettings)),
     ...footerPrintSettings,
+    ...(localStorage.footerPrintSettings && JSON.parse(localStorage.footerPrintSettings)),
   })
   localStorage.calculationSettings = JSON.stringify({
-    ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
     ...calculationSettings,
+    ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
   })
   localStorage.version = await ipcRenderer.invoke('app_version')
   localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
@@ -342,7 +342,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   Object.keys(getInvoiceSettings(ISET.FOOTER)).forEach((item) => {
     if (footer[item]) {
       page.drawText(footer[item], {
-        ...footerPrintSettings[item],
+        ...getInvoiceSettings(ISET.FOOTER)[item],
         ...commonFont,
       })
     }

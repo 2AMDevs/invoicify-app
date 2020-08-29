@@ -154,7 +154,7 @@ const InvoiceSettings = () => {
                 label={`${subkey.toUpperCase()} (${titleCase(key)})`}
                 key={`${key} ${subkey}`}
                 onChange={(_, val) => handleChange(0, key,
-                  { ...footerPrintSettings[key], [subkey]: val }, ISET.FOOTER)}
+                  { ...footerPrintSettings[key], [subkey]: parseInt(val, 10) }, ISET.FOOTER)}
                 value={footerPrintSettings[key][subkey]}
               />
             ))}
