@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom'
 
 import { Header } from './components'
+import { InvoiceStateProvider, AuthStateProvider } from './contexts'
 import { HomePage, InvoiceSettings } from './pages'
 import { darkThemePalette } from './utils/constants'
 import { initializeSettings } from './utils/helper'
@@ -23,22 +24,26 @@ initializeSettings()
 
 ReactDOM.render(
   <Router>
-    <div>
-      <header>
-        <Header />
-      </header>
-      <main>
-        <Route
-          exact
-          path="/"
-          component={HomePage}
-        />
-        <Route
-          path="/configure"
-          component={InvoiceSettings}
-        />
-      </main>
-    </div>
+    <AuthStateProvider>
+      <div>
+        <header>
+          <Header />
+        </header>
+        <main>
+          <InvoiceStateProvider>
+            <Route
+              exact
+              path="/"
+              component={HomePage}
+            />
+          </InvoiceStateProvider>
+          <Route
+            path="/configure"
+            component={InvoiceSettings}
+          />
+        </main>
+      </div>
+    </AuthStateProvider>
   </Router>,
   document.getElementById('root'),
 )

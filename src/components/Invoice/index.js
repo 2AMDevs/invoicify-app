@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -8,6 +8,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
+import { useInvoiceContext } from '../../contexts'
 import {
   PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
 } from '../../utils/constants'
@@ -19,6 +20,7 @@ import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 import InvoicePageFooter from '../InvoicePageFooter'
+
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -35,7 +37,9 @@ const PdfPathError = {
 }
 
 const Invoice = ({ showPdfPreview }) => {
-  const [invoiceItems, setInvoiceItems] = useState([])
+  const [invoiceState, updateInvoiceState] = useInvoiceContext()
+
+  const [invoiceItems, setInvoiceItems] = useState(invoiceState.invoiceItems ?? [])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
 
   const openInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(true))
@@ -75,9 +79,16 @@ const Invoice = ({ showPdfPreview }) => {
     interState: false,
   }
 
-  const [invoice, setInvoice] = useState(defaultInvoiceFields())
-  const [invoiceFooter, setInvoiceFooter] = useState(defaultInvoiceFooter)
+  const [invoice, setInvoice] = useState(invoiceState.invoice ?? defaultInvoiceFields())
+  const [invoiceFooter, setInvoiceFooter] = useState(invoiceState.invoiceFooter
+    ?? defaultInvoiceFooter)
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
+
+  useEffect(() => {
+    updateInvoiceState({
+      invoice, invoiceItems, invoiceFooter,
+    })
+  }, [invoice, invoiceItems, invoiceFooter])
 
   const hoverCard = useRef(null)
 
