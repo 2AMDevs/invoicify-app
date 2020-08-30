@@ -77,6 +77,7 @@ const initializeSettings = async () => {
   localStorage.companyName = localStorage.companyName ?? COMPANY_NAME
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
+  localStorage.password = localStorage.password ?? ''
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.currency = localStorage.currency ?? '₹'

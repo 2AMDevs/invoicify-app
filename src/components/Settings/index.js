@@ -6,8 +6,11 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { FILE_TYPE, SELECT_FILE_TYPE, ERROR } from '../../utils/constants'
+import {
+  FILE_TYPE, SELECT_FILE_TYPE, ERROR, COMPANY_NAME,
+} from '../../utils/constants'
 import { getFromStorage, resetSettings, isValidPath } from '../../utils/helper'
+import SetPassword from '../SetPasswordModal'
 
 import './index.scss'
 
@@ -19,6 +22,7 @@ const stackStyles = { root: { width: '40rem' } }
 
 const Settings = ({ refreshCompanyName }) => {
   const [checkingPath, setCheckingPath] = useState(false)
+  const [hideDialog, setHideDialog] = useState(true)
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
   const [previewBillErr, setPreviewBillErr] = useState('')
   const [productType, setProductType] = useState(getFromStorage('productType'))
@@ -196,12 +200,49 @@ const Settings = ({ refreshCompanyName }) => {
           />
         </Stack>
         <DefaultButton
+          text={`${getFromStorage('password').length ? 'Change' : 'Set'} Password`}
+          iconProps={{ iconName: 'Permissions' }}
+          primary
+          onClick={() => setHideDialog(false)}
+          styles={{ root: { width: '18rem' } }}
+        />
+        <DefaultButton
           text="Reset Settings"
           iconProps={{ iconName: 'FullHistory' }}
           primary
           onClick={resetAndUpdate}
           styles={{ root: { width: '18rem' } }}
         />
+        <br />
+        <p className="outside-link">
+          ©
+          {' '}
+          {new Date().getFullYear()}
+          {' '}
+          <b>{COMPANY_NAME}</b>
+        </p>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          className="outside-link"
+          href="https://github.com/2AMDevs"
+        >
+          Privacy Policy
+        </a>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          className="outside-link"
+          href="https://github.com/2AMDevs"
+        >
+          About
+        </a>
+        {!hideDialog && (
+          <SetPassword
+            hideDialog={hideDialog}
+            setHideDialog={setHideDialog}
+          />
+        )}
       </Stack>
     </div>
   )
