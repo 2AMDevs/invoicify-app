@@ -53,7 +53,7 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
 
   return (
     <div className="header__right-section">
-      { authState.isAuthenticated && (
+      {authState.isAuthenticated && (
         <CommandBarButton
           className="header__link__btn"
           iconProps={{ iconName: 'ProductVariant' }}
@@ -61,14 +61,14 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
           onClick={openProductsPanel}
         />
       )}
-      { authState.isAuthenticated && (
+      {authState.isAuthenticated && (
         <CommandBarButton
           className="header__link__btn"
           iconProps={{ iconName: 'Settings' }}
           onClick={openSettingsPanel}
         />
       )}
-      { authState.isAuthenticated && (
+      {authState.isAuthenticated && (
         <CommandBarButton
           className="header__link__btn"
           iconProps={{ iconName: 'lockSolid' }}

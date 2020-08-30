@@ -222,12 +222,16 @@ const Settings = ({ refreshCompanyName }) => {
           <b>{COMPANY_NAME}</b>
         </p>
         <a
+          target="_blank"
+          rel="noopener noreferrer"
           className="outside-link"
           href="https://github.com/2AMDevs"
         >
           Privacy Policy
         </a>
         <a
+          target="_blank"
+          rel="noopener noreferrer"
           className="outside-link"
           href="https://github.com/2AMDevs"
         >

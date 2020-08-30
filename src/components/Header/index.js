@@ -51,7 +51,7 @@ const Header = ({ className, ...restProps }) => {
         className={cn('header', className)}
         {...restProps}
       >
-        { authState.isAuthenticated && (
+        {authState.isAuthenticated && (
           <div className="header__left-section">
             <Link
               className="header__link"

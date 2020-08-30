@@ -47,7 +47,7 @@ const LockScreen = () => {
           iconProps={{ iconName: 'Hide3' }}
           type="password"
           value={userInput}
-          onChange={(_e, val) => {
+          onChange={(_, val) => {
             setUserInput(val)
             if (!val.length) setError('')
           }}
