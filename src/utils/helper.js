@@ -44,7 +44,7 @@ const currency = (val, format) => {
   const parsedCurrency = isNaN(parseFloat(val))
     ? 0 : Math.round(parseFloat(val) * 100) / 100
 
-  return format ? `${getFromStorage('currency') || ''}${new Intl.NumberFormat('en-IN', {
+  return format ? `${getFromStorage('currency') || ''} ${new Intl.NumberFormat('en-IN', {
     currency: 'INR',
   }).format(parsedCurrency)}` : parsedCurrency
 }
