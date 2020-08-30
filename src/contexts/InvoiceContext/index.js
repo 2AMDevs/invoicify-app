@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, createContext } from 'react'
 
-const InvoiceStateContext = React.createContext()
-const InvoiceUpdateContext = React.createContext()
+const InvoiceStateContext = createContext()
+const InvoiceUpdateContext = createContext()
 
 const InvoiceStateProvider = ({ children }) => {
   const [invoiceState, setInvoiceState] = useState({})

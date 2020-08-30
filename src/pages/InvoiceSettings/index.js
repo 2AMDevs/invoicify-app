@@ -53,7 +53,7 @@ const InvoiceSettings = () => {
 
   return (
     <div className="animation-slide-up invoice-settings">
-      <Separator alignContent="start">Invoice Item Settings</Separator>
+      <Separator alignContent="start">Invoice Meta Settings</Separator>
       <br />
       {currentSettings.map((setting, idx) => (
         <Stack

@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, createContext } from 'react'
 
-const AuthStateContext = React.createContext()
-const AuthUpdateContext = React.createContext()
+const AuthStateContext = createContext()
+const AuthUpdateContext = createContext()
 
 const AuthStateProvider = ({ children }) => {
   // add more fields to the authState object if you need

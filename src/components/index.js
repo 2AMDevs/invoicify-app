@@ -7,8 +7,10 @@ import InvoiceItems from './InvoiceItems'
 import InvoiceItemsTable from './InvoiceItemsTable'
 import InvoicePageFooter from './InvoicePageFooter'
 import ListEmpty from './ListEmpty'
+import LockScreen from './LockScreen'
 import ProductForm from './ProductForm'
 import ProductsPage from './ProductsPage'
+import SetPassword from './SetPasswordModal'
 import Settings from './Settings'
 
 export {
@@ -24,4 +26,6 @@ export {
   ListEmpty,
   Settings,
   HoverTotal,
+  LockScreen,
+  SetPassword,
 }

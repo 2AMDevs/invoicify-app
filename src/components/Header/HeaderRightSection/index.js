@@ -4,6 +4,7 @@ import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton } from 'office-ui-fabric-react'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 
+import { useAuthContext } from '../../../contexts'
 import {
   minimizeApp, toggleFullScreen, quitApp, getProducts,
 } from '../../../utils/helper'
@@ -11,6 +12,8 @@ import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 
 const HeaderRightSection = ({ refreshCompanyName }) => {
+  const [authState, updateAuthState] = useAuthContext()
+
   const [productsCount, setProductsCount] = useState(getProducts()?.length)
 
   const [isProductsOpen, setIsProductsOpen] = useState(false)
@@ -31,19 +34,28 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
 
   return (
     <div className="header__right-section">
-      <CommandBarButton
-        className="header__link__btn"
-        iconProps={{ iconName: 'ProductVariant' }}
-        text="Products"
-        checked={false}
-        onClick={openProductsPanel}
-      />
-      <CommandBarButton
-        className="header__link__btn"
-        iconProps={{ iconName: 'Settings' }}
-        checked={false}
-        onClick={openSettingsPanel}
-      />
+      { authState.isAuthenticated && (
+        <CommandBarButton
+          className="header__link__btn"
+          iconProps={{ iconName: 'ProductVariant' }}
+          text="Products"
+          onClick={openProductsPanel}
+        />
+      )}
+      { authState.isAuthenticated && (
+        <CommandBarButton
+          className="header__link__btn"
+          iconProps={{ iconName: 'Settings' }}
+          onClick={openSettingsPanel}
+        />
+      )}
+      { authState.isAuthenticated && (
+        <CommandBarButton
+          className="header__link__btn"
+          iconProps={{ iconName: 'lockSolid' }}
+          onClick={() => updateAuthState({ isAuthenticated: false })}
+        />
+      )}
       {localStorage.version && (
         <CommandBarButton
           className="header__link__btn"
@@ -53,19 +65,16 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
       <CommandBarButton
         className="header__link__btn"
         iconProps={{ iconName: 'ChromeFullScreen' }}
-        checked={false}
         onClick={toggleFullScreen}
       />
       <CommandBarButton
         className="header__link__btn__mini"
         iconProps={{ iconName: 'ChromeMinimize' }}
-        checked={false}
         onClick={minimizeApp}
       />
       <CommandBarButton
         className="header__link__btn__exit"
         iconProps={{ iconName: 'ChromeClose' }}
-        checked={false}
         onClick={quitApp}
       />
       <Panel
