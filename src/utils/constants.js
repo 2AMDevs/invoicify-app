@@ -12,6 +12,7 @@ const ISET = {
   MAIN: 'invoiceSettings',
   PRINT: 'morePrintSettings',
   CALC: 'calculationSettings',
+  FOOTER: 'footerPrintSettings',
 }
 
 const ERROR = {
@@ -21,6 +22,7 @@ const ERROR = {
 const PAY_METHOD = {
   CASH: 'cash',
   CHEQUE: 'cheque',
+  CHEQUENO: 'chequeNumber',
   UPI: 'upi',
   CARD: 'card',
 }
@@ -272,6 +274,13 @@ const morePrintSettings = {
   endAmountsX: 560,
 }
 
+const footerPrintSettings = {
+  [PAY_METHOD.CHEQUENO]: {
+    x: 380,
+    y: 190,
+  },
+}
+
 const calculationSettings = {
   cgst: 1.5,
   sgst: 1.5,
@@ -284,4 +293,5 @@ export {
   productTableColumns, defaultPrintSettings, morePrintSettings, calculationSettings,
   defaultPageSettings, fieldTypes, DATE, TEXT, MASKED, CUSTOM_FONT, ZERO, UPDATE_RESTART_MSG,
   SELECT_FILE_TYPE, oldInvoiceItemsTableColumns, ERROR, MAX_ITEM_WIDTH, COMPANY_NAME,
+  footerPrintSettings,
 }

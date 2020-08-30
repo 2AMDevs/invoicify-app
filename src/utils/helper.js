@@ -6,7 +6,7 @@ import { PDFDocument } from 'pdf-lib'
 import {
   PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE, defaultPageSettings,
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings, PAY_METHOD,
-  MAX_ITEM_WIDTH, COMPANY_NAME,
+  MAX_ITEM_WIDTH, COMPANY_NAME, footerPrintSettings,
 } from './constants'
 
 // eslint-disable-next-line global-require
@@ -44,7 +44,7 @@ const currency = (val, format) => {
   const parsedCurrency = isNaN(parseFloat(val))
     ? 0 : Math.round(parseFloat(val) * 100) / 100
 
-  return format ? `${getFromStorage('currency') || ''}${new Intl.NumberFormat('en-IN', {
+  return format ? `${getFromStorage('currency') || ''} ${new Intl.NumberFormat('en-IN', {
     currency: 'INR',
   }).format(parsedCurrency)}` : parsedCurrency
 }
@@ -77,6 +77,7 @@ const initializeSettings = async () => {
   localStorage.companyName = localStorage.companyName ?? COMPANY_NAME
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
+  localStorage.password = localStorage.password ?? ''
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.currency = localStorage.currency ?? '₹'
@@ -85,12 +86,16 @@ const initializeSettings = async () => {
 
   localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-def-printer')
   localStorage.morePrintSettings = JSON.stringify({
-    ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
     ...morePrintSettings,
+    ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
+  })
+  localStorage.footerPrintSettings = JSON.stringify({
+    ...footerPrintSettings,
+    ...(localStorage.footerPrintSettings && JSON.parse(localStorage.footerPrintSettings)),
   })
   localStorage.calculationSettings = JSON.stringify({
-    ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
     ...calculationSettings,
+    ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
   })
   localStorage.version = await ipcRenderer.invoke('app_version')
   localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
@@ -334,6 +339,15 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   page.drawText(...footerCommonParts(190, PAY_METHOD.CHEQUE, 356))
   page.drawText(...footerCommonParts(170, PAY_METHOD.UPI, 330))
   page.drawText(...footerCommonParts(170, PAY_METHOD.CARD, 245))
+
+  Object.keys(getInvoiceSettings(ISET.FOOTER)).forEach((item) => {
+    if (footer[item]) {
+      page.drawText(footer[item], {
+        ...getInvoiceSettings(ISET.FOOTER)[item],
+        ...commonFont,
+      })
+    }
+  })
 
   pdfDoc.setTitle('Invoice Preview')
   pdfDoc.setAuthor(COMPANY_NAME)

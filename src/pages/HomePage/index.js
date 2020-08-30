@@ -6,11 +6,12 @@ import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner'
 import { Document, Page } from 'react-pdf'
 
-import { Invoice } from '../../components'
+import { Invoice, LockScreen } from '../../components'
+import { useAuthContext } from '../../contexts'
 
 const HomePage = () => {
   const [preview, setPreview] = useState('')
-
+  const [authState] = useAuthContext()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
   const openPreviewPanel = useConstCallback(() => setIsPreviewOpen(true))
@@ -20,6 +21,10 @@ const HomePage = () => {
   const showPdfPreview = (pdfBytes) => {
     setPreview(pdfBytes)
     openPreviewPanel()
+  }
+
+  if (!authState.isAuthenticated) {
+    return <LockScreen />
   }
 
   return (

@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
+import { Separator } from 'office-ui-fabric-react/lib/Separator'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
-import { fieldTypes, MASKED, ISET } from '../../utils/constants'
+import {
+  fieldTypes, MASKED, ISET,
+} from '../../utils/constants'
 import { getInvoiceSettings, titleCase } from '../../utils/helper'
 
 import './index.scss'
@@ -20,11 +23,12 @@ const InvoiceSettings = () => {
   const [currentSettings, setCurrentSettings] = useState(getInvoiceSettings())
   const [printSettings, setPrintSettings] = useState(getInvoiceSettings(ISET.PRINT))
   const [calcSettings, setCalcSettings] = useState(getInvoiceSettings(ISET.CALC))
+  const [footerPrintSettings, setFooterPrintSettings] = useState(getInvoiceSettings(ISET.FOOTER))
 
   const getNewSettings = (type) => {
     if (type === ISET.PRINT) return { ...printSettings }
     if (type === ISET.CALC) return { ...calcSettings }
-
+    if (type === ISET.FOOTER) return { ...footerPrintSettings }
     return [...currentSettings]
   }
 
@@ -35,8 +39,10 @@ const InvoiceSettings = () => {
       newSettings[key] = value
       if (type === ISET.PRINT) {
         setPrintSettings(newSettings)
-      } else {
+      } else if (type === ISET.CALC) {
         setCalcSettings(newSettings)
+      } else if (type === ISET.FOOTER) {
+        setFooterPrintSettings(newSettings)
       }
     } else {
       newSettings[index][key] = value
@@ -47,6 +53,8 @@ const InvoiceSettings = () => {
 
   return (
     <div className="animation-slide-up invoice-settings">
+      <Separator alignContent="start">Invoice Meta Settings</Separator>
+      <br />
       {currentSettings.map((setting, idx) => (
         <Stack
           horizontal
@@ -107,6 +115,11 @@ const InvoiceSettings = () => {
             ) : ''}
         </Stack>
       ))}
+
+      <br />
+      <Separator alignContent="start">Invoice Item Settings</Separator>
+      <br />
+
       <Stack
         horizontal
         {...token}
@@ -121,6 +134,38 @@ const InvoiceSettings = () => {
           />
         ))}
       </Stack>
+
+      <br />
+      <Separator alignContent="start">Invoice Footer</Separator>
+      <br />
+
+      <Stack
+        {...token}
+        key="Footer Stuff"
+      >
+        {Object.keys(footerPrintSettings).map((key) => (
+          <Stack
+            horizontal
+            {...token}
+            key
+          >
+            {Object.keys(footerPrintSettings[key]).map((subkey) => (
+              <TextField
+                label={`${subkey.toUpperCase()} (${titleCase(key)})`}
+                key={`${key} ${subkey}`}
+                onChange={(_, val) => handleChange(0, key,
+                  { ...footerPrintSettings[key], [subkey]: parseInt(val, 10) }, ISET.FOOTER)}
+                value={footerPrintSettings[key][subkey]}
+              />
+            ))}
+          </Stack>
+        ))}
+      </Stack>
+
+      <br />
+      <Separator alignContent="start">Calculation Settings</Separator>
+      <br />
+
       <Stack
         horizontal
         {...token}
@@ -135,6 +180,7 @@ const InvoiceSettings = () => {
           />
         ))}
       </Stack>
+      <br />
     </div>
   )
 }

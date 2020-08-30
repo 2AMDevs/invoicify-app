@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 
 const {
-  app, BrowserWindow, Menu, screen, ipcMain, dialog,
+  app, BrowserWindow, Menu, screen, ipcMain, dialog, shell,
 } = require('electron')
 const isDev = require('electron-is-dev')
 const { autoUpdater } = require('electron-updater')
@@ -40,6 +40,11 @@ const createWindow = () => {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`,
   )
+
+  win.webContents.on('new-window', (e, url) => {
+    e.preventDefault()
+    shell.openExternal(url)
+  })
 
   // TODO: Add Tweak to open this when 7 press on Home button, so that we can debug prod
   if (isDev) win.webContents.openDevTools()

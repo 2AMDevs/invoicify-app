@@ -7,16 +7,17 @@ import {
 import { Text } from 'office-ui-fabric-react/lib/Text'
 import { Link } from 'react-router-dom'
 
+import { useAuthContext } from '../../contexts'
 import { getFromStorage, closeNotification, restartApp } from '../../utils/helper'
 import HeaderRightSection from './HeaderRightSection'
 
 import './index.scss'
 
 const Header = ({ className, ...restProps }) => {
+  const [authState] = useAuthContext()
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
 
   const refreshCompanyName = () => setCompanyName(getFromStorage('companyName'))
-
   return (
     <div className="header-container">
       <MessageBar
@@ -50,30 +51,32 @@ const Header = ({ className, ...restProps }) => {
         className={cn('header', className)}
         {...restProps}
       >
-        <div className="header__left-section">
-          <Link
-            className="header__link"
-            to="/"
-          >
-            <CommandBarButton
-              className="header__link__btn"
-              iconProps={{ iconName: 'Home' }}
-              text="Home"
-              checked={false}
-            />
-          </Link>
-          <Link
-            className="header__link"
-            to="/configure"
-          >
-            <CommandBarButton
-              className="header__link__btn"
-              iconProps={{ iconName: 'EntitlementPolicy' }}
-              text="Invoice Settings"
-              checked={false}
-            />
-          </Link>
-        </div>
+        {authState.isAuthenticated && (
+          <div className="header__left-section">
+            <Link
+              className="header__link"
+              to="/"
+            >
+              <CommandBarButton
+                className="header__link__btn"
+                iconProps={{ iconName: 'Home' }}
+                text="Home"
+                checked={false}
+              />
+            </Link>
+            <Link
+              className="header__link"
+              to="/configure"
+            >
+              <CommandBarButton
+                className="header__link__btn"
+                iconProps={{ iconName: 'EntitlementPolicy' }}
+                text="Personalizations"
+                checked={false}
+              />
+            </Link>
+          </div>
+        )}
         <Text
           variant="xLarge"
           className="companyName"
