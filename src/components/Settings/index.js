@@ -233,10 +233,12 @@ const Settings = ({ refreshCompanyName }) => {
         >
           About
         </a>
-        <SetPassword
-          hideDialog={hideDialog}
-          setHideDialog={setHideDialog}
-        />
+        {!hideDialog && (
+          <SetPassword
+            hideDialog={hideDialog}
+            setHideDialog={setHideDialog}
+          />
+        )}
       </Stack>
     </div>
   )

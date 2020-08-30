@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { useId } from '@uifabric/react-hooks'
-import { PrimaryButton } from 'office-ui-fabric-react/lib/Button'
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
@@ -9,7 +9,7 @@ import { getFromStorage } from '../../utils/helper'
 
 const dialogContentProps = {
   type: DialogType.largeHeader,
-  title: `${getFromStorage('password').length ? 'Change' : 'Set'} Password`,
+  title: `${getFromStorage('password')?.length ? 'Change' : 'Set'} Password`,
   closeButtonAriaLabel: 'Close',
 }
 
@@ -64,6 +64,10 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
         <PrimaryButton
           onClick={() => changePassword()}
           text="Change Password"
+        />
+        <DefaultButton
+          onClick={() => setHideDialog(true)}
+          text="Cancel"
         />
       </DialogFooter>
     </Dialog>
