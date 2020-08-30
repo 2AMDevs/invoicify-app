@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton } from 'office-ui-fabric-react'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
+import { useHistory } from 'react-router-dom'
 
 import { useAuthContext } from '../../../contexts'
 import {
@@ -12,6 +13,7 @@ import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 
 const HeaderRightSection = ({ refreshCompanyName }) => {
+  const history = useHistory()
   const [authState, updateAuthState] = useAuthContext()
 
   const [productsCount, setProductsCount] = useState(getProducts()?.length)
@@ -31,6 +33,23 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
   const refreshProductsCount = () => {
     setProductsCount(getProducts().length || 0)
   }
+
+  const lockIt = () => {
+    updateAuthState({ isAuthenticated: false })
+    if (window.location.hash !== '#/') history.push('/')
+  }
+
+  useEffect(() => {
+    const keyDownHandler = (e) => {
+      if (e.ctrlKey) {
+        const { key, repeat } = e
+        if (repeat) return
+        if (key.toLowerCase() === 'l') lockIt()
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler, true)
+    return () => document.removeEventListener('keydown', keyDownHandler, true)
+  })
 
   return (
     <div className="header__right-section">
@@ -53,7 +72,7 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
         <CommandBarButton
           className="header__link__btn"
           iconProps={{ iconName: 'lockSolid' }}
-          onClick={() => updateAuthState({ isAuthenticated: false })}
+          onClick={lockIt}
         />
       )}
       {localStorage.version && (
