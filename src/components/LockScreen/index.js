@@ -49,7 +49,6 @@ const LockScreen = () => {
         <br />
         <TextField
           label="Enter Password (if not set simply press enter)"
-          lab
           type="password"
           value={userInput}
           onChange={(_, val) => {
