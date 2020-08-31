@@ -103,6 +103,36 @@ code {
   animation: slideUp 0.5s forwards;
 }
 
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.90);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animation-scale-up {
+  animation: scaleUp 0.5s forwards;
+}
+
+@keyframes scaleDown {
+  0% {
+      transform: scale(1.2);
+      opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animation-scale-down {
+  animation: scaleDown 0.5s forwards;
+}
+
 .outside-link {
   color: wheat;
   text-decoration: none;

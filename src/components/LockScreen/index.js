@@ -1,6 +1,7 @@
 import './index.scss'
 import React, { useState } from 'react'
 
+import { FontIcon } from 'office-ui-fabric-react/lib/Icon'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
@@ -24,11 +25,15 @@ const LockScreen = () => {
 
   return (
     <div
-      className="lock-screen"
+      className="lock-screen animation-slide-down"
     >
-      <Stack>
-        <p className="huge">{time.toDateString()}</p>
-        {/* <p className="huge">{time.toLocaleTimeString()}</p> */}
+      <div className="lock-screen__items animation-slide-up">
+        <FontIcon
+          className="pretty-huge lock-screen__items__lock-icn animation-scale-down"
+          iconName="Lock"
+        />
+        {/* <p className="huge">{time.toDateString()}</p>
+        <p className="huge">{time.toLocaleTimeString()}</p> */}
         <br />
         <p className="okayish">
           Hey!
@@ -44,7 +49,7 @@ const LockScreen = () => {
         <br />
         <TextField
           label="Enter Password (if not set simply press enter)"
-          iconProps={{ iconName: 'Hide3' }}
+          lab
           type="password"
           value={userInput}
           onChange={(_, val) => {
@@ -54,7 +59,7 @@ const LockScreen = () => {
           onKeyPress={unlock}
           errorMessage={errorMessage}
         />
-      </Stack>
+      </div>
 
     </div>
   )
