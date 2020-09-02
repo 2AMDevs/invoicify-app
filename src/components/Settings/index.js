@@ -29,6 +29,7 @@ const Settings = ({ refreshCompanyName }) => {
   const [invoiceNumber, setInvoiceNumber] = useState(getFromStorage('invoiceNumber'))
   const [companyName, setCompanyName] = useState(getFromStorage('companyName'))
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
+  const [showFullMonth, setShowFullMonth] = useState(getFromStorage('showFullMonth'))
   const [font, setFont] = useState(getFromStorage('customFont'))
   const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
   const [currency, setCurrency] = useState(getFromStorage('currency'))
@@ -45,6 +46,11 @@ const Settings = ({ refreshCompanyName }) => {
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
+  }
+
+  const onMonthShowChange = (_, checked) => {
+    localStorage.showFullMonth = checked
+    setShowFullMonth(checked)
   }
 
   const onCurrencyChange = (_, val) => {
@@ -158,6 +164,11 @@ const Settings = ({ refreshCompanyName }) => {
             onText="हिन्दी"
             offText="English"
             onChange={onDateLangChange}
+          />
+          <Toggle
+            label="Full Month"
+            checked={showFullMonth}
+            onChange={onMonthShowChange}
           />
         </Stack>
         <Stack
