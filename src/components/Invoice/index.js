@@ -415,6 +415,7 @@ const Invoice = ({ showPdfPreview }) => {
             <TextField
               label="Old Purchase"
               type="number"
+              disabled
               value={invoiceFooter.oldPurchase}
               onChange={(_, value) => {
                 updateInvoiceFooter({ oldPurchase: value })

@@ -200,7 +200,7 @@ const defaultPrintSettings = [
   {
     name: 'Invoice Number',
     x: 90,
-    y: 695,
+    y: 694,
     required: true,
     disabled: true,
     type: TEXT,
@@ -210,8 +210,8 @@ const defaultPrintSettings = [
   },
   {
     name: 'Invoice Date',
-    x: 485.42,
-    y: 694.52,
+    x: 473,
+    y: 694,
     required: true,
     disabled: false,
     type: DATE,
@@ -222,7 +222,7 @@ const defaultPrintSettings = [
   {
     name: 'Customer Name',
     x: 60,
-    y: 672.52,
+    y: 668,
     required: true,
     disabled: false,
     type: TEXT,
@@ -232,7 +232,7 @@ const defaultPrintSettings = [
   {
     name: 'GSTIN',
     x: 100,
-    y: 645.52,
+    y: 641,
     required: true,
     disabled: false,
     type: TEXT,
@@ -243,8 +243,8 @@ const defaultPrintSettings = [
   },
   {
     name: 'Mobile',
-    x: 465.42,
-    y: 645.52,
+    x: 473,
+    y: 641,
     required: true,
     disabled: false,
     type: TEXT,
@@ -257,8 +257,8 @@ const defaultPrintSettings = [
   },
   {
     name: 'Address',
-    x: 325,
-    y: 645.52,
+    x: 257,
+    y: 641,
     required: true,
     disabled: false,
     type: TEXT,
@@ -276,8 +276,8 @@ const morePrintSettings = {
 
 const footerPrintSettings = {
   [PAY_METHOD.CHEQUENO]: {
-    x: 380,
-    y: 190,
+    x: 299,
+    y: 205,
   },
 }
 

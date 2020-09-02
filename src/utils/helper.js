@@ -259,7 +259,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   // Print Footer
   const footerCommonParts = (y, key, x) => {
-    const text = `${currency(footer[key], true)}/-`
+    const text = `${currency(footer[key])}/-`
     return [
       text,
       {
@@ -270,21 +270,22 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     ]
   }
 
-  page.drawText(...footerCommonParts(210, 'grossTotal'))
-  page.drawText(...footerCommonParts(190, 'cgst'))
-  page.drawText(...footerCommonParts(170, 'sgst'))
-  page.drawText(...footerCommonParts(148, 'igst'))
-  page.drawText(...footerCommonParts(128, 'totalAmount'))
-  page.drawText(...footerCommonParts(108, 'oldPurchase'))
-  page.drawText(...footerCommonParts(88, 'grandTotal'))
+  page.drawText(...footerCommonParts(230, 'grossTotal'))
+  page.drawText(...footerCommonParts(210, 'cgst'))
+  page.drawText(...footerCommonParts(190, 'sgst'))
+  page.drawText(...footerCommonParts(170, 'igst'))
+  page.drawText(...footerCommonParts(148, 'totalAmount'))
+  page.drawText(...footerCommonParts(128, 'oldPurchase'))
+  page.drawText(...footerCommonParts(108, 'grandTotal'))
 
   const calcSettings = getInvoiceSettings(ISET.CALC)
 
   const towWordsText = getBoolFromString(calcSettings.roundOffToWords)
-    ? Math.round(footer.grandTotal) : footer.grandTotal
-  page.drawText(toWords(towWordsText), {
-    x: 85,
-    y: 87,
+    ? Math.round(Math.abs(footer.grandTotal)) : Math.abs(footer.grandTotal)
+
+  page.drawText(`${footer.grandTotal < 0 ? 'Minus ' : ''}${toWords(towWordsText)}`, {
+    x: 92,
+    y: 88,
     ...commonFont,
   })
 
@@ -302,49 +303,62 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   if (oldItemList.length) {
     page.drawText(oldItems.names, {
-      x: 60,
-      y: 137,
+      x: 67,
+      y: 150,
       ...commonFont,
     })
 
     page.drawText(oldItems.purity, {
-      x: 65,
-      y: 122,
+      x: 73,
+      y: 130,
       ...commonFont,
     })
     page.drawText(oldItems.price, {
-      x: 200,
-      y: 122,
+      x: 216,
+      y: 130,
       ...commonFont,
     })
     page.drawText(oldItems.gWeight, {
-      x: 105,
-      y: 107,
+      x: 110,
+      y: 109,
       ...commonFont,
     })
     page.drawText(oldItems.weight, {
-      x: 233,
-      y: 107,
+      x: 248,
+      y: 109,
       ...commonFont,
     })
     page.drawText(oldItems.totalPrice, {
-      x: 326,
-      y: 107,
+      x: 348,
+      y: 109,
       ...commonFont,
     })
   }
 
   // Print Distribution
-  page.drawText(...footerCommonParts(220, PAY_METHOD.CASH, 255))
-  page.drawText(...footerCommonParts(220, PAY_METHOD.CHEQUE, 356))
+  page.drawText(...footerCommonParts(219, PAY_METHOD.CASH, 255))
+  page.drawText(...footerCommonParts(219, PAY_METHOD.CHEQUE, 356))
   page.drawText(...footerCommonParts(190, PAY_METHOD.UPI, 330))
   page.drawText(...footerCommonParts(190, PAY_METHOD.CARD, 255))
 
+  // Currently things are coded for Cheque number
   Object.keys(getInvoiceSettings(ISET.FOOTER)).forEach((item) => {
     if (footer[item]) {
-      page.drawText(footer[item], {
+      page.drawText(`Cheque No.: ${footer[item]}`, {
         ...getInvoiceSettings(ISET.FOOTER)[item],
         ...commonFont,
+      })
+      page.drawLine({
+        start: {
+          ...getInvoiceSettings(ISET.FOOTER)[item],
+          y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
+        },
+        end: {
+          y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
+          x: getInvoiceSettings(ISET.FOOTER)[item].x + 55,
+        },
+        thickness: 2,
+        opacity: 0.75,
       })
     }
   })
