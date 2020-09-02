@@ -78,6 +78,7 @@ const initializeSettings = async () => {
   localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
   localStorage.products = localStorage.products ?? '[]'
   localStorage.password = localStorage.password ?? ''
+  localStorage.showFullMonth = localStorage.showFullMonth ?? true
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.currency = localStorage.currency ?? '₹'
@@ -113,7 +114,10 @@ const getInvoiceDate = (date) => {
     year: 'numeric', month: 'long', day: 'numeric',
   }
   const hindiDate = getFromStorage('hindiDate')
-  return date.toLocaleDateString(`${hindiDate ? 'hi' : 'en'}-IN`, options)
+  const showFullMonth = getFromStorage('showFullMonth')
+  return showFullMonth
+    ? date.toLocaleDateString(`${hindiDate ? 'hi' : 'en'}-IN`, options)
+    : `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
 }
 
 const setProduct = (product) => {
