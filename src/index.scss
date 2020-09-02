@@ -8,6 +8,7 @@
   --color-black: rgba(0, 0, 0, 1);
   --color-black-op-80: rgba(0, 0, 0, 0.8);
   --color-black-op-50: rgba(0, 0, 0, 0.5);
+  --color-black-op-30: rgba(0, 0, 0, 0.3);
   --color-black-op-20: rgba(0, 0, 0, 0.2);
   --color-red-exit: rgba(238, 62, 79, 0.75);
 
@@ -103,7 +104,42 @@ code {
   animation: slideUp 0.5s forwards;
 }
 
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.90);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animation-scale-up {
+  animation: scaleUp 0.5s forwards;
+}
+
+@keyframes scaleDown {
+  0% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animation-scale-down {
+  animation: scaleDown 0.5s forwards;
+}
+
 .outside-link {
   color: wheat;
   text-decoration: none;
+}
+
+.row-flex {
+  display: flex;
+  flex-direction: row;
 }
