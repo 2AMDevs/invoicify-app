@@ -335,10 +335,10 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   }
 
   // Print Distribution
-  page.drawText(...footerCommonParts(190, PAY_METHOD.CASH, 245))
-  page.drawText(...footerCommonParts(190, PAY_METHOD.CHEQUE, 356))
-  page.drawText(...footerCommonParts(170, PAY_METHOD.UPI, 330))
-  page.drawText(...footerCommonParts(170, PAY_METHOD.CARD, 245))
+  page.drawText(...footerCommonParts(220, PAY_METHOD.CASH, 255))
+  page.drawText(...footerCommonParts(220, PAY_METHOD.CHEQUE, 356))
+  page.drawText(...footerCommonParts(190, PAY_METHOD.UPI, 330))
+  page.drawText(...footerCommonParts(190, PAY_METHOD.CARD, 255))
 
   Object.keys(getInvoiceSettings(ISET.FOOTER)).forEach((item) => {
     if (footer[item]) {
