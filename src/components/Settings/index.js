@@ -35,7 +35,8 @@ const Settings = ({ refreshCompanyName }) => {
   const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
   const [currency, setCurrency] = useState(getFromStorage('currency'))
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [authenticated, setAuthenticated] = useState(false)
+  const [resetSettingsPasswordError, setResetSettingsPasswordError] = useState('')
+  const [resetSettingsPassword, setResetSettingsPassword] = useState('')
 
   useEffect(() => {
     // eslint-disable-next-line func-names
@@ -99,6 +100,16 @@ const Settings = ({ refreshCompanyName }) => {
     setCompanyName(getFromStorage('companyName'))
     setHindiDate(getFromStorage('hindiDate'))
     setFont(getFromStorage('customFont'))
+  }
+
+  const verifyAndReset = () => {
+    if (resetSettingsPassword === getFromStorage('password')) {
+      resetAndUpdate()
+      setResetSettingsPasswordError(null)
+      setShowAuthModal(false)
+    } else {
+      setResetSettingsPasswordError('Incorrect Password')
+    }
   }
 
   const onProductTypeChange = (_, newValue) => {
@@ -264,26 +275,28 @@ const Settings = ({ refreshCompanyName }) => {
           target="#targetButton"
           primaryButtonProps={{
             text: 'Reset',
-            disabled: !authenticated,
             onClick: () => {
-              resetAndUpdate()
-              setAuthenticated(false)
+              verifyAndReset()
             },
           }}
           secondaryButtonProps={{
             text: 'Cancel',
             onClick: () => {
+              setResetSettingsPasswordError('')
               setShowAuthModal(false)
-              setAuthenticated(false)
             },
           }}
           onDismiss={() => {
+            setResetSettingsPasswordError('')
             setShowAuthModal(false)
-            setAuthenticated(false)
           }}
           headline="Authenticate yourself to reset 🔐"
         >
-          Lorem ipsum dolor sit amet
+          <TextField
+            placeholder="Enter password"
+            onChange={(_, val) => setResetSettingsPassword(val)}
+            errorMessage={resetSettingsPasswordError}
+          />
         </TeachingBubble>
       )}
     </div>
