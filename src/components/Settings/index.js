@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { DefaultButton } from 'office-ui-fabric-react'
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
+import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
@@ -33,6 +34,8 @@ const Settings = ({ refreshCompanyName }) => {
   const [font, setFont] = useState(getFromStorage('customFont'))
   const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
   const [currency, setCurrency] = useState(getFromStorage('currency'))
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authenticated, setAuthenticated] = useState(false)
 
   useEffect(() => {
     // eslint-disable-next-line func-names
@@ -219,9 +222,10 @@ const Settings = ({ refreshCompanyName }) => {
         />
         <DefaultButton
           text="Reset Settings"
+          id="targetButton"
           iconProps={{ iconName: 'FullHistory' }}
           primary
-          onClick={resetAndUpdate}
+          onClick={() => setShowAuthModal(true)}
           styles={{ root: { width: '18rem' } }}
         />
         <br />
@@ -255,6 +259,33 @@ const Settings = ({ refreshCompanyName }) => {
           />
         )}
       </Stack>
+      {showAuthModal && (
+        <TeachingBubble
+          target="#targetButton"
+          primaryButtonProps={{
+            text: 'Reset',
+            disabled: !authenticated,
+            onClick: () => {
+              resetAndUpdate()
+              setAuthenticated(false)
+            },
+          }}
+          secondaryButtonProps={{
+            text: 'Cancel',
+            onClick: () => {
+              setShowAuthModal(false)
+              setAuthenticated(false)
+            },
+          }}
+          onDismiss={() => {
+            setShowAuthModal(false)
+            setAuthenticated(false)
+          }}
+          headline="Authenticate yourself to reset 🔐"
+        >
+          Lorem ipsum dolor sit amet
+        </TeachingBubble>
+      )}
     </div>
   )
 }
