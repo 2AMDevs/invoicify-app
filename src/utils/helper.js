@@ -342,12 +342,15 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   // Print Distribution
   Object.keys(getInvoiceSettings(ISET.FOOTER)).forEach((item) => {
     if (footer[item]) {
-      page.drawText(`${item === PAY_METHOD.CHEQUENO ? 'Cheque No.:' : ''} ${footer[item]}`, {
-        ...getInvoiceSettings(ISET.FOOTER)[item],
-        ...commonFont,
-      })
+      const isCN = item === PAY_METHOD.CHEQUENO
+      page.drawText(
+        `${isCN ? 'Cheque No.:' : ''} ${footer[item]} ${isCN ? '' : '/-'}`, {
+          ...getInvoiceSettings(ISET.FOOTER)[item],
+          ...commonFont,
+        },
+      )
 
-      if (item === PAY_METHOD.CHEQUENO) {
+      if (isCN) {
         page.drawLine({
           start: {
             ...getInvoiceSettings(ISET.FOOTER)[item],

@@ -155,6 +155,7 @@ const InvoiceSettings = () => {
                 onChange={(_, val) => handleChange(0, key,
                   {
                     ...footerPrintSettings[key],
+                    // eslint-disable-next-line no-restricted-globals
                     [subkey]: isNaN(parseFloat(val)) ? 0 : parseFloat(val),
                   }, ISET.FOOTER)}
                 value={footerPrintSettings[key][subkey]}
