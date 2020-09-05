@@ -140,21 +140,24 @@ const InvoiceSettings = () => {
       <br />
 
       <Stack
-        {...token}
         key="Footer Stuff"
       >
         {Object.keys(footerPrintSettings).map((key) => (
           <Stack
             horizontal
             {...token}
-            key
+            key={key}
           >
             {Object.keys(footerPrintSettings[key]).map((subkey) => (
               <TextField
                 label={`${subkey.toUpperCase()} (${titleCase(key)})`}
                 key={`${key} ${subkey}`}
                 onChange={(_, val) => handleChange(0, key,
-                  { ...footerPrintSettings[key], [subkey]: parseInt(val, 10) }, ISET.FOOTER)}
+                  {
+                    ...footerPrintSettings[key],
+                    // eslint-disable-next-line no-restricted-globals
+                    [subkey]: isNaN(parseFloat(val)) ? 0 : parseFloat(val),
+                  }, ISET.FOOTER)}
                 value={footerPrintSettings[key][subkey]}
               />
             ))}

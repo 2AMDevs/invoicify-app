@@ -340,30 +340,30 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   }
 
   // Print Distribution
-  page.drawText(...footerCommonParts(219, PAY_METHOD.CASH, 255))
-  page.drawText(...footerCommonParts(219, PAY_METHOD.CHEQUE, 356))
-  page.drawText(...footerCommonParts(190, PAY_METHOD.UPI, 330))
-  page.drawText(...footerCommonParts(190, PAY_METHOD.CARD, 255))
-
-  // Currently things are coded for Cheque number
   Object.keys(getInvoiceSettings(ISET.FOOTER)).forEach((item) => {
     if (footer[item]) {
-      page.drawText(`Cheque No.: ${footer[item]}`, {
-        ...getInvoiceSettings(ISET.FOOTER)[item],
-        ...commonFont,
-      })
-      page.drawLine({
-        start: {
+      const isCN = item === PAY_METHOD.CHEQUENO
+      page.drawText(
+        `${isCN ? 'Cheque No.:' : ''} ${footer[item]} ${isCN ? '' : '/-'}`, {
           ...getInvoiceSettings(ISET.FOOTER)[item],
-          y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
+          ...commonFont,
         },
-        end: {
-          y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
-          x: getInvoiceSettings(ISET.FOOTER)[item].x + 55,
-        },
-        thickness: 2,
-        opacity: 0.75,
-      })
+      )
+
+      if (isCN) {
+        page.drawLine({
+          start: {
+            ...getInvoiceSettings(ISET.FOOTER)[item],
+            y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
+          },
+          end: {
+            y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
+            x: getInvoiceSettings(ISET.FOOTER)[item].x + 55,
+          },
+          thickness: 2,
+          opacity: 0.75,
+        })
+      }
     }
   })
 
