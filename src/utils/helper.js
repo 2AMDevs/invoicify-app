@@ -79,6 +79,7 @@ const initializeSettings = async () => {
   localStorage.products = localStorage.products ?? '[]'
   localStorage.password = localStorage.password ?? ''
   localStorage.showFullMonth = localStorage.showFullMonth ?? true
+  localStorage.printBoth = localStorage.printBoth ?? true
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.currency = localStorage.currency ?? '₹'
@@ -423,7 +424,10 @@ const restartApp = () => {
 }
 
 const resetSettings = () => {
+  const { password, products } = localStorage
   localStorage.clear()
+  localStorage.password = password
+  localStorage.products = products
   initializeSettings()
 }
 

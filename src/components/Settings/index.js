@@ -21,7 +21,7 @@ const { ipcRenderer } = require('electron')
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: '40rem' } }
 
-const Settings = ({ refreshCompanyName }) => {
+const Settings = ({ refreshCompanyName, reloadPage }) => {
   const [checkingPath, setCheckingPath] = useState(false)
   const [hideDialog, setHideDialog] = useState(true)
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
@@ -94,12 +94,6 @@ const Settings = ({ refreshCompanyName }) => {
 
   const resetAndUpdate = () => {
     resetSettings()
-    setPreviewBill(getFromStorage('previewPDFUrl'))
-    setProductType(getFromStorage('productType'))
-    setInvoiceNumber(getFromStorage('invoiceNumber'))
-    setCompanyName(getFromStorage('companyName'))
-    setHindiDate(getFromStorage('hindiDate'))
-    setFont(getFromStorage('customFont'))
   }
 
   const verifyAndReset = () => {
@@ -107,6 +101,7 @@ const Settings = ({ refreshCompanyName }) => {
       resetAndUpdate()
       setResetSettingsPasswordError(null)
       setShowAuthModal(false)
+      reloadPage()
     } else {
       setResetSettingsPasswordError('Incorrect Password')
     }
@@ -294,6 +289,7 @@ const Settings = ({ refreshCompanyName }) => {
         >
           <TextField
             placeholder="Enter password"
+            type="password"
             onChange={(_, val) => setResetSettingsPassword(val)}
             errorMessage={resetSettingsPasswordError}
           />
