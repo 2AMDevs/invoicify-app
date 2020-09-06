@@ -143,3 +143,19 @@ code {
   display: flex;
   flex-direction: row;
 }
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.ms-Overlay {
+  animation: fadeUp forwards 0.5s;
+  -webkit-backdrop-filter: blur(0.8rem);
+  backdrop-filter: blur(0.8rem);
+  background-color: var(--color-black-op-20);
+}
