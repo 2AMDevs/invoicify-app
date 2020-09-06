@@ -120,7 +120,10 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
       >
         <Settings
           refreshCompanyName={refreshCompanyName}
-          reloadPage={dismissSettingsPanel}
+          reloadPage={() => {
+            dismissSettingsPanel()
+            reloadStuff()
+          }}
         />
       </Panel>
     </div>
