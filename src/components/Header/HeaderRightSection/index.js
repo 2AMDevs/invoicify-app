@@ -34,9 +34,11 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
     setProductsCount(getProducts().length || 0)
   }
 
+  const reloadStuff = () => history.push('/')
+
   const lockIt = () => {
     updateAuthState({ isAuthenticated: false })
-    if (window.location.hash !== '#/') history.push('/')
+    if (window.location.hash !== '#/') reloadStuff()
   }
 
   useEffect(() => {
@@ -116,7 +118,13 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
         closeButtonAriaLabel="Close"
         headerText="Settings"
       >
-        <Settings refreshCompanyName={refreshCompanyName} />
+        <Settings
+          refreshCompanyName={refreshCompanyName}
+          reloadPage={() => {
+            dismissSettingsPanel()
+            reloadStuff()
+          }}
+        />
       </Panel>
     </div>
   )

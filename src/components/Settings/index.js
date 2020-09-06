@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { DefaultButton } from 'office-ui-fabric-react'
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
+import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
@@ -20,7 +21,7 @@ const { ipcRenderer } = require('electron')
 const stackTokens = { childrenGap: 15 }
 const stackStyles = { root: { width: '40rem' } }
 
-const Settings = ({ refreshCompanyName }) => {
+const Settings = ({ refreshCompanyName, reloadPage }) => {
   const [checkingPath, setCheckingPath] = useState(false)
   const [hideDialog, setHideDialog] = useState(true)
   const [previewBill, setPreviewBill] = useState(getFromStorage('previewPDFUrl'))
@@ -33,6 +34,10 @@ const Settings = ({ refreshCompanyName }) => {
   const [font, setFont] = useState(getFromStorage('customFont'))
   const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
   const [currency, setCurrency] = useState(getFromStorage('currency'))
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [resetSettingsPasswordError, setResetSettingsPasswordError] = useState('')
+  const [resetSettingsPassword, setResetSettingsPassword] = useState('')
+  const [printBoth, setPrintBoth] = useState(getFromStorage('printBoth'))
 
   useEffect(() => {
     // eslint-disable-next-line func-names
@@ -46,6 +51,11 @@ const Settings = ({ refreshCompanyName }) => {
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
+  }
+
+  const onChangePrintBoth = (_, c) => {
+    localStorage.printBoth = c
+    setPrintBoth(c)
   }
 
   const onMonthShowChange = (_, checked) => {
@@ -90,12 +100,17 @@ const Settings = ({ refreshCompanyName }) => {
 
   const resetAndUpdate = () => {
     resetSettings()
-    setPreviewBill(getFromStorage('previewPDFUrl'))
-    setProductType(getFromStorage('productType'))
-    setInvoiceNumber(getFromStorage('invoiceNumber'))
-    setCompanyName(getFromStorage('companyName'))
-    setHindiDate(getFromStorage('hindiDate'))
-    setFont(getFromStorage('customFont'))
+  }
+
+  const verifyAndReset = () => {
+    if (resetSettingsPassword === getFromStorage('password')) {
+      resetAndUpdate()
+      setResetSettingsPasswordError(null)
+      setShowAuthModal(false)
+      reloadPage()
+    } else {
+      setResetSettingsPasswordError('Incorrect Password')
+    }
   }
 
   const onProductTypeChange = (_, newValue) => {
@@ -136,16 +151,21 @@ const Settings = ({ refreshCompanyName }) => {
           horizontal
         >
           <TextField
-            label="Next Invoice Number"
+            label="Next Invoice"
             onChange={onInvoiceNoChange}
             value={invoiceNumber}
             description="You can change next invoice number here"
           />
           <TextField
-            label="Default Currency Symbol"
+            label="Currency Symbol"
             onChange={onCurrencyChange}
             value={currency}
             description="Currency Symbol will be used in printing"
+          />
+          <Toggle
+            label="Print Both Types"
+            checked={printBoth}
+            onChange={onChangePrintBoth}
           />
         </Stack>
         <Stack
@@ -219,9 +239,10 @@ const Settings = ({ refreshCompanyName }) => {
         />
         <DefaultButton
           text="Reset Settings"
+          id="targetButton"
           iconProps={{ iconName: 'FullHistory' }}
           primary
-          onClick={resetAndUpdate}
+          onClick={() => setShowAuthModal(true)}
           styles={{ root: { width: '18rem' } }}
         />
         <br />
@@ -255,6 +276,36 @@ const Settings = ({ refreshCompanyName }) => {
           />
         )}
       </Stack>
+      {showAuthModal && (
+        <TeachingBubble
+          target="#targetButton"
+          primaryButtonProps={{
+            text: 'Reset',
+            onClick: () => {
+              verifyAndReset()
+            },
+          }}
+          secondaryButtonProps={{
+            text: 'Cancel',
+            onClick: () => {
+              setResetSettingsPasswordError('')
+              setShowAuthModal(false)
+            },
+          }}
+          onDismiss={() => {
+            setResetSettingsPasswordError('')
+            setShowAuthModal(false)
+          }}
+          headline="Authenticate yourself to reset 🔐"
+        >
+          <TextField
+            placeholder="Enter password"
+            type="password"
+            onChange={(_, val) => setResetSettingsPassword(val)}
+            errorMessage={resetSettingsPasswordError}
+          />
+        </TeachingBubble>
+      )}
     </div>
   )
 }

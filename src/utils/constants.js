@@ -233,7 +233,7 @@ const defaultPrintSettings = [
     name: 'GSTIN',
     x: 100,
     y: 641,
-    required: true,
+    required: false,
     disabled: false,
     type: TEXT,
     inputLength: 15,
@@ -259,7 +259,7 @@ const defaultPrintSettings = [
     name: 'Address',
     x: 257,
     y: 641,
-    required: true,
+    required: false,
     disabled: false,
     type: TEXT,
     row: 4,
@@ -275,9 +275,25 @@ const morePrintSettings = {
 }
 
 const footerPrintSettings = {
+  [PAY_METHOD.CASH]: {
+    x: 242,
+    y: 220,
+  },
+  [PAY_METHOD.CHEQUE]: {
+    x: 349,
+    y: 220,
+  },
   [PAY_METHOD.CHEQUENO]: {
-    x: 299,
-    y: 205,
+    x: 303,
+    y: 207,
+  },
+  [PAY_METHOD.CARD]: {
+    x: 238,
+    y: 188,
+  },
+  [PAY_METHOD.UPI]: {
+    x: 324,
+    y: 188,
   },
 }
 
