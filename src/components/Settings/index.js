@@ -37,6 +37,7 @@ const Settings = ({ refreshCompanyName }) => {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [resetSettingsPasswordError, setResetSettingsPasswordError] = useState('')
   const [resetSettingsPassword, setResetSettingsPassword] = useState('')
+  const [printBoth, setPrintBoth] = useState(getFromStorage('printBoth'))
 
   useEffect(() => {
     // eslint-disable-next-line func-names
@@ -50,6 +51,11 @@ const Settings = ({ refreshCompanyName }) => {
   const onDateLangChange = (_, checked) => {
     localStorage.hindiDate = checked
     setHindiDate(checked)
+  }
+
+  const onChangePrintBoth = (_, c) => {
+    localStorage.printBoth = c
+    setPrintBoth(c)
   }
 
   const onMonthShowChange = (_, checked) => {
@@ -150,16 +156,21 @@ const Settings = ({ refreshCompanyName }) => {
           horizontal
         >
           <TextField
-            label="Next Invoice Number"
+            label="Next Invoice"
             onChange={onInvoiceNoChange}
             value={invoiceNumber}
             description="You can change next invoice number here"
           />
           <TextField
-            label="Default Currency Symbol"
+            label="Currency Symbol"
             onChange={onCurrencyChange}
             value={currency}
             description="Currency Symbol will be used in printing"
+          />
+          <Toggle
+            label="Print Both Types"
+            checked={printBoth}
+            onChange={onChangePrintBoth}
           />
         </Stack>
         <Stack

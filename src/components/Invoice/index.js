@@ -102,19 +102,36 @@ const Invoice = ({ showPdfPreview }) => {
     setInvoiceFooter(defaultInvoiceFooter)
   }
 
+  const moveAhead = () => {
+    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
+    resetForm()
+  }
+
   const printAndMove = (_, includeBill) => {
     fetchPDF(includeBill && PREVIEW).then((pdfBytes) => {
       if (pdfBytes?.error) {
         setAlertDetails(PdfPathError)
         setHideAlert(false)
-        return
+        return false
       }
-      printPDF(pdfBytes).then((res) => {
-        if (res) {
-          localStorage.invoiceNumber = invoice['Invoice Number'] + 1
-          resetForm()
-        }
-      })
+      return printPDF(pdfBytes)
+    }).then((oneGone) => {
+      if (oneGone && getFromStorage('printBoth')) {
+        fetchPDF(PREVIEW).then((pdfBytes) => {
+          if (pdfBytes?.error) {
+            setAlertDetails(PdfPathError)
+            setHideAlert(false)
+            return
+          }
+          printPDF(pdfBytes).then((fin) => {
+            if (fin) {
+              moveAhead()
+            }
+          })
+        })
+      } else if (oneGone) {
+        moveAhead()
+      }
     })
   }
 
