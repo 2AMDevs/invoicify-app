@@ -427,7 +427,7 @@ const resetSettings = () => {
   const { password, products } = localStorage
   localStorage.clear()
   localStorage.password = password
-  setProducts(products)
+  localStorage.products = products
   initializeSettings()
 }
 
