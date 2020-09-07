@@ -195,6 +195,15 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   const commonFont = { font, size: fontSize }
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
+  // Print Invoice Copy Type
+  const copyText = `[${mode === PREVIEW ? 'Duplicate' : 'Original'} Invoice]`
+  page.drawText(copyText, {
+    x: 569 - (font.widthOfTextAtSize(copyText, fontSize)),
+    y: 820,
+    size: fontSize,
+    font,
+  })
+
   // Print Invoice Header
   getInvoiceSettings().forEach((field) => {
     if (meta[field.name]) {
