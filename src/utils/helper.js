@@ -195,11 +195,12 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   const commonFont = { font, size: fontSize }
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
+  const printSettings = getInvoiceSettings(ISET.PRINT)
   // Print Invoice Copy Type
   const copyText = `[${mode === PREVIEW ? 'Duplicate' : 'Original'} Invoice]`
   page.drawText(copyText, {
-    x: 569 - (font.widthOfTextAtSize(copyText, fontSize)),
-    y: 820,
+    x: printSettings.copyTypeXEnd - (font.widthOfTextAtSize(copyText, fontSize)),
+    y: printSettings.copyTypeY,
     size: fontSize,
     font,
   })
@@ -220,7 +221,6 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   })
 
   // Print Items
-  const printSettings = getInvoiceSettings(ISET.PRINT)
   let idx = -1
   items.filter((it) => !it.isOldItem).forEach((item, serial) => {
     idx += 1

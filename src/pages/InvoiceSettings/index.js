@@ -53,7 +53,7 @@ const InvoiceSettings = () => {
 
   return (
     <div className="animation-slide-up invoice-settings">
-      <Separator alignContent="start">Invoice Meta Settings</Separator>
+      <Separator alignContent="start">Invoice Meta</Separator>
       <br />
       {currentSettings.map((setting, idx) => (
         <Stack
@@ -117,7 +117,7 @@ const InvoiceSettings = () => {
       ))}
 
       <br />
-      <Separator alignContent="start">Invoice Item Settings</Separator>
+      <Separator alignContent="start">Invoice Item & Copy Mark</Separator>
       <br />
 
       <Stack
@@ -129,7 +129,7 @@ const InvoiceSettings = () => {
           <TextField
             label={titleCase(key)}
             key={key}
-            onChange={(_, val) => handleChange(0, key, val, ISET.PRINT)}
+            onChange={(_, val) => handleChange(0, key, parseFloat(val), ISET.PRINT)}
             value={printSettings[key]}
           />
         ))}
