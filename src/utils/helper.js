@@ -80,6 +80,7 @@ const initializeSettings = async () => {
   localStorage.password = localStorage.password ?? ''
   localStorage.showFullMonth = localStorage.showFullMonth ?? true
   localStorage.printBoth = localStorage.printBoth ?? true
+  localStorage.oldPurchaseFreedom = localStorage.oldPurchaseFreedom ?? true
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.currency = localStorage.currency ?? '₹'
