@@ -80,6 +80,7 @@ const initializeSettings = async () => {
   localStorage.password = localStorage.password ?? ''
   localStorage.showFullMonth = localStorage.showFullMonth ?? true
   localStorage.printBoth = localStorage.printBoth ?? true
+  localStorage.oldPurchaseFreedom = localStorage.oldPurchaseFreedom ?? true
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.currency = localStorage.currency ?? '₹'
@@ -195,6 +196,16 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   const commonFont = { font, size: fontSize }
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
+  const printSettings = getInvoiceSettings(ISET.PRINT)
+  // Print Invoice Copy Type
+  const copyText = `[${mode === PREVIEW ? 'Duplicate' : 'Original'} Invoice]`
+  page.drawText(copyText, {
+    x: printSettings.copyTypeXEnd - (font.widthOfTextAtSize(copyText, fontSize)),
+    y: printSettings.copyTypeY,
+    size: fontSize,
+    font,
+  })
+
   // Print Invoice Header
   getInvoiceSettings().forEach((field) => {
     if (meta[field.name]) {
@@ -211,7 +222,6 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   })
 
   // Print Items
-  const printSettings = getInvoiceSettings(ISET.PRINT)
   let idx = -1
   items.filter((it) => !it.isOldItem).forEach((item, serial) => {
     idx += 1

@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
+import { Icon } from 'office-ui-fabric-react/lib/Icon'
 import { Separator } from 'office-ui-fabric-react/lib/Separator'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
+import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip'
 
 import {
   fieldTypes, MASKED, ISET,
 } from '../../utils/constants'
-import { getInvoiceSettings, titleCase } from '../../utils/helper'
+import { getInvoiceSettings, titleCase, getFromStorage } from '../../utils/helper'
 
 import './index.scss'
 
@@ -24,12 +26,18 @@ const InvoiceSettings = () => {
   const [printSettings, setPrintSettings] = useState(getInvoiceSettings(ISET.PRINT))
   const [calcSettings, setCalcSettings] = useState(getInvoiceSettings(ISET.CALC))
   const [footerPrintSettings, setFooterPrintSettings] = useState(getInvoiceSettings(ISET.FOOTER))
+  const [opFree, setOpFree] = useState(getFromStorage('oldPurchaseFreedom'))
 
   const getNewSettings = (type) => {
     if (type === ISET.PRINT) return { ...printSettings }
     if (type === ISET.CALC) return { ...calcSettings }
     if (type === ISET.FOOTER) return { ...footerPrintSettings }
     return [...currentSettings]
+  }
+
+  const onChangeOpFree = (_, c) => {
+    localStorage.oldPurchaseFreedom = c
+    setOpFree(c)
   }
 
   const handleChange = (index, key, value, type = ISET.MAIN) => {
@@ -53,7 +61,7 @@ const InvoiceSettings = () => {
 
   return (
     <div className="animation-slide-up invoice-settings">
-      <Separator alignContent="start">Invoice Meta Settings</Separator>
+      <Separator alignContent="start">Invoice Meta</Separator>
       <br />
       {currentSettings.map((setting, idx) => (
         <Stack
@@ -117,7 +125,7 @@ const InvoiceSettings = () => {
       ))}
 
       <br />
-      <Separator alignContent="start">Invoice Item Settings</Separator>
+      <Separator alignContent="start">Invoice Item & Copy Mark</Separator>
       <br />
 
       <Stack
@@ -129,7 +137,7 @@ const InvoiceSettings = () => {
           <TextField
             label={titleCase(key)}
             key={key}
-            onChange={(_, val) => handleChange(0, key, val, ISET.PRINT)}
+            onChange={(_, val) => handleChange(0, key, parseFloat(val), ISET.PRINT)}
             value={printSettings[key]}
           />
         ))}
@@ -182,6 +190,19 @@ const InvoiceSettings = () => {
             value={calcSettings[key]}
           />
         ))}
+        <Toggle
+          checked={opFree}
+          onChange={onChangeOpFree}
+          label={(
+            <div>
+              OP Freedom
+              {' '}
+              <TooltipHost content="Enables to add Old Purchase without Item Info">
+                <Icon iconName="Info" />
+              </TooltipHost>
+            </div>
+          )}
+        />
       </Stack>
       <br />
     </div>

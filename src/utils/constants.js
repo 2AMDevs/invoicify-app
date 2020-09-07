@@ -272,6 +272,8 @@ const morePrintSettings = {
   diffBetweenItemsY: 15,
   diffBetweenAmountsY: 20,
   endAmountsX: 560,
+  copyTypeXEnd: 569,
+  copyTypeY: 820,
 }
 
 const footerPrintSettings = {
