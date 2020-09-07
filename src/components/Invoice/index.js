@@ -432,7 +432,9 @@ const Invoice = ({ showPdfPreview }) => {
             <TextField
               label="Old Purchase"
               type="number"
-              disabled
+              disabled={invoiceItems.some((item) => item.isOldItem)
+                || (!invoiceItems.some((item) => item.isOldItem)
+                && !getFromStorage('oldPurchaseFreedom'))}
               value={invoiceFooter.oldPurchase}
               onChange={(_, value) => {
                 updateInvoiceFooter({ oldPurchase: value })
