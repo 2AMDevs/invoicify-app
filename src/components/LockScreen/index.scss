@@ -47,6 +47,16 @@
     backdrop-filter: blur(8px);
     background-color: var(--color-black-op-20);
     border-radius: 1rem;
+    transform: scale(1);
+
+    .ms-TextField-fieldGroup {
+      background-color: var(--color-black-op-50);
+      transition: transform 0.3s ease-in-out;
+
+      &:focus-within {
+        transform: scaleX(1.1);
+      }
+    }
   }
 }
 
