@@ -43,8 +43,6 @@ class InvoicePageFooter extends React.Component {
     }
 
     if (e.ctrlKey) {
-      if (this.props.disablePrintButton) return
-
       const { key, repeat } = e
       if (repeat) return
 
@@ -54,6 +52,7 @@ class InvoicePageFooter extends React.Component {
         this.props.previewPDF()
         break
       case 'p':
+        if (this.props.disablePrintButton) return
         this.props.printAndMove()
         break
       case 'r':
