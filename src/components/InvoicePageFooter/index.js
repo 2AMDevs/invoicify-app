@@ -34,6 +34,8 @@ class InvoicePageFooter extends React.Component {
 
   keyDownHandler = (e) => {
     if (e.shiftKey && e.ctrlKey) {
+      if (this.props.disablePrintButton) return
+
       const { key, repeat } = e
       if (repeat) return
       if (key.toLowerCase() === 'p' && this.props.printWithBill) this.props.printWithBill()
@@ -41,6 +43,8 @@ class InvoicePageFooter extends React.Component {
     }
 
     if (e.ctrlKey) {
+      if (this.props.disablePrintButton) return
+
       const { key, repeat } = e
       if (repeat) return
 
