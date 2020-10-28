@@ -97,7 +97,12 @@ const InvoiceItems = ({
                   label="Item name"
                   options={filterComboBoxOptions(currentInvoiceItem.product)}
                   selectedKey={currentInvoiceItem.product}
-                  onChange={(_, option) => option && onChangeField(currentInvoiceItemIndex, 'product', option.id)}
+                  onChange={(_, option) => {
+                    if (option) {
+                      onChangeField(currentInvoiceItemIndex, 'price', option.price)
+                      onChangeField(currentInvoiceItemIndex, 'product', option.id)
+                    }
+                  }}
                   onKeyUp={(e) => {
                     if (!e.key.includes('Arrow')) {
                       setItemsFilterValue(e.target.value)

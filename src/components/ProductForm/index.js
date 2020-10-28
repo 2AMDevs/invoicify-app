@@ -18,20 +18,23 @@ const ProductForm = ({
 }) => {
   const [name, setName] = useState(product?.name ?? '')
   const [type, setType] = useState(product?.type ?? '')
+  const [price, setPrice] = useState(product?.price ?? 0)
 
   const changeName = (_, val) => setName(val)
+  const changePrice = (_, val) => setPrice(val)
 
   const changeType = (_, val) => setType(val.key)
 
   const resetForm = () => {
     setName('')
     setType('')
+    setPrice('')
   }
 
   const saveForm = () => {
     const id = product?.id ?? generateUuid4()
     setProduct({
-      name, id, type,
+      name, id, type, price,
     })
     if (fetchItems) fetchItems()
     if (hideModal) hideModal()
@@ -62,6 +65,13 @@ const ProductForm = ({
               placeholder="Name of the product"
               value={name}
               onChange={changeName}
+            />
+            <TextField
+              label="Price"
+              required
+              placeholder="Product Price"
+              value={price}
+              onChange={changePrice}
             />
             <Dropdown
               placeholder="Product Type"
