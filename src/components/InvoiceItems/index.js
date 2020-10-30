@@ -99,7 +99,6 @@ const InvoiceItems = ({
                   selectedKey={currentInvoiceItem.product}
                   onChange={(_, option) => {
                     if (option) {
-                      onChangeField(currentInvoiceItemIndex, 'price', option.price)
                       onChangeField(currentInvoiceItemIndex, 'product', option.id)
                     }
                   }}

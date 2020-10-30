@@ -13,7 +13,8 @@ import {
   PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
 } from '../../utils/constants'
 import {
-  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
+  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency,
+  groupBy, generateUuid4, getProducts
 } from '../../utils/helper'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
@@ -221,6 +222,9 @@ const Invoice = ({ showPdfPreview }) => {
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
         const newItem = { ...item, ...valueObject }
+        if (valueObject.product && item.product !== valueObject.product) {
+          newItem.price = getProducts(newItem.product).price
+        }
         if (valueObject.isOldItem) {
           newItem.quantity = 1
           newItem.product = null
