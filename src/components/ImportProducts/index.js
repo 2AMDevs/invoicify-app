@@ -43,12 +43,14 @@ const ImportProducts = ({ refreshProductItems }) => {
       const newLocalProducts = res?.map((item) => ({
         name: item[0],
         type: item[1],
+        price: item[2],
         id: generateUuid4(),
       }))
       if (newLocalProducts?.length) {
         setNewProducts(newLocalProducts)
         toggleHideDialog()
       }
+    // eslint-disable-next-line no-console
     }).catch(console.error)
   }
 
