@@ -75,6 +75,7 @@ const Invoice = ({ showPdfPreview }) => {
     oldPurchase: ZERO,
     grandTotal: ZERO,
     [PAY_METHOD.CHEQUE]: ZERO,
+    [PAY_METHOD.CREDIT]: ZERO,
     [PAY_METHOD.CARD]: ZERO,
     [PAY_METHOD.UPI]: ZERO,
     [PAY_METHOD.CASH]: ZERO,
@@ -162,7 +163,7 @@ const Invoice = ({ showPdfPreview }) => {
       updatedInvoiceFooter = { ...invoiceFooter, ...change }
     }
     const {
-      oldPurchase, grossTotal, cheque, card, upi, interState,
+      oldPurchase, grossTotal, cheque, card, upi, interState, credit,
     } = updatedInvoiceFooter
     const calcSettings = getInvoiceSettings(ISET.CALC)
     const cgst = interState
@@ -180,7 +181,7 @@ const Invoice = ({ showPdfPreview }) => {
       igst,
       totalAmount,
       grandTotal: currency(totalAmount - oldPurchase),
-      cash: currency(totalAmount - oldPurchase - card - cheque - upi),
+      cash: currency(totalAmount - oldPurchase - card - cheque - upi - credit),
     })
   }
 

@@ -351,29 +351,44 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   }
 
   // Print Distribution
-  Object.keys(getInvoiceSettings(ISET.FOOTER)).forEach((item) => {
+  const startX = 210
+  let startY = 220
+  let prevPayLen = 0
+  Object.values(PAY_METHOD).forEach((item) => {
     if (footer[item]) {
       const isCN = item === PAY_METHOD.CHEQUENO
-      page.drawText(
-        `${isCN ? 'Cheque No.:' : ''} ${footer[item]} ${isCN ? '' : '/-'}`, {
-          ...getInvoiceSettings(ISET.FOOTER)[item],
-          ...commonFont,
-        },
-      )
 
-      if (isCN) {
-        page.drawLine({
-          start: {
-            ...getInvoiceSettings(ISET.FOOTER)[item],
-            y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
+      const textContent = `${isCN ? 'Cheque No.:' : item.toUpperCase()}: ${footer[item]} ${isCN ? '' : '/-'}`
+      const currX = startX + (isCN ? (prevPayLen + 15) : 0)
+
+      if (isCN && !footer[PAY_METHOD.CHEQUE]) {
+        // eslint-disable-next-line no-console
+        console.log('No Cheques Please')
+      } else {
+        page.drawText(
+          textContent, {
+            x: currX,
+            y: startY,
+            ...commonFont,
           },
-          end: {
-            y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
-            x: getInvoiceSettings(ISET.FOOTER)[item].x + 55,
-          },
-          thickness: 2,
-          opacity: 0.75,
-        })
+        )
+
+        if (isCN) {
+          page.drawLine({
+            start: {
+              x: currX,
+              y: startY - 2.3,
+            },
+            end: {
+              y: startY - 2.3,
+              x: currX + 55,
+            },
+            thickness: 2,
+            opacity: 0.75,
+          })
+        }
+        startY -= (item === PAY_METHOD.CHEQUE ? 0 : 15)
+        prevPayLen = font.widthOfTextAtSize(textContent, fontSize)
       }
     }
   })
