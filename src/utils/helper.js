@@ -352,14 +352,16 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   // Print Distribution
   const startX = 210
+  const yLimit = 190
   let startY = 220
   let prevPayLen = 0
+  let sameLine = false
   Object.values(PAY_METHOD).forEach((item) => {
     if (footer[item]) {
       const isCN = item === PAY_METHOD.CHEQUENO
 
       const textContent = `${isCN ? 'Cheque No.:' : item.toUpperCase()}: ${footer[item]} ${isCN ? '' : '/-'}`
-      const currX = startX + (isCN ? (prevPayLen + 15) : 0)
+      const currX = startX + ((isCN || sameLine) ? (prevPayLen + 15) : 0)
 
       if (isCN && !footer[PAY_METHOD.CHEQUE]) {
         // eslint-disable-next-line no-console
@@ -387,7 +389,8 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
             opacity: 0.75,
           })
         }
-        startY -= (item === PAY_METHOD.CHEQUE ? 0 : 15)
+        sameLine = (startY === yLimit)
+        startY -= ((item === PAY_METHOD.CHEQUE) || sameLine ? 0 : 15)
         prevPayLen = font.widthOfTextAtSize(textContent, fontSize)
       }
     }
