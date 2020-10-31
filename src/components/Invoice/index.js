@@ -42,6 +42,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const [invoiceItems, setInvoiceItems] = useState(invoiceState.invoiceItems ?? [])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
+  const [isGrossWeightNetWeight, setIsGrossWeightNetWeight] = useState(false)
 
   const openInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(true))
 
@@ -488,6 +489,8 @@ const Invoice = ({ showPdfPreview }) => {
         headerText="Invoice item"
       >
         <InvoiceItems
+          isGrossWeightNetWeight={isGrossWeightNetWeight}
+          setIsGrossWeightNetWeight={setIsGrossWeightNetWeight}
           invoiceItems={invoiceItems}
           currentInvoiceItemIndex={currentInvoiceItemIndex}
           currentInvoiceItem={invoiceItems[currentInvoiceItemIndex]}

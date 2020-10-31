@@ -21,7 +21,7 @@ const columnProps = {
 
 const InvoiceItems = ({
   currentInvoiceItem, currentInvoiceItemIndex, removeInvoiceItem, updateInvoiceItem,
-  dismissInvoiceItemsPanel, addNewInvoiceItem,
+  dismissInvoiceItemsPanel, addNewInvoiceItem, isGrossWeightNetWeight, setIsGrossWeightNetWeight
 }) => {
   const [itemsFilterValue, setItemsFilterValue] = useState('')
 
@@ -32,6 +32,8 @@ const InvoiceItems = ({
       [stateKey]: value,
       ...((stateKey === 'gWeight' && currentInvoiceItem.isOldItem)
       && { weight: currency(value * currentInvoiceItem.purity * 0.01) }),
+      ...((stateKey === 'gWeight' && !currentInvoiceItem.isOldItem && isGrossWeightNetWeight)
+      && { weight: value }),
     }
     updateInvoiceItem(itemIndex, updateObject)
     setItemsFilterValue('')
@@ -79,6 +81,12 @@ const InvoiceItems = ({
             label="Old Purchase"
             checked={currentInvoiceItem.isOldItem}
             onChange={(_, isChecked) => onChangeField(currentInvoiceItemIndex, 'isOldItem', isChecked)}
+          />
+          <Checkbox
+            className="invoice-items__item__weight-check"
+            label="Gross W is the same as Net W"
+            checked={isGrossWeightNetWeight}
+            onChange={(_, isChecked) => setIsGrossWeightNetWeight(isChecked)}
           />
 
           <Stack
