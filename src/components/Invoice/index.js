@@ -14,7 +14,7 @@ import {
 } from '../../utils/constants'
 import {
   getFromStorage, getPdf, getInvoiceSettings, printPDF, currency,
-  groupBy, generateUuid4, getProducts
+  groupBy, generateUuid4, getProducts,
 } from '../../utils/helper'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'

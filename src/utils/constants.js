@@ -23,7 +23,7 @@ const PAY_METHOD = {
   CASH: 'cash',
   CHEQUE: 'cheque',
   CHEQUENO: 'chequeNumber',
-  CREDT: 'credit',
+  CREDIT: 'credit',
   UPI: 'upi',
   CARD: 'card',
 }
