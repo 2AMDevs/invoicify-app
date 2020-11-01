@@ -351,29 +351,48 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   }
 
   // Print Distribution
-  Object.keys(getInvoiceSettings(ISET.FOOTER)).forEach((item) => {
-    if (footer[item]) {
-      const isCN = item === PAY_METHOD.CHEQUENO
-      page.drawText(
-        `${isCN ? 'Cheque No.:' : ''} ${footer[item]} ${isCN ? '' : '/-'}`, {
-          ...getInvoiceSettings(ISET.FOOTER)[item],
-          ...commonFont,
-        },
-      )
+  const startX = 210
+  const yLimit = 190
+  let startY = 220
+  let prevPayLen = 0
+  let sameLine = false
+  Object.values(PAY_METHOD).forEach((item) => {
+    const isCN = item === PAY_METHOD.CHEQUENO
+    if (isCN && !footer[item]) {
+      startY -= 15
+    } else if (footer[item]) {
+      const textContent = `${isCN ? 'Chq No:' : item.toUpperCase()}: ${+footer[item]} ${isCN ? '' : '/-'}`
+      const currX = startX + ((isCN || sameLine) ? (prevPayLen + 10) : 0)
 
-      if (isCN) {
-        page.drawLine({
-          start: {
-            ...getInvoiceSettings(ISET.FOOTER)[item],
-            y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
+      if (isCN && !footer[PAY_METHOD.CHEQUE]) {
+        // eslint-disable-next-line no-console
+        console.log('No Cheques Please')
+      } else {
+        page.drawText(
+          textContent, {
+            x: currX,
+            y: startY,
+            ...commonFont,
           },
-          end: {
-            y: getInvoiceSettings(ISET.FOOTER)[item].y - 2.3,
-            x: getInvoiceSettings(ISET.FOOTER)[item].x + 55,
-          },
-          thickness: 2,
-          opacity: 0.75,
-        })
+        )
+
+        if (isCN) {
+          page.drawLine({
+            start: {
+              x: currX,
+              y: startY - 2.3,
+            },
+            end: {
+              y: startY - 2.3,
+              x: currX + 90,
+            },
+            thickness: 2,
+            opacity: 0.75,
+          })
+        }
+        sameLine = (startY === yLimit)
+        startY -= ((item === PAY_METHOD.CHEQUE) || sameLine ? 0 : 15)
+        prevPayLen = font.widthOfTextAtSize(textContent, fontSize)
       }
     }
   })

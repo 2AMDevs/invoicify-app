@@ -13,7 +13,8 @@ import {
   PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
 } from '../../utils/constants'
 import {
-  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency, groupBy, generateUuid4,
+  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency,
+  groupBy, generateUuid4, getProducts,
 } from '../../utils/helper'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
@@ -41,6 +42,7 @@ const Invoice = ({ showPdfPreview }) => {
 
   const [invoiceItems, setInvoiceItems] = useState(invoiceState.invoiceItems ?? [])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
+  const [isGrossWeightNetWeight, setIsGrossWeightNetWeight] = useState(false)
 
   const openInvoiceItemsPanel = useConstCallback(() => setIsInvoiceItemFormOpen(true))
 
@@ -73,6 +75,7 @@ const Invoice = ({ showPdfPreview }) => {
     oldPurchase: ZERO,
     grandTotal: ZERO,
     [PAY_METHOD.CHEQUE]: ZERO,
+    [PAY_METHOD.CREDIT]: ZERO,
     [PAY_METHOD.CARD]: ZERO,
     [PAY_METHOD.UPI]: ZERO,
     [PAY_METHOD.CASH]: ZERO,
@@ -160,7 +163,7 @@ const Invoice = ({ showPdfPreview }) => {
       updatedInvoiceFooter = { ...invoiceFooter, ...change }
     }
     const {
-      oldPurchase, grossTotal, cheque, card, upi, interState,
+      oldPurchase, grossTotal, cheque, card, upi, interState, credit,
     } = updatedInvoiceFooter
     const calcSettings = getInvoiceSettings(ISET.CALC)
     const cgst = interState
@@ -178,7 +181,7 @@ const Invoice = ({ showPdfPreview }) => {
       igst,
       totalAmount,
       grandTotal: currency(totalAmount - oldPurchase),
-      cash: currency(totalAmount - oldPurchase - card - cheque - upi),
+      cash: currency(totalAmount - oldPurchase - card - cheque - upi - credit),
     })
   }
 
@@ -221,6 +224,9 @@ const Invoice = ({ showPdfPreview }) => {
     setInvoiceItems(invoiceItems.map((item, i) => {
       if (i === index) {
         const newItem = { ...item, ...valueObject }
+        if (valueObject.product && item.product !== valueObject.product) {
+          newItem.price = getProducts(newItem.product).price
+        }
         if (valueObject.isOldItem) {
           newItem.quantity = 1
           newItem.product = null
@@ -484,6 +490,8 @@ const Invoice = ({ showPdfPreview }) => {
         headerText="Invoice item"
       >
         <InvoiceItems
+          isGrossWeightNetWeight={isGrossWeightNetWeight}
+          setIsGrossWeightNetWeight={setIsGrossWeightNetWeight}
           invoiceItems={invoiceItems}
           currentInvoiceItemIndex={currentInvoiceItemIndex}
           currentInvoiceItem={invoiceItems[currentInvoiceItemIndex]}
