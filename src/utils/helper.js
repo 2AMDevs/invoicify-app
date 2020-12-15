@@ -8,20 +8,10 @@ import {
   CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings, PAY_METHOD,
   MAX_ITEM_WIDTH, COMPANY_NAME, footerPrintSettings,
 } from './constants'
+import { getBoolFromString } from './utils'
 
 // eslint-disable-next-line global-require
 const { ipcRenderer } = require('electron')
-
-const getBoolFromString = (value) => {
-  switch (value) {
-  case 'true':
-    return true
-  case 'false':
-    return false
-  default:
-    return value
-  }
-}
 
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
