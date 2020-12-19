@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useState, useRef,
+  useCallback, useRef, useState,
 } from 'react'
 
 import { CommandBarButton, Icon } from 'office-ui-fabric-react'
@@ -10,9 +10,9 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import {
-  getProducts, groupBy, currency, getProductTypes, quantize,
+  currency, getProducts, getProductTypes,
 } from '../../utils/helper'
-
+import { groupBy, quantize } from '../../utils/utils'
 import './index.scss'
 
 const columnProps = {
@@ -21,7 +21,7 @@ const columnProps = {
 
 const InvoiceItems = ({
   currentInvoiceItem, currentInvoiceItemIndex, removeInvoiceItem, updateInvoiceItem,
-  dismissInvoiceItemsPanel, addNewInvoiceItem, isGrossWeightNetWeight, setIsGrossWeightNetWeight
+  dismissInvoiceItemsPanel, addNewInvoiceItem, isGrossWeightNetWeight, setIsGrossWeightNetWeight,
 }) => {
   const [itemsFilterValue, setItemsFilterValue] = useState('')
 

@@ -39,9 +39,6 @@ const currency = (val, format) => {
   }).format(parsedCurrency)}` : parsedCurrency
 }
 
-const quantize = (val) => (isNaN(parseFloat(val))
-  ? 0 : +val)
-
 const printerList = async () => {
   const list = await ipcRenderer.invoke('get-printers')
   const getIcon = (name) => {
@@ -131,9 +128,6 @@ const setProducts = (newProducts, replace) => {
   const products = (getFromStorage('products', 'json') || [])
   localStorage.setItem('products', JSON.stringify(replace ? newProducts : [...products, ...newProducts]))
 }
-
-const titleCase = (string) => string.replace(/([A-Z])/g, ' $1')
-  .replace(/^./, (str) => str.toUpperCase())
 
 const deleteProducts = (ids) => {
   const products = (getFromStorage('products', 'json') || []).filter((p) => !ids.includes(p.id))
@@ -394,20 +388,6 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   return pdfDoc.save()
 }
 
-const generateUuid4 = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-  // eslint-disable-next-line no-bitwise
-  const r = Math.random() * 16 | 0
-  // eslint-disable-next-line no-mixed-operators, no-bitwise
-  const v = c === 'x' ? r : (r & 0x3 | 0x8)
-  return v.toString(16)
-}))
-
-const groupBy = (array, key) => array.reduce((result, currentValue) => {
-  // eslint-disable-next-line no-param-reassign
-  (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue)
-  return result
-}, {})
-
 ipcRenderer.on('updateDownloaded', (_event, info) => {
   const notification = document.getElementById('notification')
   const message = document.getElementById('message')
@@ -462,17 +442,13 @@ export {
   getPdf,
   getProductTypes,
   getInvoiceSettings,
-  generateUuid4,
-  groupBy,
   currency,
   closeNotification,
   restartApp,
   quitApp,
   minimizeApp,
   resetSettings,
-  titleCase,
   updatePrinterList,
   isValidPath,
   toggleFullScreen,
-  quantize,
 }

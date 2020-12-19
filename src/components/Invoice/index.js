@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -10,18 +10,18 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import { useInvoiceContext } from '../../contexts'
 import {
-  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
+  DATE, defaultPrintSettings, ISET, MASKED, PAY_METHOD, PREVIEW, PRINT, ZERO,
 } from '../../utils/constants'
 import {
-  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency,
-  groupBy, generateUuid4, getProducts,
+  currency, getFromStorage, getInvoiceSettings, getPdf,
+  getProducts, printPDF,
 } from '../../utils/helper'
+import { generateUuid4, groupBy } from '../../utils/utils'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 import InvoicePageFooter from '../InvoicePageFooter'
-
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
