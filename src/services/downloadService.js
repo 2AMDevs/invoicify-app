@@ -18,3 +18,10 @@ ipcRenderer.on('message', (_event, msg) => {
   if (message) message.innerText = msg
   if (notification) notification.parentElement.parentElement.parentElement.classList.remove('hidden')
 })
+
+const closeNotification = () => {
+  const n = document.getElementById('notification')
+  n.parentElement.parentElement.parentElement.classList.add('hidden')
+}
+
+export default closeNotification

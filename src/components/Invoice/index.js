@@ -10,12 +10,11 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import { useInvoiceContext } from '../../contexts'
 import { currency, getFromStorage, getProducts } from '../../services/dbService'
+import { getPdf, printPDF } from '../../services/pdfService'
+import { getInvoiceSettings } from '../../services/settingsService'
 import {
   DATE, defaultPrintSettings, ISET, MASKED, PAY_METHOD, PREVIEW, PRINT, ZERO,
 } from '../../utils/constants'
-import {
-  getInvoiceSettings, getPdf, printPDF,
-} from '../../utils/helper'
 import { generateUuid4, groupBy } from '../../utils/utils'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'

@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom'
 
 import { useAuthContext } from '../../contexts'
 import { getFromStorage } from '../../services/dbService'
+import closeNotification from '../../services/downloadService'
 import { restartApp } from '../../services/nodeService'
-import { closeNotification } from '../../utils/helper'
 import HeaderRightSection from './HeaderRightSection'
 import './index.scss'
 

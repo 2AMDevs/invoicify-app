@@ -1,59 +1,24 @@
-/* eslint-disable no-restricted-globals */
 import fontkit from '@pdf-lib/fontkit'
 import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  currency, getFromStorage, getProducts, updatePrinterList,
-} from '../services/dbService'
-import {
-  getAppVersion, getDefPrinter, getFileBuffer, isValidPath, printIt,
-} from '../services/nodeService'
-import {
-  calculationSettings,
-  COMPANY_NAME, CUSTOM_FONT, DATE, defaultPageSettings, defaultPrintSettings, FILE_TYPE,
+  COMPANY_NAME,
+  CUSTOM_FONT, DATE, defaultPageSettings,
+  FILE_TYPE, ISET, MAX_ITEM_WIDTH,
+  PAY_METHOD, PREVIEW, PRINT,
+} from '../utils/constants'
+import { getBoolFromString } from '../utils/utils'
+import { currency, getFromStorage, getProducts } from './dbService'
+import { getFileBuffer, isValidPath, printIt } from './nodeService'
+import { getInvoiceSettings } from './settingsService'
 
-  footerPrintSettings, ISET,
-
-  MAX_ITEM_WIDTH, morePrintSettings, PAY_METHOD, PREVIEW, PRINT,
-} from './constants'
-import { getBoolFromString } from './utils'
-
-// eslint-disable-next-line global-require
-
-const initializeSettings = async () => {
-  localStorage.companyName = localStorage.companyName ?? COMPANY_NAME
-  localStorage.invoiceNumber = localStorage.invoiceNumber ?? 1
-  localStorage.products = localStorage.products ?? '[]'
-  localStorage.password = localStorage.password ?? ''
-  localStorage.showFullMonth = localStorage.showFullMonth ?? true
-  localStorage.printBoth = localStorage.printBoth ?? true
-  localStorage.oldPurchaseFreedom = localStorage.oldPurchaseFreedom ?? true
-  localStorage.productType = localStorage.productType ?? 'G, S'
-  localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
-  localStorage.currency = localStorage.currency ?? '₹'
-  localStorage.invoiceSettings = localStorage.invoiceSettings
-                                  ?? JSON.stringify(defaultPrintSettings)
-
-  localStorage.printer = localStorage.printer ?? await getDefPrinter()
-  localStorage.morePrintSettings = JSON.stringify({
-    ...morePrintSettings,
-    ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
-  })
-  localStorage.footerPrintSettings = JSON.stringify({
-    ...footerPrintSettings,
-    ...(localStorage.footerPrintSettings && JSON.parse(localStorage.footerPrintSettings)),
-  })
-  localStorage.calculationSettings = JSON.stringify({
-    ...calculationSettings,
-    ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
-  })
-  localStorage.version = await getAppVersion()
-  localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
-  await updatePrinterList()
+const getFontBuffer = async () => {
+  const selectedFont = getFromStorage(FILE_TYPE.FONT)
+  return (selectedFont !== CUSTOM_FONT && isValidPath(selectedFont))
+    ? getFileBuffer(selectedFont)
+    : fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
 }
-
-const printPDF = (pdfBytes) => printIt(pdfBytes, getFromStorage('printer'))
 
 const getInvoiceDate = (date) => {
   const options = {
@@ -64,18 +29,6 @@ const getInvoiceDate = (date) => {
   return showFullMonth
     ? date.toLocaleDateString(`${hindiDate ? 'hi' : 'en'}-IN`, options)
     : `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
-}
-
-const getInvoiceSettings = (type = ISET.MAIN) => {
-  const invoiceSettings = localStorage.getItem(type)
-  return invoiceSettings ? JSON.parse(invoiceSettings) : []
-}
-
-const getSelectFontBuffer = async () => {
-  const selectedFont = getFromStorage(FILE_TYPE.FONT)
-  return (selectedFont !== CUSTOM_FONT && isValidPath(selectedFont))
-    ? getFileBuffer(selectedFont)
-    : fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
 }
 
 const getPdf = async (invoiceDetails, mode = PRINT) => {
@@ -96,7 +49,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
   pdfDoc.registerFontkit(fontkit)
   const { fontSize } = defaultPageSettings
-  const font = await pdfDoc.embedFont(await getSelectFontBuffer(), { subset: true })
+  const font = await pdfDoc.embedFont(await getFontBuffer(), { subset: true })
   const commonFont = { font, size: fontSize }
   const page = isPreviewMode ? pdfDoc.getPages()[0] : pdfDoc.addPage()
 
@@ -308,25 +261,6 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   return pdfDoc.save()
 }
 
-const closeNotification = () => {
-  const n = document.getElementById('notification')
-  n.parentElement.parentElement.parentElement.classList.add('hidden')
-}
+const printPDF = (pdfBytes) => printIt(pdfBytes, getFromStorage('printer'))
 
-const resetSettings = () => {
-  const { password, products } = localStorage
-  localStorage.clear()
-  localStorage.password = password
-  localStorage.products = products
-  initializeSettings()
-}
-
-export {
-  initializeSettings,
-  printPDF,
-  getInvoiceDate,
-  getPdf,
-  getInvoiceSettings,
-  closeNotification,
-  resetSettings,
-}
+export { getPdf, printPDF }

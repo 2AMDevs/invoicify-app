@@ -9,10 +9,10 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import { getFromStorage } from '../../services/dbService'
 import { isValidPath } from '../../services/nodeService'
+import { resetSettings } from '../../services/settingsService'
 import {
   FILE_TYPE, SELECT_FILE_TYPE, ERROR, COMPANY_NAME,
 } from '../../utils/constants'
-import { resetSettings } from '../../utils/helper'
 import SetPassword from '../SetPasswordModal'
 
 import './index.scss'
