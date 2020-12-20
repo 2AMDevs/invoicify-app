@@ -54,8 +54,7 @@ const deleteProducts = (ids) => {
 }
 
 const getProducts = (id) => {
-  const productsString = localStorage.getItem('products')
-  const products = productsString ? JSON.parse(productsString) : []
+  const products = getFromStorage('products', 'json') || []
   if (!id) {
     return products
   }
