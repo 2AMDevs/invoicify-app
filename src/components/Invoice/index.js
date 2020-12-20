@@ -9,12 +9,12 @@ import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import { useInvoiceContext } from '../../contexts'
+import { currency, getFromStorage, getProducts } from '../../services/dbService'
 import {
   DATE, defaultPrintSettings, ISET, MASKED, PAY_METHOD, PREVIEW, PRINT, ZERO,
 } from '../../utils/constants'
 import {
-  currency, getFromStorage, getInvoiceSettings, getPdf,
-  getProducts, printPDF,
+  getInvoiceSettings, getPdf, printPDF,
 } from '../../utils/helper'
 import { generateUuid4, groupBy } from '../../utils/utils'
 import Alert from '../Alert'

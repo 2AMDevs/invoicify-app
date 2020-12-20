@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
 
 import {
-  Modal,
-  IconButton,
-  TextField,
-  DefaultButton,
-  Stack,
+  DefaultButton, IconButton, Modal,
+
+  Stack, TextField,
 } from 'office-ui-fabric-react'
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 
-import { setProduct, getProductTypes, generateUuid4 } from '../../utils/helper'
-
+import { getProductTypes, setProduct } from '../../services/dbService'
+import { generateUuid4 } from '../../utils/utils'
 import './index.scss'
 
 const ProductForm = ({

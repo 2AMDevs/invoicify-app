@@ -8,10 +8,11 @@ import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip'
 
+import { getFromStorage } from '../../services/dbService'
 import {
   fieldTypes, ISET, MASKED,
 } from '../../utils/constants'
-import { getFromStorage, getInvoiceSettings } from '../../utils/helper'
+import { getInvoiceSettings } from '../../utils/helper'
 import { titleCase } from '../../utils/utils'
 import './index.scss'
 

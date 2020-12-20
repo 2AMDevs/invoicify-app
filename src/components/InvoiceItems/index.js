@@ -9,9 +9,7 @@ import { ComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/l
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
-import {
-  currency, getProducts, getProductTypes,
-} from '../../utils/helper'
+import { currency, getProducts, getProductTypes } from '../../services/dbService'
 import { groupBy, quantize } from '../../utils/utils'
 import './index.scss'
 

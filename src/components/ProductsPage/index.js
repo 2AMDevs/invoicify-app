@@ -8,8 +8,8 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 
+import { deleteProducts, getProducts, setProducts } from '../../services/dbService'
 import { productTableColumns } from '../../utils/constants'
-import { getProducts, deleteProducts, setProducts } from '../../utils/helper'
 import ImportProducts from '../ImportProducts'
 import ListEmpty from '../ListEmpty'
 import ProductForm from '../ProductForm'

@@ -6,8 +6,8 @@ import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button'
 import { Dialog, DialogFooter, DialogType } from 'office-ui-fabric-react/lib/Dialog'
 import { DirectionalHint, TooltipHost } from 'office-ui-fabric-react/lib/Tooltip'
 
+import { setProducts } from '../../services/dbService'
 import { SELECT_FILE_TYPE } from '../../utils/constants'
-import { setProducts } from '../../utils/helper'
 import { generateUuid4 } from '../../utils/utils'
 import './index.scss'
 

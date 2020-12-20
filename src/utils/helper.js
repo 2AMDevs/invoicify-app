@@ -4,61 +4,22 @@ import * as toWords from 'convert-rupees-into-words'
 import { PDFDocument } from 'pdf-lib'
 
 import {
-  PREVIEW, PRINT, DATE, defaultPrintSettings, ISET, FILE_TYPE, defaultPageSettings,
-  CUSTOM_FONT, UPDATE_RESTART_MSG, morePrintSettings, calculationSettings, PAY_METHOD,
-  MAX_ITEM_WIDTH, COMPANY_NAME, footerPrintSettings,
+  currency, getFromStorage, getProducts, updatePrinterList,
+} from '../services/dbService'
+import {
+  getAppVersion, getDefPrinter, getFileBuffer, isValidPath, printIt,
+} from '../services/nodeService'
+import {
+  calculationSettings,
+  COMPANY_NAME, CUSTOM_FONT, DATE, defaultPageSettings, defaultPrintSettings, FILE_TYPE,
+
+  footerPrintSettings, ISET,
+
+  MAX_ITEM_WIDTH, morePrintSettings, PAY_METHOD, PREVIEW, PRINT,
 } from './constants'
 import { getBoolFromString } from './utils'
 
 // eslint-disable-next-line global-require
-const { ipcRenderer } = require('electron')
-
-const getFromStorage = (key, type) => {
-  const value = localStorage[key]
-  if (type === 'num') {
-    const intVal = parseInt(value, 10)
-    return isNaN(intVal) ? 1 : intVal
-  }
-  if (type === 'json') {
-    return JSON.parse(value)
-  }
-  return getBoolFromString(value)
-}
-
-const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((type) => ({
-  key: type.trim(),
-  text: type.trim(),
-})) || []
-
-const currency = (val, format) => {
-  const parsedCurrency = isNaN(parseFloat(val))
-    ? 0 : Math.round(parseFloat(val) * 100) / 100
-
-  return format ? `${getFromStorage('currency') || ''} ${new Intl.NumberFormat('en-IN', {
-    currency: 'INR',
-  }).format(parsedCurrency)}` : parsedCurrency
-}
-
-const printerList = async () => {
-  const list = await ipcRenderer.invoke('get-printers')
-  const getIcon = (name) => {
-    if (name.includes('Fax')) return 'fax'
-    if (name.includes('to PDF')) return 'pdf'
-    if (name.includes('OneNote')) return 'OneNoteLogo16'
-    if (name.includes('Cloud')) return 'Cloud'
-    return 'print'
-  }
-  return list.map((key) => ({
-    key,
-    text: key,
-    canCheck: true,
-    iconProps: { iconName: getIcon(key) },
-  }))
-}
-
-const updatePrinterList = async () => {
-  localStorage.printers = JSON.stringify(await printerList())
-}
 
 const initializeSettings = async () => {
   localStorage.companyName = localStorage.companyName ?? COMPANY_NAME
@@ -74,7 +35,7 @@ const initializeSettings = async () => {
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
 
-  localStorage.printer = localStorage.printer ?? await ipcRenderer.invoke('get-def-printer')
+  localStorage.printer = localStorage.printer ?? await getDefPrinter()
   localStorage.morePrintSettings = JSON.stringify({
     ...morePrintSettings,
     ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
@@ -87,16 +48,12 @@ const initializeSettings = async () => {
     ...calculationSettings,
     ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
   })
-  localStorage.version = await ipcRenderer.invoke('app_version')
+  localStorage.version = await getAppVersion()
   localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
   await updatePrinterList()
 }
 
-const printPDF = (pdfBytes) => ipcRenderer.invoke('print-it', pdfBytes, getFromStorage('printer'))
-
-const toggleFullScreen = () => {
-  ipcRenderer.send('toggle-fullscreen')
-}
+const printPDF = (pdfBytes) => printIt(pdfBytes, getFromStorage('printer'))
 
 const getInvoiceDate = (date) => {
   const options = {
@@ -109,52 +66,15 @@ const getInvoiceDate = (date) => {
     : `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
 }
 
-const setProduct = (product) => {
-  let editing = false
-  const products = (getFromStorage('products', 'json') || []).map((p) => {
-    if (p.id === product.id) {
-      editing = true
-      return product
-    }
-    return p
-  })
-
-  if (!editing) products.push(product)
-
-  localStorage.setItem('products', JSON.stringify(products))
-}
-
-const setProducts = (newProducts, replace) => {
-  const products = (getFromStorage('products', 'json') || [])
-  localStorage.setItem('products', JSON.stringify(replace ? newProducts : [...products, ...newProducts]))
-}
-
-const deleteProducts = (ids) => {
-  const products = (getFromStorage('products', 'json') || []).filter((p) => !ids.includes(p.id))
-  localStorage.setItem('products', JSON.stringify(products))
-}
-
-const getProducts = (id) => {
-  const productsString = localStorage.getItem('products')
-  const products = productsString ? JSON.parse(productsString) : []
-  if (!id) {
-    return products
-  }
-  const [product] = products.filter((p) => p.id === id)
-  return product
-}
-
 const getInvoiceSettings = (type = ISET.MAIN) => {
   const invoiceSettings = localStorage.getItem(type)
   return invoiceSettings ? JSON.parse(invoiceSettings) : []
 }
 
-const isValidPath = async (path) => path && ipcRenderer.invoke('is-valid', path)
-
 const getSelectFontBuffer = async () => {
   const selectedFont = getFromStorage(FILE_TYPE.FONT)
   return (selectedFont !== CUSTOM_FONT && isValidPath(selectedFont))
-    ? ipcRenderer.invoke('read-file-buffer', selectedFont)
+    ? getFileBuffer(selectedFont)
     : fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
 }
 
@@ -168,7 +88,7 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
     if (!legit) {
       return { error: 'Please fix Preview PDF Path in Settings' }
     }
-    const existingPdfBytes = await ipcRenderer.invoke('read-file-buffer', previewPath)
+    const existingPdfBytes = await getFileBuffer(previewPath)
     pdfDoc = await PDFDocument.load(existingPdfBytes)
   } else {
     pdfDoc = await PDFDocument.create()
@@ -388,38 +308,9 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   return pdfDoc.save()
 }
 
-ipcRenderer.on('updateDownloaded', (_event, info) => {
-  const notification = document.getElementById('notification')
-  const message = document.getElementById('message')
-  const restartButton = document.getElementById('restart-button')
-  if (message) message.innerText = UPDATE_RESTART_MSG
-  restartButton.classList.remove('hidden')
-  localStorage.version = info.version
-  notification.parentElement.parentElement.parentElement.classList.remove('hidden')
-})
-
-ipcRenderer.on('message', (_event, msg) => {
-  const notification = document.getElementById('notification')
-  const message = document.getElementById('message')
-  if (message) message.innerText = msg
-  if (notification) notification.parentElement.parentElement.parentElement.classList.remove('hidden')
-})
-
-const quitApp = () => {
-  ipcRenderer.send('bye-bye')
-}
-
-const minimizeApp = () => {
-  ipcRenderer.send('shut-up')
-}
-
 const closeNotification = () => {
   const n = document.getElementById('notification')
   n.parentElement.parentElement.parentElement.classList.add('hidden')
-}
-
-const restartApp = () => {
-  ipcRenderer.send('restart_app')
 }
 
 const resetSettings = () => {
@@ -431,24 +322,11 @@ const resetSettings = () => {
 }
 
 export {
-  getFromStorage,
   initializeSettings,
   printPDF,
   getInvoiceDate,
-  setProduct,
-  setProducts,
-  deleteProducts,
-  getProducts,
   getPdf,
-  getProductTypes,
   getInvoiceSettings,
-  currency,
   closeNotification,
-  restartApp,
-  quitApp,
-  minimizeApp,
   resetSettings,
-  updatePrinterList,
-  isValidPath,
-  toggleFullScreen,
 }
