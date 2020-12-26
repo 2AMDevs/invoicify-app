@@ -7,7 +7,7 @@ import {
 } from 'office-ui-fabric-react'
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 
-import { getProductTypes, setProduct } from '../../services/dbService'
+import { getProductTypes, upsertProduct } from '../../services/dbService'
 import { generateUuid4 } from '../../utils/utils'
 import './index.scss'
 
@@ -31,7 +31,7 @@ const ProductForm = ({
 
   const saveForm = () => {
     const id = product?.id ?? generateUuid4()
-    setProduct({
+    upsertProduct({
       name, id, type, price,
     })
     if (fetchItems) fetchItems()

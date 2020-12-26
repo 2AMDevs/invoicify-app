@@ -4,9 +4,10 @@ import { getPrintersList } from './nodeService'
 
 /**
  * @param {string} key Name of DB key to access
- * @param {string} type Type of DB attribute (num | json).
+ * @param {string} [type] Type of DB attribute (num | json).
  * String and bool-strings handled automatically
- * @returns returnValue
+ * @returns returns the value of key from DB casted to
+ * type specified
  */
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
@@ -21,11 +22,26 @@ const getFromStorage = (key, type) => {
   return getBoolFromString(value)
 }
 
+/**
+ * @returns Return Parsed Array of Products from DB
+ */
+const getProductsJSON = () => getFromStorage('products', 'json') || []
+
+/**
+ * @returns Fetches Product Type Array String from DB
+ * and converts it into usable key, text object
+ */
 const getProductTypes = () => getFromStorage('productType')?.split(',')?.map((type) => ({
   key: type.trim(),
   text: type.trim(),
 })) || []
 
+/**
+ * @param {string} val Name of DB key to access
+ * @param {boolean} [format] Flag on whether or not to format the amount.
+ * @returns String containing Currency Symbol as per DB
+ * then number formatted as per Indian Currency standard
+ */
 const currency = (val, format) => {
   const parsedCurrency = isNaN(parseFloat(val))
     ? 0 : Math.round(parseFloat(val) * 100) / 100
@@ -35,37 +51,55 @@ const currency = (val, format) => {
   }).format(parsedCurrency)}` : parsedCurrency
 }
 
-const setProduct = (product) => {
-  let editing = false
-  const products = (getFromStorage('products', 'json') || []).map((p) => {
-    if (p.id === product.id) {
-      editing = true
-      return product
-    }
-    return p
-  })
-
-  if (!editing) products.push(product)
-
-  localStorage.setItem('products', JSON.stringify(products))
-}
-
+/**
+ * Adds/Replace Array of Products in DB
+ * @param {Array} newProducts Array of Product Objects
+ * @param {boolean} [replace] Flag indicating whether to replace all.
+ */
 const setProducts = (newProducts, replace) => {
-  const products = (getFromStorage('products', 'json') || [])
+  const products = (getProductsJSON())
   localStorage.setItem('products',
     JSON.stringify(replace
       ? newProducts
       : [...products, ...newProducts]))
 }
 
-const deleteProducts = (ids) => {
-  const products = (getFromStorage('products', 'json') || [])
-    .filter((p) => !ids.includes(p.id))
-  localStorage.setItem('products', JSON.stringify(products))
+/**
+ * Alters the Product with same ID or
+ * inserts a new one if doesn't exist
+ * @param {object} product Product Object to be added in DB
+ */
+const upsertProduct = (product) => {
+  const products = getProductsJSON()
+  const target = products
+    .findIndex((p) => p.id === product.id)
+
+  if (target !== -1) {
+    products[target] = product
+  }
+
+  setProducts(products, true)
 }
 
+/**
+ * Deletes Product with id in ids array from DB
+ * @param {Array} ids Array of Product IDs
+ */
+const deleteProducts = (ids) => {
+  const products = (getProductsJSON())
+    .filter((p) => !ids.includes(p.id))
+  setProducts(products, true)
+}
+
+/**
+ * Returns Product with id if `id` is given
+ * else returns Array of all Products
+ * @param {string} [id] id of Product to be fetched
+ * @returns Single Product with id as `id` or
+ * array of Products
+ */
 const getProducts = (id) => {
-  const products = getFromStorage('products', 'json') || []
+  const products = getProductsJSON()
   if (!id) {
     return products
   }
@@ -73,6 +107,13 @@ const getProducts = (id) => {
   return product
 }
 
+/**
+ * @async
+ * Fetches Printers from Client PC and modifies
+ * the list so that we can use it to render options
+ * @returns Array of Fabric UI Friendly Objects
+ * helping in rendering Printer Options
+ */
 const printerList = async () => {
   const list = await getPrintersList()
   const getIcon = (name) => {
@@ -90,11 +131,15 @@ const printerList = async () => {
   }))
 }
 
+/**
+ * @async
+ * Sets the Printers List to DB
+ */
 const updatePrinterList = async () => {
   localStorage.printers = JSON.stringify(await printerList())
 }
 
 export {
   getFromStorage, getProductTypes, currency,
-  setProducts, setProduct, deleteProducts, getProducts, updatePrinterList,
+  setProducts, upsertProduct, deleteProducts, getProducts, updatePrinterList,
 }
