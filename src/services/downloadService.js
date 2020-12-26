@@ -2,26 +2,22 @@ import { UPDATE_RESTART_MSG } from '../utils/constants'
 
 const { ipcRenderer } = require('electron')
 
+const notification = document.querySelector('.header-container__update-notification')
+const message = document.getElementById('message')
+
 ipcRenderer.on('updateDownloaded', (_event, info) => {
-  const notification = document.getElementById('notification')
-  const message = document.getElementById('message')
   const restartButton = document.getElementById('restart-button')
   if (message) message.innerText = UPDATE_RESTART_MSG
-  restartButton.classList.remove('hidden')
   localStorage.version = info.version
-  notification.parentElement.parentElement.parentElement.classList.remove('hidden')
+  restartButton.classList.remove('hidden')
+  notification.classList.remove('hidden')
 })
 
 ipcRenderer.on('message', (_event, msg) => {
-  const notification = document.getElementById('notification')
-  const message = document.getElementById('message')
   if (message) message.innerText = msg
-  if (notification) notification.parentElement.parentElement.parentElement.classList.remove('hidden')
+  if (notification) notification.classList.remove('hidden')
 })
 
-const closeNotification = () => {
-  const n = document.getElementById('notification')
-  n.parentElement.parentElement.parentElement.classList.add('hidden')
-}
+const closeNotification = () => notification.classList.add('hidden')
 
 export default closeNotification
