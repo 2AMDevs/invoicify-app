@@ -1,3 +1,9 @@
+/* eslint-disable no-restricted-globals */
+/**
+ * @param {string} value Suspect boolean string
+ * @returns boolean value if string is correct
+ * or the string itself
+ */
 const getBoolFromString = (value) => {
   switch (value) {
   case 'true':
@@ -9,6 +15,9 @@ const getBoolFromString = (value) => {
   }
 }
 
+/**
+ * @returns Generates an UUID of format below
+ */
 const generateUuid4 = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
   // eslint-disable-next-line no-bitwise
   const r = Math.random() * 16 | 0
@@ -23,10 +32,17 @@ const groupBy = (array, key) => array.reduce((result, currentValue) => {
   return result
 }, {})
 
+/**
+ * @param {string} string String to be transformed
+ * @returns Title Cased String
+ */
 const titleCase = (string) => string.replace(/([A-Z])/g, ' $1')
   .replace(/^./, (str) => str.toUpperCase())
 
-// eslint-disable-next-line no-restricted-globals
+/**
+ * @param {string} string Suspect Decimal Value
+ * @returns Decimal Value of Number type or 0
+ */
 const quantize = (val) => (isNaN(parseFloat(val))
   ? 0 : +val)
 

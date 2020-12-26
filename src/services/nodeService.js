@@ -1,20 +1,12 @@
 const { ipcRenderer } = require('electron')
 
-const toggleFullScreen = () => {
-  ipcRenderer.send('toggle-fullscreen')
-}
+const toggleFullScreen = () => ipcRenderer.send('toggle-fullscreen')
 
-const quitApp = () => {
-  ipcRenderer.send('bye-bye')
-}
+const quitApp = () => ipcRenderer.send('bye-bye')
 
-const minimizeApp = () => {
-  ipcRenderer.send('shut-up')
-}
+const minimizeApp = () => ipcRenderer.send('shut-up')
 
-const restartApp = () => {
-  ipcRenderer.send('restart_app')
-}
+const restartApp = () => ipcRenderer.send('restart_app')
 
 const getPrintersList = async () => ipcRenderer.invoke('get-printers')
 

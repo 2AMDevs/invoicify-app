@@ -2,6 +2,12 @@
 import { getBoolFromString } from '../utils/utils'
 import { getPrintersList } from './nodeService'
 
+/**
+ * @param {string} key Name of DB key to access
+ * @param {string} type Type of DB attribute (num | json).
+ * String and bool-strings handled automatically
+ * @returns returnValue
+ */
 const getFromStorage = (key, type) => {
   const value = localStorage[key]
   if (type === 'num') {
@@ -11,6 +17,7 @@ const getFromStorage = (key, type) => {
   if (type === 'json') {
     return JSON.parse(value)
   }
+
   return getBoolFromString(value)
 }
 
@@ -45,11 +52,15 @@ const setProduct = (product) => {
 
 const setProducts = (newProducts, replace) => {
   const products = (getFromStorage('products', 'json') || [])
-  localStorage.setItem('products', JSON.stringify(replace ? newProducts : [...products, ...newProducts]))
+  localStorage.setItem('products',
+    JSON.stringify(replace
+      ? newProducts
+      : [...products, ...newProducts]))
 }
 
 const deleteProducts = (ids) => {
-  const products = (getFromStorage('products', 'json') || []).filter((p) => !ids.includes(p.id))
+  const products = (getFromStorage('products', 'json') || [])
+    .filter((p) => !ids.includes(p.id))
   localStorage.setItem('products', JSON.stringify(products))
 }
 
