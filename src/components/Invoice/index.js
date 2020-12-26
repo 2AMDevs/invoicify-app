@@ -15,7 +15,7 @@ import { getInvoiceSettings } from '../../services/settingsService'
 import {
   DATE, defaultPrintSettings, ISET, MASKED, PAY_METHOD, PREVIEW, PRINT, ZERO,
 } from '../../utils/constants'
-import { generateUuid4, groupBy } from '../../utils/utils'
+import { makeHash, groupBy } from '../../utils/utils'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
@@ -259,7 +259,7 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const addNewInvoiceItem = () => {
-    const newItemId = generateUuid4()
+    const newItemId = makeHash()
     addInvoiceItem({
       id: newItemId,
       product: null,

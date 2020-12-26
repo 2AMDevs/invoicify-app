@@ -8,7 +8,7 @@ import { DirectionalHint, TooltipHost } from 'office-ui-fabric-react/lib/Tooltip
 
 import { setProducts } from '../../services/dbService'
 import { SELECT_FILE_TYPE } from '../../utils/constants'
-import { generateUuid4 } from '../../utils/utils'
+import { makeHash } from '../../utils/utils'
 import './index.scss'
 
 const dialogContentProps = {
@@ -44,7 +44,7 @@ const ImportProducts = ({ refreshProductItems }) => {
         name: item[0],
         type: item[1],
         price: item[2],
-        id: generateUuid4(),
+        id: makeHash(),
       }))
       if (newLocalProducts?.length) {
         setNewProducts(newLocalProducts)

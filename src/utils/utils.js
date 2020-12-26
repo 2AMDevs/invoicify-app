@@ -16,9 +16,9 @@ const getBoolFromString = (value) => {
 }
 
 /**
- * @returns Generates an UUID of format below
+ * @returns Generates an UUID (hash🍀)
  */
-const generateUuid4 = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+const makeHash = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
   // eslint-disable-next-line no-bitwise
   const r = Math.random() * 16 | 0
   // eslint-disable-next-line no-mixed-operators, no-bitwise
@@ -47,5 +47,5 @@ const quantize = (val) => (isNaN(parseFloat(val))
   ? 0 : +val)
 
 export {
-  getBoolFromString, generateUuid4, groupBy, titleCase, quantize,
+  getBoolFromString, makeHash, groupBy, titleCase, quantize,
 }
