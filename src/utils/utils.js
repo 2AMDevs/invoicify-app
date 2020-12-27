@@ -1,8 +1,7 @@
 /* eslint-disable no-restricted-globals */
 /**
  * @param {string} value Suspect boolean string
- * @returns boolean value if string is correct
- * or the string itself
+ * @return boolean value if string is correct or the string itself
  */
 const getBoolFromString = (value) => {
   switch (value) {
@@ -15,9 +14,7 @@ const getBoolFromString = (value) => {
   }
 }
 
-/**
- * @returns Generates an UUID (hash🍀)
- */
+/** @return Generates an UUID (hash🍀) */
 const makeHash = () => ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
   // eslint-disable-next-line no-bitwise
   const r = Math.random() * 16 | 0
@@ -41,7 +38,7 @@ const titleCase = (string) => string.replace(/([A-Z])/g, ' $1')
 
 /**
  * @param {string} string Suspect Decimal Value
- * @returns Decimal Value of Number type or 0
+ * @return Decimal Value of Number type or 0
  */
 const quantize = (val) => (isNaN(parseFloat(val))
   ? 0 : +val)
