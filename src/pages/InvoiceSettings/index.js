@@ -8,11 +8,12 @@ import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip'
 
+import { getFromStorage } from '../../services/dbService'
+import { getInvoiceSettings } from '../../services/settingsService'
 import {
-  fieldTypes, MASKED, ISET,
+  fieldTypes, ISET, MASKED,
 } from '../../utils/constants'
-import { getInvoiceSettings, titleCase, getFromStorage } from '../../utils/helper'
-
+import { titleCase } from '../../utils/utils'
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth

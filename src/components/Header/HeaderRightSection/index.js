@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton } from 'office-ui-fabric-react'
@@ -6,9 +6,8 @@ import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { useHistory } from 'react-router-dom'
 
 import { useAuthContext } from '../../../contexts'
-import {
-  minimizeApp, toggleFullScreen, quitApp, getProducts,
-} from '../../../utils/helper'
+import { getProducts } from '../../../services/dbService'
+import { minimizeApp, quitApp, toggleFullScreen } from '../../../services/nodeService'
 import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
 

@@ -2,15 +2,16 @@ import React, { useState } from 'react'
 
 import cn from 'classnames'
 import {
-  CommandBarButton, MessageBarButton, MessageBarType, MessageBar,
+  CommandBarButton, MessageBar, MessageBarButton, MessageBarType,
 } from 'office-ui-fabric-react'
 import { Text } from 'office-ui-fabric-react/lib/Text'
 import { Link } from 'react-router-dom'
 
 import { useAuthContext } from '../../contexts'
-import { getFromStorage, closeNotification, restartApp } from '../../utils/helper'
+import { getFromStorage } from '../../services/dbService'
+import closeNotification from '../../services/downloadService'
+import { restartApp } from '../../services/nodeService'
 import HeaderRightSection from './HeaderRightSection'
-
 import './index.scss'
 
 const Header = ({ className, ...restProps }) => {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -9,19 +9,18 @@ import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import { useInvoiceContext } from '../../contexts'
+import { currency, getFromStorage, getProducts } from '../../services/dbService'
+import { getPdf, printPDF } from '../../services/pdfService'
+import { getInvoiceSettings } from '../../services/settingsService'
 import {
-  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
+  DATE, defaultPrintSettings, ISET, MASKED, PAY_METHOD, PREVIEW, PRINT, ZERO,
 } from '../../utils/constants'
-import {
-  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency,
-  groupBy, generateUuid4, getProducts,
-} from '../../utils/helper'
+import { makeHash, groupBy } from '../../utils/utils'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 import InvoicePageFooter from '../InvoicePageFooter'
-
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -260,7 +259,7 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const addNewInvoiceItem = () => {
-    const newItemId = generateUuid4()
+    const newItemId = makeHash()
     addInvoiceItem({
       id: newItemId,
       product: null,

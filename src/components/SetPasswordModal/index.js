@@ -5,7 +5,7 @@ import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
-import { getFromStorage } from '../../utils/helper'
+import { getFromStorage } from '../../services/dbService'
 
 const dialogContentProps = {
   type: DialogType.largeHeader,

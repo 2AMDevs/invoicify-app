@@ -7,13 +7,14 @@ import {
   SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
 
+import { getProducts } from '../../services/dbService'
 import { invoiceItemsTableColumns, oldInvoiceItemsTableColumns } from '../../utils/constants'
-import { getProducts } from '../../utils/helper'
 import ListEmpty from '../ListEmpty'
-
 import './index.scss'
 
-const InvoiceItemsTable = ({ items, oldItemsTable, removeInvoiceItem, editInvoiceItem }) => {
+const InvoiceItemsTable = ({
+  items, oldItemsTable, removeInvoiceItem, editInvoiceItem,
+}) => {
   const actionColumn = {
     key: 'action-column',
     name: 'Actions',
