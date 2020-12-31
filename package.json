@@ -4,7 +4,7 @@
   "author": "2AM Devs",
   "description": "Digitalizes your billing process",
   "private": true,
-  "main": "./public/index.js",
+  "main": "./public/electron.js",
   "build": {
     "appId": "invoicify.2am",
     "publish": [
