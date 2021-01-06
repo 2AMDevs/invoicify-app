@@ -15,7 +15,7 @@ import { getInvoiceSettings } from '../../services/settingsService'
 import {
   DATE, defaultPrintSettings, ISET, MASKED, PAY_METHOD, PREVIEW, PRINT, ZERO,
 } from '../../utils/constants'
-import { makeHash, groupBy } from '../../utils/utils'
+import { makeHash, groupBy, incrementor } from '../../utils/utils'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
@@ -60,7 +60,7 @@ const Invoice = ({ showPdfPreview }) => {
 
     return {
       ...defaultInvoice,
-      'Invoice Number': getFromStorage('invoiceNumber', 'num'),
+      'Invoice Number': getFromStorage('invoiceNumber'),
       'Invoice Date': new Date(),
     }
   }
@@ -105,7 +105,7 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const moveAhead = () => {
-    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
+    localStorage.invoiceNumber = incrementor(invoice['Invoice Number'])
     resetForm()
   }
 
