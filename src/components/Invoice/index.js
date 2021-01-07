@@ -1,4 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react'
 
 import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton, DatePicker } from 'office-ui-fabric-react'
@@ -9,19 +11,18 @@ import { MaskedTextField, TextField } from 'office-ui-fabric-react/lib/TextField
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 import { useInvoiceContext } from '../../contexts'
+import { currency, getFromStorage, getProducts } from '../../services/dbService'
+import { getPdf, printPDF } from '../../services/pdfService'
+import { getInvoiceSettings } from '../../services/settingsService'
 import {
-  PREVIEW, PRINT, DATE, MASKED, ZERO, ISET, PAY_METHOD, defaultPrintSettings,
+  DATE, defaultPrintSettings, ISET, MASKED, PAY_METHOD, PREVIEW, PRINT, ZERO,
 } from '../../utils/constants'
-import {
-  getFromStorage, getPdf, getInvoiceSettings, printPDF, currency,
-  groupBy, generateUuid4, getProducts,
-} from '../../utils/helper'
+import { makeHash, groupBy, incrementor } from '../../utils/utils'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
 import InvoiceItemsTable from '../InvoiceItemsTable'
 import InvoicePageFooter from '../InvoicePageFooter'
-
 import './index.scss'
 
 const deviceWidth = document.documentElement.clientWidth
@@ -39,6 +40,11 @@ const PdfPathError = {
 
 const Invoice = ({ showPdfPreview }) => {
   const [invoiceState, updateInvoiceState] = useInvoiceContext()
+
+  const stableInvoiceUpdate = useCallback(
+    updateInvoiceState,
+    [],
+  )
 
   const [invoiceItems, setInvoiceItems] = useState(invoiceState.invoiceItems ?? [])
   const [isInvoiceItemFormOpen, setIsInvoiceItemFormOpen] = useState(false)
@@ -61,7 +67,7 @@ const Invoice = ({ showPdfPreview }) => {
 
     return {
       ...defaultInvoice,
-      'Invoice Number': getFromStorage('invoiceNumber', 'num'),
+      'Invoice Number': getFromStorage('invoiceNumber'),
       'Invoice Date': new Date(),
     }
   }
@@ -88,10 +94,10 @@ const Invoice = ({ showPdfPreview }) => {
   const [currentInvoiceItemIndex, setCurrentInvoiceItemIndex] = useState(null)
 
   useEffect(() => {
-    updateInvoiceState({
+    stableInvoiceUpdate({
       invoice, invoiceItems, invoiceFooter,
     })
-  }, [invoice, invoiceItems, invoiceFooter])
+  }, [invoice, invoiceItems, invoiceFooter, stableInvoiceUpdate])
 
   const hoverCard = useRef(null)
 
@@ -106,7 +112,7 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const moveAhead = () => {
-    localStorage.invoiceNumber = invoice['Invoice Number'] + 1
+    localStorage.invoiceNumber = incrementor(invoice['Invoice Number'])
     resetForm()
   }
 
@@ -260,7 +266,7 @@ const Invoice = ({ showPdfPreview }) => {
   }
 
   const addNewInvoiceItem = () => {
-    const newItemId = generateUuid4()
+    const newItemId = makeHash()
     addInvoiceItem({
       id: newItemId,
       product: null,

@@ -1,6 +1,6 @@
 {
   "name": "invoicify",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "author": "2AM Devs",
   "description": "Digitalizes your billing process",
   "private": true,
@@ -48,7 +48,7 @@
     "pdf-to-printer": "^1.4.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-pdf": "^4.2.0",
+    "react-pdf": "^5.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "read-excel-file": "^4.0.6"
@@ -90,6 +90,6 @@
     "electron-reload": "^1.5.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
-    "wait-on": "^5.0.1"
+    "wait-on": "^5.2.1"
   }
 }

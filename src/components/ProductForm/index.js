@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
 
 import {
-  Modal,
-  IconButton,
-  TextField,
-  DefaultButton,
-  Stack,
+  DefaultButton, IconButton, Modal,
+  Stack, TextField,
 } from 'office-ui-fabric-react'
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 
-import { setProduct, getProductTypes, generateUuid4 } from '../../utils/helper'
-
+import { getProductTypes, upsertProduct } from '../../services/dbService'
+import { makeHash } from '../../utils/utils'
 import './index.scss'
 
 const ProductForm = ({
@@ -32,8 +29,8 @@ const ProductForm = ({
   }
 
   const saveForm = () => {
-    const id = product?.id ?? generateUuid4()
-    setProduct({
+    const id = product?.id ?? makeHash()
+    upsertProduct({
       name, id, type, price,
     })
     if (fetchItems) fetchItems()

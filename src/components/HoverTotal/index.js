@@ -4,8 +4,7 @@ import { DefaultButton } from 'office-ui-fabric-react'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import { PAY_METHOD } from '../../utils/constants'
-import { titleCase } from '../../utils/helper'
-
+import { titleCase } from '../../utils/utils'
 import './index.scss'
 
 const HoverTotal = ({ hoverCard, invoiceFooter, updateInvoiceFooter }) => {

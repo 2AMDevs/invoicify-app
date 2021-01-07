@@ -11,8 +11,8 @@ import {
 import { Header } from './components'
 import { InvoiceStateProvider, AuthStateProvider } from './contexts'
 import { HomePage, InvoiceSettings } from './pages'
+import { initializeSettings } from './services/settingsService'
 import { darkThemePalette } from './utils/constants'
-import { initializeSettings } from './utils/helper'
 
 import './index.scss'
 

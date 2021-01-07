@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { FontIcon } from 'office-ui-fabric-react/lib/Icon'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import { useAuthContext } from '../../contexts'
-import { getFromStorage } from '../../utils/helper'
-
+import { getFromStorage } from '../../services/dbService'
 import './index.scss'
 
 const LockScreen = () => {

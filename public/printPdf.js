@@ -5,9 +5,22 @@ const path = require('path')
 
 const ptp = require('pdf-to-printer')
 
+/**
+ * returns list of printers present on device
+ */
 const getPrinters = async () => ptp.getPrinters()
+
+/**
+ * returns default printer
+ */
 const getDefaultPrinter = async () => ptp.getDefaultPrinter()
 
+/**
+ * Print pdfBytes with selectedPrinter
+ * @param {Uint8Array} pdfBytes PDF Content in Uint8 format
+ * @param {string} selectedPrinter Name of Printer selected
+ * @returns {boolean} true if printed successfully else false
+ */
 const print = async (pdfBytes, selectedPrinter) => {
   const printer = selectedPrinter ?? await getDefaultPrinter()
   const filePath = path.join(os.tmpdir(), 'print.pdf')

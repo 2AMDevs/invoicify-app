@@ -2,7 +2,7 @@ import React from 'react'
 
 import { DefaultButton } from 'office-ui-fabric-react'
 
-import { getFromStorage, updatePrinterList } from '../../utils/helper'
+import { getFromStorage, updatePrinterList } from '../../services/dbService'
 import './index.scss'
 
 class InvoicePageFooter extends React.Component {
