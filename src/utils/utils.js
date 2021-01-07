@@ -49,6 +49,15 @@ const quantize = (val) => (isNaN(parseFloat(val))
  * @borrows https://stackoverflow.com/a/51271494/7326407
  * @param {string} str String to be incremented. Eg: MKY42
  * @return String with incremented value (Eg: MKY43)
+ * @description works with these types of formats
+ * TEST01A06
+ * TEST-100-A100
+ * TEST0001B-101
+ * TEST001A100
+ * TEST001A91
+ * TEST1101
+ * TEST1010
+ * 1010
  */
 const incrementor = (str) => {
   const numPart = str.match(/(0?[1-9])+$|0?([1-9]+?0+)$/)[0]
