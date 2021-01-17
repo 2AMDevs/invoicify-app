@@ -3,4 +3,17 @@
     width: 60rem;
     min-width: 60rem;
   }
+
+  &__email-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    &__input {
+      flex: 1;
+    }
+    &__submit-btn {
+      margin-left: 2rem;
+    }
+  }
 }

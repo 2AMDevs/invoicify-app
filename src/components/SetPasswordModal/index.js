@@ -7,6 +7,7 @@ import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import { createUser } from '../../services/apiService'
 import { getFromStorage } from '../../services/dbService'
+import { validateEmail } from '../../utils/utils'
 
 import './index.scss'
 
@@ -19,9 +20,9 @@ const dialogContentProps = {
 const SetPassword = ({ hideDialog, setHideDialog }) => {
   const labelId = useId('changePassword')
   /** State */
-  const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setnewPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [isEmailVerified, setIsEmailVerified] = useState(false)
 
   const modalProps = React.useMemo(
     () => ({
@@ -37,13 +38,17 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
     setHideDialog(true)
   }
 
-  const submitEmail = (email) => {
+  const submitEmail = () => {
+    if (!email) return
+
     const name = getFromStorage('companyName')
     createUser(name, email).then((res) => {
-      console.log(res)
-      // localStorage.email = email
-    }).catch((e) => {
-      console.log(e)
+      if (res.status === 201 || res.status === 200) {
+        localStorage.email = res.data.data.email
+      }
+    }).catch(() => {
+      setEmail('')
+      setIsEmailVerified(false)
     })
   }
 
@@ -54,36 +59,35 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
       dialogContentProps={dialogContentProps}
       modalProps={modalProps}
     >
-      <div className="set-password-modal__fields">
+      <div className="set-password-modal__email-row">
         <TextField
+          className="set-password-modal__email-row__input"
           label="E-mail"
           type="email"
           value={email}
           onChange={(_e, val) => setEmail(val)}
         />
-        {getFromStorage('password').length ? (
-          <TextField
-            label="Old Password"
-            iconProps={{ iconName: 'Hide3' }}
-            type="password"
-            value={oldPassword}
-            onChange={(_e, val) => setOldPassword(val)}
-          />
-        ) : ''}
-        <TextField
-          label="New Password"
-          iconProps={{ iconName: 'Hide3' }}
-          type="password"
-          value={newPassword}
-          disabled={oldPassword !== getFromStorage('password')}
-          onChange={(_e, val) => setnewPassword(val)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              changePassword()
-            }
-          }}
+        <DefaultButton
+          className="set-password-modal__email-row__submit-btn"
+          text="Verify email"
+          primary
+          disabled={!validateEmail(email)}
+          onClick={submitEmail}
         />
       </div>
+      <TextField
+        label="New Password"
+        iconProps={{ iconName: 'Hide3' }}
+        type="password"
+        value={newPassword}
+        disabled={!isEmailVerified}
+        onChange={(_e, val) => setnewPassword(val)}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            changePassword()
+          }
+        }}
+      />
       <DialogFooter>
         <PrimaryButton
           onClick={() => changePassword()}
