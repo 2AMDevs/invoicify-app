@@ -6,6 +6,7 @@ import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dia
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import { getFromStorage } from '../../services/dbService'
+import { createUser } from '../../services/apiService'
 
 const dialogContentProps = {
   type: DialogType.largeHeader,
@@ -17,6 +18,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
   const labelId = useId('changePassword')
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setnewPassword] = useState('')
+  createUser()
 
   const modalProps = React.useMemo(
     () => ({
