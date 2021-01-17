@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-const createUser = () => {
-  console.log(process.env.REACT_APP_API_URL)
-  // axios.post()
+const createUser = (name, email) => {
+  const url = `${process.env.REACT_APP_API_URL}/users`
+  return axios.post(url, { name, email })
 }
 
 export { createUser }
