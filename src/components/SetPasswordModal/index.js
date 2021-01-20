@@ -5,7 +5,7 @@ import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
-import { createUser } from '../../services/apiService'
+import { createUser, verifyOtp } from '../../services/apiService'
 import { getFromStorage } from '../../services/dbService'
 import { validateEmail } from '../../utils/utils'
 
@@ -22,6 +22,8 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
   /** State */
   const [newPassword, setnewPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [otp, setOtp] = useState('')
+  const [sessionId, setSessionId] = useState('')
   const [emailError, setEmailError] = useState('')
   const [isEmailVerified, setIsEmailVerified] = useState(false)
 
@@ -41,7 +43,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
 
   const emailVerificationError = (error) => {
     setIsEmailVerified(false)
-    setEmailError(error.message || 'Something went wrong')
+    setEmailError(error ? error.message : 'Something went wrong')
   }
 
   const submitEmail = () => {
@@ -49,13 +51,30 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
 
     const name = getFromStorage('companyName')
     createUser(name, email).then((res) => {
-      if (res.status === 201 || res.status === 200) {
-        localStorage.email = res.data.data.email
+      if (res.status === 'OK') {
+        localStorage.email = res.data.email
+        setSessionId(res.data.sessionId)
       } else {
         emailVerificationError(res.error)
       }
     }).catch((e) => {
       emailVerificationError(e)
+    })
+  }
+
+  const submitOtp = () => {
+    if (!email || !sessionId || !otp) return
+
+    verifyOtp(email, otp, sessionId).then((res) => {
+      console.log(res)
+      if (res.status === 'OK') {
+        setIsEmailVerified(true)
+      } else {
+        // emailVerificationError(res.error)
+      }
+    }).catch((e) => {
+      console.log(e)
+      // emailVerificationError(e)
     })
   }
 

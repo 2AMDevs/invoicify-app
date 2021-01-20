@@ -6,7 +6,6 @@
  */
 const createUser = (name, email) => {
   const url = `${process.env.REACT_APP_API_URL}/users`
-  // return axios.post(url, { name, email })
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -16,4 +15,24 @@ const createUser = (name, email) => {
   }).then((response) => response.json())
 }
 
-export { createUser }
+/**
+ * Verifies user email a user in the db
+ * @param {email} email used to set/reset password with OTP
+ * @param {otp} otp sent to the email
+ * @param {sessionId} sessionId of current session
+ * @returns {Promise}
+ */
+const verifyOtp = (email, otp, sessionId) => {
+  const url = `${process.env.REACT_APP_API_URL}/users/verify`
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, otp, sessionId }),
+  }).then((response) => response.json())
+}
+
+export {
+  createUser, verifyOtp,
+}
