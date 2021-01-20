@@ -22,6 +22,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
   /** State */
   const [newPassword, setnewPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
   const [isEmailVerified, setIsEmailVerified] = useState(false)
 
   const modalProps = React.useMemo(
@@ -38,6 +39,11 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
     setHideDialog(true)
   }
 
+  const emailVerificationError = (error) => {
+    setIsEmailVerified(false)
+    setEmailError(error.message || 'Something went wrong')
+  }
+
   const submitEmail = () => {
     if (!email) return
 
@@ -45,10 +51,11 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
     createUser(name, email).then((res) => {
       if (res.status === 201 || res.status === 200) {
         localStorage.email = res.data.data.email
+      } else {
+        emailVerificationError(res.error)
       }
-    }).catch(() => {
-      setEmail('')
-      setIsEmailVerified(false)
+    }).catch((e) => {
+      emailVerificationError(e)
     })
   }
 
@@ -65,7 +72,11 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
           label="E-mail"
           type="email"
           value={email}
-          onChange={(_e, val) => setEmail(val)}
+          errorMessage={emailError}
+          onChange={(_e, val) => {
+            setEmail(val)
+            setEmailError('')
+          }}
         />
         <DefaultButton
           className="set-password-modal__email-row__submit-btn"

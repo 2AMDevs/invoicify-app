@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 /**
  * Creates a user in the db
  * @param {string} name of the company or individual
@@ -8,7 +6,14 @@ import axios from 'axios'
  */
 const createUser = (name, email) => {
   const url = `${process.env.REACT_APP_API_URL}/users`
-  return axios.post(url, { name, email })
+  // return axios.post(url, { name, email })
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name, email }),
+  }).then((response) => response.json())
 }
 
 export { createUser }

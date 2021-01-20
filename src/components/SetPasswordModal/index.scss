@@ -7,13 +7,16 @@
   &__email-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
 
     &__input {
       flex: 1;
+      height: 8.1rem;
     }
+
     &__submit-btn {
       margin-left: 2rem;
+      margin-top: 0.5rem;
     }
   }
 }
