@@ -28,6 +28,9 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
   const [sessionId, setSessionId] = useState('')
   const [emailError, setEmailError] = useState('')
   const [isEmailVerified, setIsEmailVerified] = useState(false)
+  const [oldPass, setOldPass] = useState('')
+  const [oldPassVerified, setOldPassVerified] = useState(isForgotPasswordPage)
+  const [passwordErr, setPasswordErr] = useState('')
 
   const modalProps = React.useMemo(
     () => ({
@@ -90,13 +93,41 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
       {window.navigator.onLine
         ? (
           <>
+            {!isForgotPasswordPage && (
+              <div className="set-password-modal__email-row">
+                <TextField
+                  className="set-password-modal__email-row__input"
+                  label="Current Password"
+                  placeholder="Leave empty if no password is set"
+                  canRevealPassword
+                  type="password"
+                  value={oldPass}
+                  errorMessage={passwordErr}
+                  disabled={oldPassVerified}
+                  onChange={(_e, val) => {
+                    setOldPass(val)
+                  }}
+                />
+                <DefaultButton
+                  className="set-password-modal__email-row__submit-btn"
+                  text={oldPassVerified ? 'Verified' : 'Verify'}
+                  primary
+                  disabled={oldPassVerified}
+                  onClick={() => {
+                    const verified = oldPass === getFromStorage('password')
+                    setOldPassVerified(verified)
+                    setPasswordErr(verified ? '' : 'Password did not match')
+                  }}
+                />
+              </div>
+            )}
             <div className="set-password-modal__email-row">
               <TextField
                 className="set-password-modal__email-row__input"
                 label="E-mail"
                 type="email"
                 value={email}
-                disabled={isForgotPasswordPage}
+                disabled={isForgotPasswordPage || !oldPassVerified}
                 errorMessage={emailError}
                 onChange={(_e, val) => {
                   setEmail(val)
@@ -110,7 +141,7 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
                 className="set-password-modal__email-row__submit-btn"
                 text={isForgotPasswordPage ? 'Send OTP' : 'Verify Email'}
                 primary
-                disabled={!validateEmail(email) || otpSent}
+                disabled={!validateEmail(email) || otpSent || !oldPassVerified || isEmailVerified}
                 onClick={submitEmail}
               />
             </div>
