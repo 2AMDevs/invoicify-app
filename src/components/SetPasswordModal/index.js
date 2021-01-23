@@ -17,13 +17,14 @@ const dialogContentProps = {
   closeButtonAriaLabel: 'Close',
 }
 
-const SetPassword = ({ hideDialog, setHideDialog }) => {
+const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
   const labelId = useId('changePassword')
   /** State */
   const [newPassword, setnewPassword] = useState('')
   const [email, setEmail] = useState(localStorage.email)
   const [otpSent, setOtpSent] = useState(false)
   const [otp, setOtp] = useState('')
+  const [otpError, setOtpError] = useState('')
   const [sessionId, setSessionId] = useState('')
   const [emailError, setEmailError] = useState('')
   const [isEmailVerified, setIsEmailVerified] = useState(false)
@@ -56,6 +57,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
         localStorage.email = res.data.email
         setSessionId(res.data.sessionId)
         setOtpSent(true)
+        setOtpError('')
       } else {
         emailVerificationError(res.error)
       }
@@ -68,17 +70,14 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
     if (!email || !sessionId || !otp) return
 
     verifyOtp(email, otp, sessionId).then((res) => {
-      console.log(res)
       if (res.status === 'OK') {
         setIsEmailVerified(true)
         setOtpSent(false)
+        setOtpError('')
       } else {
-        // emailVerificationError(res.error)
+        setOtpError(res.error.message)
       }
-    }).catch((e) => {
-      console.log(e)
-      // emailVerificationError(e)
-    })
+    }).catch(() => setOtpError('An error occurred while verifying the otp'))
   }
 
   return (
@@ -94,11 +93,14 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
           label="E-mail"
           type="email"
           value={email}
+          disabled={isForgotPasswordPage}
           errorMessage={emailError}
           onChange={(_e, val) => {
             setEmail(val)
             setEmailError('')
             setOtpSent(false)
+            setOtp('')
+            setIsEmailVerified(false)
           }}
         />
         <DefaultButton
@@ -112,19 +114,21 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
       <div className="set-password-modal__email-row">
         <TextField
           className="set-password-modal__email-row__input"
-          label="one time password"
+          label="One Time Password"
           type="number"
           value={otp}
           disabled={!otpSent}
+          errorMessage={otpError}
           onChange={(_e, val) => {
             setOtp(val)
+            setOtpError('')
           }}
         />
         <DefaultButton
           className="set-password-modal__email-row__submit-btn"
           text="Verify otp"
           primary
-          disabled={otp.length !== 4}
+          disabled={otp.length !== 4 || isEmailVerified}
           onClick={submitOtp}
         />
       </div>
@@ -143,6 +147,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
       />
       <DialogFooter>
         <PrimaryButton
+          disabled={!isEmailVerified}
           onClick={() => changePassword()}
           text="Change Password"
         />
