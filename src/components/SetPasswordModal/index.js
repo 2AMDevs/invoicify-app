@@ -22,6 +22,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
   /** State */
   const [newPassword, setnewPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [otpSent, setOtpSent] = useState(false)
   const [otp, setOtp] = useState('')
   const [sessionId, setSessionId] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -54,6 +55,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
       if (res.status === 'OK') {
         localStorage.email = res.data.email
         setSessionId(res.data.sessionId)
+        setOtpSent(true)
       } else {
         emailVerificationError(res.error)
       }
@@ -95,6 +97,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
           onChange={(_e, val) => {
             setEmail(val)
             setEmailError('')
+            setOtpSent(false)
           }}
         />
         <DefaultButton
@@ -103,6 +106,25 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
           primary
           disabled={!validateEmail(email)}
           onClick={submitEmail}
+        />
+      </div>
+      <div className="set-password-modal__email-row">
+        <TextField
+          className="set-password-modal__email-row__input"
+          label="one time password"
+          type="number"
+          value={otp}
+          disabled={!otpSent}
+          onChange={(_e, val) => {
+            setOtp(val)
+          }}
+        />
+        <DefaultButton
+          className="set-password-modal__email-row__submit-btn"
+          text="Verify otp"
+          primary
+          disabled={otp.length !== 4}
+          onClick={submitOtp}
         />
       </div>
       <TextField
