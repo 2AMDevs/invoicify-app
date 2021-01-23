@@ -73,7 +73,16 @@ const incrementor = (str) => {
   return `${strPart}0${numPart.replace(/\d+$/, (n) => ++n)}`
 }
 
+/**
+ * Validates email with regex
+ * @param {string} email
+ */
+const validateEmail = (email) => {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
+}
+
 export {
   getBoolFromString, makeHash, groupBy,
-  titleCase, quantize, incrementor,
+  titleCase, quantize, incrementor, validateEmail,
 }
