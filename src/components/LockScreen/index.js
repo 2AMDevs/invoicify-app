@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
+import { DefaultButton } from 'office-ui-fabric-react'
 import { FontIcon } from 'office-ui-fabric-react/lib/Icon'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import { useAuthContext } from '../../contexts'
 import { getFromStorage } from '../../services/dbService'
+import SetPassword from '../SetPasswordModal'
+
 import './index.scss'
 
 const LockScreen = () => {
@@ -12,6 +15,7 @@ const LockScreen = () => {
   const [time, setTime] = useState(new Date())
   const [userInput, setUserInput] = useState('')
   const [errorMessage, setError] = useState('')
+  const [hidePasswordDialog, setHidePasswordDialog] = useState(true)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -66,6 +70,24 @@ const LockScreen = () => {
           onKeyPress={unlock}
           errorMessage={errorMessage}
         />
+        {localStorage.password && (
+          <>
+            <DefaultButton
+              text="Forgot Password?"
+              iconProps={{ iconName: 'Permissions' }}
+              primary
+              onClick={() => setHidePasswordDialog(false)}
+              styles={{ root: { width: '18rem', marginTop: '2rem' } }}
+            />
+            {!hidePasswordDialog && (
+              <SetPassword
+                isForgotPasswordPage
+                hideDialog={hidePasswordDialog}
+                setHideDialog={setHidePasswordDialog}
+              />
+            )}
+          </>
+        )}
       </div>
       <div className="lock-screen__clock animation-slide-up">
         <span className="row-flex">
