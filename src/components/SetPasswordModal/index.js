@@ -21,7 +21,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
   const labelId = useId('changePassword')
   /** State */
   const [newPassword, setnewPassword] = useState('')
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(localStorage.email)
   const [otpSent, setOtpSent] = useState(false)
   const [otp, setOtp] = useState('')
   const [sessionId, setSessionId] = useState('')
@@ -71,6 +71,7 @@ const SetPassword = ({ hideDialog, setHideDialog }) => {
       console.log(res)
       if (res.status === 'OK') {
         setIsEmailVerified(true)
+        setOtpSent(false)
       } else {
         // emailVerificationError(res.error)
       }
