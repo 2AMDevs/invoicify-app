@@ -5,10 +5,10 @@ import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
+import NoNet from '../../assets/no-net.mp4'
 import { createUser, verifyOtp } from '../../services/apiService'
 import { getFromStorage } from '../../services/dbService'
 import { validateEmail } from '../../utils/utils'
-
 import './index.scss'
 
 const dialogContentProps = {
@@ -87,65 +87,78 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
       dialogContentProps={dialogContentProps}
       modalProps={modalProps}
     >
-      <div className="set-password-modal__email-row">
-        <TextField
-          className="set-password-modal__email-row__input"
-          label="E-mail"
-          type="email"
-          value={email}
-          disabled={isForgotPasswordPage}
-          errorMessage={emailError}
-          onChange={(_e, val) => {
-            setEmail(val)
-            setEmailError('')
-            setOtpSent(false)
-            setOtp('')
-            setIsEmailVerified(false)
-          }}
-        />
-        <DefaultButton
-          className="set-password-modal__email-row__submit-btn"
-          text={isForgotPasswordPage ? 'Send OTP' : 'Verify Email'}
-          primary
-          disabled={!validateEmail(email) || otpSent}
-          onClick={submitEmail}
-        />
-      </div>
-      <div className="set-password-modal__email-row">
-        <TextField
-          className="set-password-modal__email-row__input"
-          label="One Time Password"
-          type="number"
-          placeholder={otpSent ? 'Enter OTP from Email' : ''}
-          value={otp}
-          disabled={!otpSent}
-          errorMessage={otpError}
-          onChange={(_e, val) => {
-            setOtp(val)
-            setOtpError('')
-          }}
-        />
-        <DefaultButton
-          className="set-password-modal__email-row__submit-btn"
-          text="Verify OTP"
-          primary
-          disabled={otp.length !== 4 || isEmailVerified}
-          onClick={submitOtp}
-        />
-      </div>
-      <TextField
-        label="New Password"
-        type="password"
-        canRevealPassword
-        value={newPassword}
-        disabled={!isEmailVerified}
-        onChange={(_e, val) => setnewPassword(val)}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') {
-            changePassword()
-          }
-        }}
-      />
+      {window.navigator.onLine
+        ? (
+          <>
+            <div className="set-password-modal__email-row">
+              <TextField
+                className="set-password-modal__email-row__input"
+                label="E-mail"
+                type="email"
+                value={email}
+                disabled={isForgotPasswordPage}
+                errorMessage={emailError}
+                onChange={(_e, val) => {
+                  setEmail(val)
+                  setEmailError('')
+                  setOtpSent(false)
+                  setOtp('')
+                  setIsEmailVerified(false)
+                }}
+              />
+              <DefaultButton
+                className="set-password-modal__email-row__submit-btn"
+                text={isForgotPasswordPage ? 'Send OTP' : 'Verify Email'}
+                primary
+                disabled={!validateEmail(email) || otpSent}
+                onClick={submitEmail}
+              />
+            </div>
+            <div className="set-password-modal__email-row">
+              <TextField
+                className="set-password-modal__email-row__input"
+                label="One Time Password"
+                type="number"
+                placeholder={otpSent ? 'Enter OTP from Email' : ''}
+                value={otp}
+                disabled={!otpSent}
+                errorMessage={otpError}
+                onChange={(_e, val) => {
+                  setOtp(val)
+                  setOtpError('')
+                }}
+              />
+              <DefaultButton
+                className="set-password-modal__email-row__submit-btn"
+                text="Verify OTP"
+                primary
+                disabled={otp.length !== 4 || isEmailVerified}
+                onClick={submitOtp}
+              />
+            </div>
+            <TextField
+              label="New Password"
+              type="password"
+              canRevealPassword
+              value={newPassword}
+              disabled={!isEmailVerified}
+              onChange={(_e, val) => setnewPassword(val)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  changePassword()
+                }
+              }}
+            />
+          </>
+        ) : (
+          <video
+            autoPlay
+            loop
+            muted
+            src={NoNet}
+            type="video/mp4"
+          />
+        )}
       <DialogFooter>
         <PrimaryButton
           disabled={!isEmailVerified}
