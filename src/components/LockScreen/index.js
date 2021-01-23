@@ -62,6 +62,7 @@ const LockScreen = () => {
         <TextField
           label="Enter Password (if not set simply press enter)"
           type="password"
+          canRevealPassword
           value={userInput}
           onChange={(_, val) => {
             setUserInput(val)

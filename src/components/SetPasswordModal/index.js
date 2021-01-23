@@ -105,9 +105,9 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
         />
         <DefaultButton
           className="set-password-modal__email-row__submit-btn"
-          text="Verify email"
+          text={isForgotPasswordPage ? 'Send OTP' : 'Verify Email'}
           primary
-          disabled={!validateEmail(email)}
+          disabled={!validateEmail(email) || otpSent}
           onClick={submitEmail}
         />
       </div>
@@ -116,6 +116,7 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
           className="set-password-modal__email-row__input"
           label="One Time Password"
           type="number"
+          placeholder={otpSent ? 'Enter OTP from Email' : ''}
           value={otp}
           disabled={!otpSent}
           errorMessage={otpError}
@@ -126,7 +127,7 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
         />
         <DefaultButton
           className="set-password-modal__email-row__submit-btn"
-          text="Verify otp"
+          text="Verify OTP"
           primary
           disabled={otp.length !== 4 || isEmailVerified}
           onClick={submitOtp}
@@ -134,8 +135,8 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
       </div>
       <TextField
         label="New Password"
-        iconProps={{ iconName: 'Hide3' }}
         type="password"
+        canRevealPassword
         value={newPassword}
         disabled={!isEmailVerified}
         onChange={(_e, val) => setnewPassword(val)}
