@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { DefaultButton } from 'office-ui-fabric-react'
+import { ActionButton } from 'office-ui-fabric-react'
 import { FontIcon } from 'office-ui-fabric-react/lib/Icon'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
@@ -72,7 +72,7 @@ const LockScreen = () => {
         />
         {localStorage.password && (
           <>
-            <DefaultButton
+            <ActionButton
               text="Forgot Password?"
               iconProps={{ iconName: 'Permissions' }}
               primary
