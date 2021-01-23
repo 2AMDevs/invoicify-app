@@ -44,8 +44,6 @@ const LockScreen = () => {
         />
       </div>
       <div className="lock-screen__items animation-slide-up">
-        {/* <p className="not-so-huge">{time.toDateString()}</p>
-        <p className="huge">{time.toLocaleTimeString()}</p> */}
         <br />
         <p className="okayish">
           Hey!
@@ -59,9 +57,10 @@ const LockScreen = () => {
           {getFromStorage('companyName')}
         </p>
         <br />
+        <p className="human-size">{localStorage.password ? 'Enter Password' : 'Press Enter'}</p>
         <TextField
-          label="Enter Password (if not set simply press enter)"
           type="password"
+          autoFocus
           canRevealPassword
           value={userInput}
           onChange={(_, val) => {
@@ -78,7 +77,7 @@ const LockScreen = () => {
               iconProps={{ iconName: 'Permissions' }}
               primary
               onClick={() => setHidePasswordDialog(false)}
-              styles={{ root: { width: '18rem', marginTop: '2rem' } }}
+              styles={{ root: { marginTop: '2rem' } }}
             />
             {!hidePasswordDialog && (
               <SetPassword
