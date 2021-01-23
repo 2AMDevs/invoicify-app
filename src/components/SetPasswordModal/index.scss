@@ -12,11 +12,13 @@
     &__input {
       flex: 1;
       height: 8.1rem;
+      max-width: 40rem;
     }
 
     &__submit-btn {
       margin-left: 2rem;
       margin-top: 0.8rem;
+      width: 15rem;
     }
   }
 }
