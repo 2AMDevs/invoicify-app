@@ -31,12 +31,14 @@ const PAY_METHOD = {
 const FILE_TYPE = {
   PDF: 'previewPDFUrl',
   FONT: 'customFont',
+  IMG: 'customLockBg',
 }
 
 const SELECT_FILE_TYPE = {
   EXCEL: { name: 'Spreadsheets', extensions: ['xlsx', 'xls'] },
   PDF: { name: 'PDF', extensions: ['pdf'] },
   FONT: { name: 'Fonts', extensions: ['ttf', 'otf'] },
+  IMG: { name: 'Pictures', extensions: ['png', 'jpeg', 'gif', 'jpg'] },
 }
 
 const MAX_ITEM_WIDTH = 117
