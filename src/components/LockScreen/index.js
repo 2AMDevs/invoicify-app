@@ -36,6 +36,10 @@ const LockScreen = () => {
   return (
     <div
       className="lock-screen animation-slide-down"
+      // @aashutoshrathi help
+      style={{
+        backgroundImage: `url(${getFromStorage('customLockBg')})`,
+      }}
     >
       <div className="lock-screen__hero-icn animation-scale-down">
         <FontIcon
