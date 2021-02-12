@@ -6,6 +6,7 @@ import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import { useAuthContext } from '../../contexts'
 import { getFromStorage } from '../../services/dbService'
+import { getB64File } from '../../services/nodeService'
 import SetPassword from '../SetPasswordModal'
 
 import './index.scss'
@@ -14,6 +15,7 @@ const LockScreen = () => {
   const [authState, updateAuthState] = useAuthContext()
   const [time, setTime] = useState(new Date())
   const [userInput, setUserInput] = useState('')
+  const [bgImg, setBgImg] = useState('')
   const [errorMessage, setError] = useState('')
   const [hidePasswordDialog, setHidePasswordDialog] = useState(true)
 
@@ -22,6 +24,10 @@ const LockScreen = () => {
       setTime(new Date())
     }, 1000)
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    getB64File(getFromStorage('customLockBg')).then((b64Img) => !bgImg && setBgImg(b64Img))
   }, [])
 
   const unlock = (event) => {
@@ -36,6 +42,7 @@ const LockScreen = () => {
   return (
     <div
       className="lock-screen animation-slide-down"
+      style={{ backgroundImage: `url(data:image/png;base64,${bgImg})` }}
     >
       <div className="lock-screen__hero-icn animation-scale-down">
         <FontIcon

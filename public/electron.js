@@ -85,10 +85,10 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-const getFilePath = async (fileFilters) => {
+const getFilePath = async (fileFilters, disableAllFiles = false) => {
   const filters = [
     ...(fileFilters || []),
-    { name: 'All Files', extensions: ['*'] },
+    ...(!disableAllFiles ? [{ name: 'All Files', extensions: ['*'] }] : []),
   ]
   const file = await dialog.showOpenDialog({ properties: ['openFile'], filters })
   if (file) {
@@ -109,7 +109,7 @@ ipcMain.on('shut-up', () => {
 })
 
 ipcMain.handle('app_version', () => app.getVersion())
-ipcMain.handle('select-file', (_event, args) => getFilePath([args]))
+ipcMain.handle('select-file', (_event, filters, disableAllFiles) => getFilePath([filters], disableAllFiles))
 ipcMain.handle('get-printers', getPrinters)
 ipcMain.handle('get-def-printer', getDefaultPrinter)
 ipcMain.handle('is-valid', (_event, args) => fs.existsSync(args))
@@ -125,6 +125,8 @@ ipcMain.handle('products-excel-to-json', async (_event, filters) => {
 })
 
 ipcMain.handle('read-file-buffer', async (_, filePath) => fs.readFileSync(filePath))
+
+ipcMain.handle('read-b64-file', async (_, filePath) => fs.readFileSync(filePath).toString('base64'))
 
 ipcMain.on('restart_app', () => {
   autoUpdater.quitAndInstall()

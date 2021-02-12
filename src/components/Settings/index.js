@@ -34,6 +34,7 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
   const [hindiDate, setHindiDate] = useState(getFromStorage('hindiDate'))
   const [showFullMonth, setShowFullMonth] = useState(getFromStorage('showFullMonth'))
   const [font, setFont] = useState(getFromStorage('customFont'))
+  const [bg, setBg] = useState(getFromStorage('customLockBg'))
   const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
   const [currency, setCurrency] = useState(getFromStorage('currency'))
   const [showAuthModal, setShowAuthModal] = useState(false)
@@ -88,13 +89,18 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
   }
 
   const fileSelected = async (type) => {
-    const filters = type === FILE_TYPE.PDF ? SELECT_FILE_TYPE.PDF : SELECT_FILE_TYPE.FONT
-    const path = await ipcRenderer.invoke('select-file', filters)
+    let filters = SELECT_FILE_TYPE.PDF
+    if (type === FILE_TYPE.FONT) filters = SELECT_FILE_TYPE.FONT
+    if (type === FILE_TYPE.IMG) filters = SELECT_FILE_TYPE.IMG
+
+    const path = await ipcRenderer.invoke('select-file', filters, true)
     if (path) {
       if (type === FILE_TYPE.PDF) {
         setPreviewBill(path)
       } else if (type === FILE_TYPE.FONT) {
         setFont(path)
+      } else if (type === FILE_TYPE.IMG) {
+        setBg(path)
       }
       localStorage.setItem(type, path)
     }
@@ -230,6 +236,25 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
             iconProps={{ iconName: 'Font' }}
             primary
             onClick={() => fileSelected(FILE_TYPE.FONT)}
+          />
+        </Stack>
+        <Stack
+          tokens={stackTokens}
+          horizontal
+        >
+          <TextField
+            className="invoice-page__path-input"
+            placeholder="Lock Screen Background"
+            disabled
+            description="Select Image to be shown in lock screen background"
+            value={bg}
+          />
+          <DefaultButton
+            className="invoice-page__select-btn"
+            text="Select Img"
+            iconProps={{ iconName: 'Picture' }}
+            primary
+            onClick={() => fileSelected(FILE_TYPE.IMG)}
           />
         </Stack>
         <DefaultButton
