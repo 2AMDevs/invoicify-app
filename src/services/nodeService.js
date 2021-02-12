@@ -37,6 +37,14 @@ const getFileBuffer = async (file) => ipcRenderer.invoke('read-file-buffer', fil
 
 /**
  * @async
+ * Reads File Content using Node and turns them in Base64
+ * @param {string} Path to File
+ * @return Base64 content of file
+ */
+const getB64File = async (file) => ipcRenderer.invoke('read-b64-file', file)
+
+/**
+ * @async
  * Fetches application version from App Context
  * @return String containing version of App (Eg: v0.4.2)
  */
@@ -60,5 +68,5 @@ const printIt = async (content, printer) => ipcRenderer.invoke('print-it', conte
 export {
   toggleFullScreen, quitApp, restartApp,
   minimizeApp, getPrintersList, isValidPath, getFileBuffer,
-  getAppVersion, getDefPrinter, printIt,
+  getAppVersion, getDefPrinter, printIt, getB64File,
 }
