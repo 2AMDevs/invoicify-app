@@ -16,6 +16,7 @@ const { ipcRenderer } = require('electron')
 const DownloadSection = () => {
   const [upGress, setUpdateProgress] = useState(getUpdateInfo()?.progress ?? '')
   const [updateInfo, setUpdateInfo] = useState(getUpdateInfo()?.info ?? '')
+  const [newVersion, setNewVersion] = useState(getUpdateInfo()?.info?.version ?? ' ')
 
   useEffect(() => {
     // const interval = setInterval(() => {
@@ -37,6 +38,7 @@ const DownloadSection = () => {
     ipcRenderer.on('updateDownloaded', (_e, info) => {
       setUpdateInfo(info)
       editUpdateInfo(info, 'info')
+      setNewVersion(`v${info.version} `)
     })
   }, [upGress])
 
@@ -60,7 +62,7 @@ const DownloadSection = () => {
               <>
                 <ProgressIndicator
                   label={`${upGress.percent === 100
-                    ? `${`🥳 v${updateInfo.version} Update Downloaded`}`
+                    ? `${`🥳 ${newVersion}Update Downloaded`}`
                     : 'Downloading Update ⏬'}`}
                   description={`📦 ${upGress.transferred}/${upGress.total} 🚀 (${upGress.speed}) `}
                   percentComplete={upGress.percent / 100}
