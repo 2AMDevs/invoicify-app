@@ -28,7 +28,7 @@ const LockScreen = () => {
 
   useEffect(() => {
     getB64File(getFromStorage('customLockBg')).then((b64Img) => !bgImg && setBgImg(b64Img))
-  }, [])
+  }, [bgImg])
 
   const unlock = (event) => {
     if (event.key === 'Enter') {

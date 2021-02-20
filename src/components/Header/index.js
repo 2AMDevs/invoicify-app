@@ -2,15 +2,13 @@ import React, { useState } from 'react'
 
 import cn from 'classnames'
 import {
-  CommandBarButton, MessageBar, MessageBarButton, MessageBarType,
+  CommandBarButton,
 } from 'office-ui-fabric-react'
 import { Text } from 'office-ui-fabric-react/lib/Text'
 import { Link } from 'react-router-dom'
 
 import { useAuthContext } from '../../contexts'
 import { getFromStorage } from '../../services/dbService'
-import closeNotification from '../../services/downloadService'
-import { restartApp } from '../../services/nodeService'
 import HeaderRightSection from './HeaderRightSection'
 import './index.scss'
 
@@ -21,33 +19,6 @@ const Header = ({ className, ...restProps }) => {
   const refreshCompanyName = () => setCompanyName(getFromStorage('companyName'))
   return (
     <div className="header-container">
-      <MessageBar
-        actions={(
-          <div>
-            <MessageBarButton
-              id="restart-button"
-              onClick={restartApp}
-              className="hidden"
-              type="submit"
-            >
-              Update & Restart
-            </MessageBarButton>
-            <MessageBarButton
-              id="close-button"
-              onClick={closeNotification}
-              type="submit"
-            >
-              Close
-            </MessageBarButton>
-          </div>
-        )}
-        messageBarType={MessageBarType.warning}
-        isMultiline={false}
-        id="notification"
-        className="hidden header-container__update-notification"
-      >
-        <p id="message" />
-      </MessageBar>
       <div
         className={cn('header', className)}
         {...restProps}

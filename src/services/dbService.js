@@ -16,7 +16,11 @@ const getFromStorage = (key, type) => {
     return isNaN(intVal) ? 1 : intVal
   }
   if (type === 'json') {
-    return JSON.parse(value)
+    try {
+      return JSON.parse(value)
+    } catch (e) {
+      return null
+    }
   }
 
   return getBoolFromString(value)
@@ -137,7 +141,30 @@ const updatePrinterList = async () => {
   localStorage.printers = JSON.stringify(await printerList())
 }
 
+/**
+ * Fetch Update Details from storage
+ * @return JSON Object with Update Details
+ */
+const getUpdateInfo = () => getFromStorage('updateInfo', 'json')
+
+/**
+ * Updates Update Object in Storage
+ * @param {Object} data, Object to be updated
+ * @param {string} [key], key to be updated
+ * @return JSON Object with Update Details
+ */
+const editUpdateInfo = (data, key) => {
+  let currentObj = getUpdateInfo() ?? {}
+  if (key) {
+    currentObj[key] = data
+  } else {
+    currentObj = data
+  }
+  localStorage.setItem('updateInfo', JSON.stringify(currentObj))
+}
+
 export {
   getFromStorage, getProductTypes, currency,
-  setProducts, upsertProduct, deleteProducts, getProducts, updatePrinterList,
+  setProducts, upsertProduct, deleteProducts, getProducts,
+  updatePrinterList, getUpdateInfo, editUpdateInfo,
 }

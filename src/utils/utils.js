@@ -82,7 +82,18 @@ const validateEmail = (email) => {
   return re.test(String(email).toLowerCase())
 }
 
+const getReadableSize = (size, speed = false) => {
+  let i = -1
+  const units = ['kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb', 'Zb', 'Yb']
+  do {
+    size /= 1024
+    i++
+  } while (size > 1024)
+  return `${Math.max(size, 0.1).toFixed(1)} ${units[i]}${(speed ? '/sec' : '')}`
+}
+
 export {
   getBoolFromString, makeHash, groupBy,
   titleCase, quantize, incrementor, validateEmail,
+  getReadableSize,
 }

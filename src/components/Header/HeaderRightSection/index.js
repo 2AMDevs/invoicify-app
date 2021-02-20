@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 
-import { useConstCallback } from '@uifabric/react-hooks'
 import { CommandBarButton } from 'office-ui-fabric-react'
 import { Panel } from 'office-ui-fabric-react/lib/Panel'
 import { useHistory } from 'react-router-dom'
@@ -10,6 +9,7 @@ import { getProducts } from '../../../services/dbService'
 import { minimizeApp, quitApp, toggleFullScreen } from '../../../services/nodeService'
 import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
+import UpdatesPanel from '../../UpdatePanel'
 
 const HeaderRightSection = ({ refreshCompanyName }) => {
   const history = useHistory()
@@ -21,13 +21,18 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  const openProductsPanel = useConstCallback(() => setIsProductsOpen(true))
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
 
-  const dismissProductsPanel = useConstCallback(() => setIsProductsOpen(false))
+  const openProductsPanel = useCallback(() => setIsProductsOpen(true), [])
 
-  const openSettingsPanel = useConstCallback(() => setIsSettingsOpen(true))
+  const dismissProductsPanel = useCallback(() => setIsProductsOpen(false), [])
 
-  const dismissSettingsPanel = useConstCallback(() => setIsSettingsOpen(false))
+  const openSettingsPanel = useCallback(() => setIsSettingsOpen(true), [])
+
+  const dismissSettingsPanel = useCallback(() => setIsSettingsOpen(false), [])
+
+  const openUpdatePanel = useCallback(() => setIsUpdateOpen(true), [])
+  const dismissUpdatePanel = useCallback(() => setIsUpdateOpen(false), [])
 
   const refreshProductsCount = () => {
     setProductsCount(getProducts().length || 0)
@@ -79,7 +84,9 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
       {localStorage.version && (
         <CommandBarButton
           className="header__link__btn"
+          iconProps={{ iconName: 'Subscribe' }}
           text={`v${localStorage.version}`}
+          onClick={openUpdatePanel}
         />
       )}
       <CommandBarButton
@@ -97,6 +104,16 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
         iconProps={{ iconName: 'ChromeClose' }}
         onClick={quitApp}
       />
+      <Panel
+        isLightDismiss
+        className="header__right-section__update-panel"
+        isOpen={isUpdateOpen}
+        onDismiss={dismissUpdatePanel}
+        closeButtonAriaLabel="Close"
+        headerText="Updates Info"
+      >
+        <UpdatesPanel tag={`v${localStorage.version}`} />
+      </Panel>
       <Panel
         isLightDismiss
         className="header__right-section__products-panel"
