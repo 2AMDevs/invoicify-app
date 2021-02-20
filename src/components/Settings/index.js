@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 
-import { DefaultButton } from 'office-ui-fabric-react'
+import { useId } from '@uifabric/react-hooks'
+import { DefaultButton, IconButton } from 'office-ui-fabric-react'
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner'
 import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
+import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip'
 
 import { getFromStorage } from '../../services/dbService'
 import { isValidPath } from '../../services/nodeService'
@@ -41,6 +43,10 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
   const [resetSettingsPasswordError, setResetSettingsPasswordError] = useState('')
   const [resetSettingsPassword, setResetSettingsPassword] = useState('')
   const [printBoth, setPrintBoth] = useState(getFromStorage('printBoth'))
+
+  const billTooltipId = useId('billTooltipId')
+  const fontTooltipId = useId('fontTooltipId')
+  const bgTooltipId = useId('bgTooltipId')
 
   useEffect(() => {
     // eslint-disable-next-line func-names
@@ -106,6 +112,18 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
     }
   }
 
+  const resetLocalStorageItem = (key) => {
+    if (key === FILE_TYPE.PDF) {
+      setPreviewBill('')
+    } else if (key === FILE_TYPE.FONT) {
+      setFont('')
+    } else if (key === FILE_TYPE.IMG) {
+      setBg('')
+    }
+
+    localStorage.setItem(key, '')
+  }
+
   const resetAndUpdate = () => {
     resetSettings()
   }
@@ -136,6 +154,7 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
       </div>
     )
   }
+
   return (
     <div className="settings animation-slide-up">
       <Stack
@@ -218,6 +237,19 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
             primary
             onClick={() => fileSelected(FILE_TYPE.PDF)}
           />
+          {previewBill && (
+            <TooltipHost
+              content="Clear Bill Path"
+              id={billTooltipId}
+            >
+              <IconButton
+                iconProps={{ iconName: 'RemoveFromTrash' }}
+                title="Clear Bill Path"
+                ariaLabel="Clear Bill Path"
+                onClick={() => resetLocalStorageItem(FILE_TYPE.PDF)}
+              />
+            </TooltipHost>
+          )}
         </Stack>
         <Stack
           tokens={stackTokens}
@@ -230,6 +262,7 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
             description="Select Indic Font TTF File, this will fallback to default if invalid path is found."
             value={font}
           />
+
           <DefaultButton
             className="invoice-page__select-btn"
             text="Select Font"
@@ -237,6 +270,19 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
             primary
             onClick={() => fileSelected(FILE_TYPE.FONT)}
           />
+          {font && (
+            <TooltipHost
+              content="Clear Font Path"
+              id={fontTooltipId}
+            >
+              <IconButton
+                iconProps={{ iconName: 'RemoveFromTrash' }}
+                title="Clear Font Path"
+                ariaLabel="Clear Font Path"
+                onClick={() => resetLocalStorageItem(FILE_TYPE.FONT)}
+              />
+            </TooltipHost>
+          )}
         </Stack>
         <Stack
           tokens={stackTokens}
@@ -256,6 +302,19 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
             primary
             onClick={() => fileSelected(FILE_TYPE.IMG)}
           />
+          {bg && (
+            <TooltipHost
+              content="Clear Background"
+              id={bgTooltipId}
+            >
+              <IconButton
+                iconProps={{ iconName: 'RemoveFromTrash' }}
+                title="Clear Background"
+                ariaLabel="Clear Background"
+                onClick={() => resetLocalStorageItem(FILE_TYPE.IMG)}
+              />
+            </TooltipHost>
+          )}
         </Stack>
         <DefaultButton
           text={`${getFromStorage('password').length ? 'Change' : 'Set'} Password`}
