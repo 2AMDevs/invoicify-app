@@ -12,6 +12,7 @@ import ProductForm from './ProductForm'
 import ProductsPage from './ProductsPage'
 import SetPassword from './SetPasswordModal'
 import Settings from './Settings'
+import UpdatePanel from './UpdatePanel'
 
 export {
   Alert,
@@ -28,4 +29,5 @@ export {
   HoverTotal,
   LockScreen,
   SetPassword,
+  UpdatePanel,
 }

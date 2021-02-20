@@ -9,6 +9,7 @@ import { getProducts } from '../../../services/dbService'
 import { minimizeApp, quitApp, toggleFullScreen } from '../../../services/nodeService'
 import ProductsPage from '../../ProductsPage'
 import Settings from '../../Settings'
+import UpdatesPanel from '../../UpdatePanel'
 
 const HeaderRightSection = ({ refreshCompanyName }) => {
   const history = useHistory()
@@ -106,16 +107,12 @@ const HeaderRightSection = ({ refreshCompanyName }) => {
       <Panel
         isLightDismiss
         className="header__right-section__update-panel"
-        headerClassName="header__right-section__settings-panel__header"
         isOpen={isUpdateOpen}
         onDismiss={dismissUpdatePanel}
         closeButtonAriaLabel="Close"
-        headerText="Updates Center"
+        headerText="Updates Info"
       >
-        Here Comes Update Details
-        Current version:
-        {' '}
-        {`v${localStorage.version}`}
+        <UpdatesPanel tag={`v${localStorage.version}`} />
       </Panel>
       <Panel
         isLightDismiss
