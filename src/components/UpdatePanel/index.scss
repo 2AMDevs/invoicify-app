@@ -21,3 +21,18 @@
     content: "\00a0  ";
   }
 }
+
+.update-card {
+    /* Parent background + Gaussian blur */
+    backdrop-filter: blur(0.9rem);
+    -webkit-backdrop-filter: blur(0.9rem);
+
+    /* Exclusion blend */
+    background-blend-mode: exclusion;
+
+    /* Color/tint overlay + Opacity */
+    background: rgba(68, 68, 68, 0.6);
+
+    padding: 1.2rem;
+
+}

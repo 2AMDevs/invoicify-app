@@ -35,6 +35,7 @@ const initializeSettings = async () => {
     ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
   })
   localStorage.version = await getAppVersion()
+  localStorage.updateInfo = ''
   localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
   await updatePrinterList()
 }
