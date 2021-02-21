@@ -61,8 +61,30 @@ const DownloadSection = () => {
             {!(upGress || updateInfo) && (
               <>
                 <Text>
+                  Your application is up to date!
+                  {' '}
+                  <span
+                    role="img"
+                    aria-label="cheers"
+                  >
+                    🥂
+                  </span>
+                  <br />
                   Hey! We are working hard to push next update.
+                  {' '}
+                  <span
+                    role="img"
+                    aria-label="hard-work"
+                  >
+                    💪🏻
+                  </span>
                   Thanks for checking!
+                  <span
+                    role="img"
+                    aria-label="Thanks"
+                  >
+                    🙌🏻
+                  </span>
                 </Text>
               </>
             )}
