@@ -10,7 +10,7 @@ const ReleaseNotes = ({ tag }) => {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     const getData = async () => {
-      const data = await fetch(`https://api.aashutosh.dev/invoicify-release/${tag}`)
+      const data = await fetch(`${process.env.RELEASE_NOTES_API}${tag}`)
       const jsonData = await data.json()
       // this is trick to get newline, yeah!
       jsonData.body.replace(/\r/gi, '  ')
