@@ -108,14 +108,14 @@ ipcMain.on('shut-up', () => {
   win.minimize()
 })
 
-ipcMain.handle('app_version', () => app.getVersion())
-ipcMain.handle('select-file', (_event, filters, disableAllFiles) => getFilePath([filters], disableAllFiles))
+ipcMain.handle('app:version', () => app.getVersion())
+ipcMain.handle('file:select', (_event, filters, disableAllFiles) => getFilePath([filters], disableAllFiles))
 ipcMain.handle('get-printers', getPrinters)
-ipcMain.handle('get-def-printer', getDefaultPrinter)
-ipcMain.handle('is-valid', (_event, args) => fs.existsSync(args))
-ipcMain.handle('print-it', async (_e, pdfBytes, selectedPrinter) => print(pdfBytes, selectedPrinter))
+ipcMain.handle('printers:get-default', getDefaultPrinter)
+ipcMain.handle('file:is-valid', (_event, args) => fs.existsSync(args))
+ipcMain.handle('printers:print', async (_e, pdfBytes, selectedPrinter) => print(pdfBytes, selectedPrinter))
 
-ipcMain.handle('products-excel-to-json', async (_event, filters) => {
+ipcMain.handle('file:excel-to-json', async (_event, filters) => {
   const file = await getFilePath([filters])
   if (file) {
     return readXlsxFile(file)
@@ -124,9 +124,9 @@ ipcMain.handle('products-excel-to-json', async (_event, filters) => {
   }
 })
 
-ipcMain.handle('read-file-buffer', async (_, filePath) => fs.readFileSync(filePath))
+ipcMain.handle('file:read-buffer', async (_, filePath) => fs.readFileSync(filePath))
 
-ipcMain.handle('read-b64-file', async (_, filePath) => fs.readFileSync(filePath).toString('base64'))
+ipcMain.handle('file:read-b64', async (_, filePath) => fs.readFileSync(filePath).toString('base64'))
 
 ipcMain.on('restart_app', () => {
   autoUpdater.quitAndInstall()

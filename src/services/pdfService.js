@@ -19,7 +19,7 @@ import { getInvoiceSettings } from './settingsService'
  */
 const getFontBuffer = async () => {
   const selectedFont = getFromStorage(FILE_TYPE.FONT)
-  return (selectedFont !== CUSTOM_FONT && isValidPath(selectedFont))
+  return (selectedFont !== CUSTOM_FONT && await isValidPath(selectedFont))
     ? getFileBuffer(selectedFont)
     : fetch(CUSTOM_FONT).then((res) => res.arrayBuffer())
 }

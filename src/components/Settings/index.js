@@ -99,7 +99,7 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
     if (type === FILE_TYPE.FONT) filters = SELECT_FILE_TYPE.FONT
     if (type === FILE_TYPE.IMG) filters = SELECT_FILE_TYPE.IMG
 
-    const path = await ipcRenderer.invoke('select-file', filters, true)
+    const path = await ipcRenderer.invoke('file:select', filters, true)
     if (path) {
       if (type === FILE_TYPE.PDF) {
         setPreviewBill(path)
