@@ -59,7 +59,10 @@ app.on('ready', () => {
 
   if (!isDev) {
     autoUpdater.setFeedURL({
-      provider: 'github', owner: process.env.OWNER, repo: process.env.REPO, token: process.env.GH_TOKEN,
+      provider: 'github',
+      owner: '2AMDevs',
+      repo: 'invoicify-app',
+      token: process.env.GH_TOKEN,
     })
     autoUpdater.checkForUpdates()
   }
