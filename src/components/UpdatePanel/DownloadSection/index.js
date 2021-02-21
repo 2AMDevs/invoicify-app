@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 import {
   Icon,
-  PrimaryButton, ProgressIndicator, Separator, Stack,
+  PrimaryButton, ProgressIndicator, Separator, Stack, Text,
 } from 'office-ui-fabric-react'
 
 import { editUpdateInfo, getUpdateInfo } from '../../../services/dbService'
@@ -19,8 +19,7 @@ const DownloadSection = () => {
   const [newVersion, setNewVersion] = useState(getUpdateInfo()?.info?.version ?? ' ')
 
   useEffect(() => {
-    // const interval = setInterval(() => {
-    ipcRenderer.on('updateProgress', (_e, progress) => {
+    ipcRenderer.on('update:progress', (_e, progress) => {
       const snapshot = {
         ...progress,
         transferred: getReadableSize(progress.transferred),
@@ -30,23 +29,24 @@ const DownloadSection = () => {
       setUpdateProgress(snapshot)
       editUpdateInfo(snapshot, 'progress')
     })
-    // }, 1000)
-    // return () => clearInterval(interval)
+
+    return () => ipcRenderer.removeListener('update:progress')
   }, [])
 
   useEffect(() => {
-    ipcRenderer.on('updateDownloaded', (_e, info) => {
+    ipcRenderer.on('update:downloaded', (_e, info) => {
       setUpdateInfo(info)
       editUpdateInfo(info, 'info')
       setNewVersion(`v${info.version} `)
     })
+
+    return () => ipcRenderer.removeListener('update:downloaded')
   }, [upGress])
 
   return (
     <>
-      {(upGress || updateInfo) ? (
+      { (
         <>
-          <br />
           <Stack>
             <Separator className="separator-stack">
               Downloads
@@ -58,6 +58,14 @@ const DownloadSection = () => {
           </Stack>
           <br />
           <div className="update-card">
+            {!(upGress || updateInfo) && (
+              <>
+                <Text>
+                  Hey! We are working hard to push next update.
+                  Thanks for checking!
+                </Text>
+              </>
+            )}
             {upGress && (
               <>
                 <ProgressIndicator
@@ -77,12 +85,12 @@ const DownloadSection = () => {
                   text="Restart & Apply Update"
                   onClick={restartApp}
                 />
+                <br />
               </div>
             )}
           </div>
-          <br />
         </>
-      ) : <></>}
+      )}
     </>
   )
 }

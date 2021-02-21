@@ -134,18 +134,18 @@ ipcMain.on('restart_app', () => {
 
 if (!isDev) {
   autoUpdater.on('update-available', (info) => {
-    win.webContents.send('updateAvailable', info)
+    win.webContents.send('update:available', info)
   })
 
   autoUpdater.on('update-not-available', (info) => {
-    win.webContents.send('updateNotAvailable', info)
+    win.webContents.send('update:notAvailable', info)
   })
 
   autoUpdater.on('download-progress', (progress) => {
-    win.webContents.send('updateProgress', progress)
+    win.webContents.send('update:progress', progress)
   })
 
   autoUpdater.on('update-downloaded', (info) => {
-    win.webContents.send('updateDownloaded', info)
+    win.webContents.send('update:downloaded', info)
   })
 }

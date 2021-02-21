@@ -19,6 +19,7 @@ const UpdatesPanel = ({ tag }) => (
         />
       </Separator>
     </Stack>
+    <br />
     <ReleaseNotes tag={tag} />
   </>
 )

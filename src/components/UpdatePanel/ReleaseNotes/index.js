@@ -34,7 +34,7 @@ const ReleaseNotes = ({ tag }) => {
 
   return (
     <div className="release-notes">
-      <div className="release-notes__body">
+      <div className="update-card">
         {(notes?.map((release) => (
           <div
             key={release.node_id}
