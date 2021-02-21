@@ -19,7 +19,7 @@ const DownloadSection = () => {
   const [newVersion, setNewVersion] = useState(getUpdateInfo()?.info?.version ?? ' ')
 
   useEffect(() => {
-    ipcRenderer.on('update:progress', (_e, progress) => {
+    const progressHandler = (_e, progress) => {
       const snapshot = {
         ...progress,
         transferred: getReadableSize(progress.transferred),
@@ -28,19 +28,19 @@ const DownloadSection = () => {
       }
       setUpdateProgress(snapshot)
       editUpdateInfo(snapshot, 'progress')
-    })
-
-    return () => ipcRenderer.removeListener('update:progress')
+    }
+    ipcRenderer.on('update:progress', progressHandler)
+    return () => ipcRenderer.removeListener('update:progress', progressHandler)
   }, [])
 
   useEffect(() => {
-    ipcRenderer.on('update:downloaded', (_e, info) => {
+    const downloadedHandler = (_e, info) => {
       setUpdateInfo(info)
       editUpdateInfo(info, 'info')
       setNewVersion(`v${info.version} `)
-    })
-
-    return () => ipcRenderer.removeListener('update:downloaded')
+    }
+    ipcRenderer.on('update:downloaded', downloadedHandler)
+    return () => ipcRenderer.removeListener('update:downloaded', downloadedHandler)
   }, [upGress])
 
   return (
