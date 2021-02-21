@@ -73,7 +73,27 @@ const incrementor = (str) => {
   return `${strPart}0${numPart.replace(/\d+$/, (n) => ++n)}`
 }
 
+/**
+ * Validates email with regex
+ * @param {string} email
+ */
+const validateEmail = (email) => {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
+}
+
+const getReadableSize = (size, speed = false) => {
+  let i = -1
+  const units = ['kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb', 'Zb', 'Yb']
+  do {
+    size /= 1024
+    i++
+  } while (size > 1024)
+  return `${Math.max(size, 0.1).toFixed(1)} ${units[i]}${(speed ? '/sec' : '')}`
+}
+
 export {
   getBoolFromString, makeHash, groupBy,
-  titleCase, quantize, incrementor,
+  titleCase, quantize, incrementor, validateEmail,
+  getReadableSize,
 }

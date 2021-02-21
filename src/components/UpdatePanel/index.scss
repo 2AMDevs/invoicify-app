@@ -1,0 +1,39 @@
+.markdown-body {
+  color: white;
+  font-size: 1em;
+}
+
+.full-height {
+  height: 50vh;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.separator-stack {
+  margin-top: 1em;
+  font-size: 1.4em;
+
+  &__icon {
+    vertical-align: middle;
+  }
+
+  &__icon:before {
+    content: "\00a0  ";
+  }
+}
+
+.update-card {
+  backdrop-filter: blur(0.9rem);
+  -webkit-backdrop-filter: blur(0.9rem);
+
+  background-blend-mode: exclusion;
+
+  background: rgba(68, 68, 68, 0.6);
+
+  padding: 1.2rem;
+}
+
+.center-self {
+  align-self: center;
+}

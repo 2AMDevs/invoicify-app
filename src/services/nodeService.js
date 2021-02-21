@@ -25,7 +25,7 @@ const getPrintersList = async () => ipcRenderer.invoke('get-printers')
  * @param {string} path Path to file/folder
  * @return true if exits and valid else false
  */
-const isValidPath = async (path) => path && ipcRenderer.invoke('is-valid', path)
+const isValidPath = async (path) => path && ipcRenderer.invoke('file:is-valid', path)
 
 /**
  * @async
@@ -33,21 +33,29 @@ const isValidPath = async (path) => path && ipcRenderer.invoke('is-valid', path)
  * @param {string} Path to File (in public/)
  * @return Buffer content of file
  */
-const getFileBuffer = async (file) => ipcRenderer.invoke('read-file-buffer', file)
+const getFileBuffer = async (file) => ipcRenderer.invoke('file:read-buffer', file)
+
+/**
+ * @async
+ * Reads File Content using Node and turns them in Base64
+ * @param {string} Path to File
+ * @return Base64 content of file
+ */
+const getB64File = async (file) => ipcRenderer.invoke('file:read-b64', file)
 
 /**
  * @async
  * Fetches application version from App Context
  * @return String containing version of App (Eg: v0.4.2)
  */
-const getAppVersion = async () => ipcRenderer.invoke('app_version')
+const getAppVersion = async () => ipcRenderer.invoke('app:version')
 
 /**
  * @async
  * Fetches Default Printer from OS
  * @return Name of Default Printer
  */
-const getDefPrinter = async () => ipcRenderer.invoke('get-def-printer')
+const getDefPrinter = async () => ipcRenderer.invoke('printers:get-default')
 
 /**
  * @async
@@ -55,10 +63,10 @@ const getDefPrinter = async () => ipcRenderer.invoke('get-def-printer')
  * @param {UInt8} content Buffer of PDF to be printed
  * @param {string} printer Name of Printer to be used
  */
-const printIt = async (content, printer) => ipcRenderer.invoke('print-it', content, printer)
+const printIt = async (content, printer) => ipcRenderer.invoke('printers:print', content, printer)
 
 export {
   toggleFullScreen, quitApp, restartApp,
   minimizeApp, getPrintersList, isValidPath, getFileBuffer,
-  getAppVersion, getDefPrinter, printIt,
+  getAppVersion, getDefPrinter, printIt, getB64File,
 }

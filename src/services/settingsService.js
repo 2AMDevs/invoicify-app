@@ -13,8 +13,10 @@ const initializeSettings = async () => {
   localStorage.showFullMonth = localStorage.showFullMonth ?? true
   localStorage.printBoth = localStorage.printBoth ?? true
   localStorage.oldPurchaseFreedom = localStorage.oldPurchaseFreedom ?? true
+  localStorage.email = localStorage.email ?? ''
   localStorage.productType = localStorage.productType ?? 'G, S'
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
+  localStorage.customLockBg = localStorage.customLockBg ?? ''
   localStorage.currency = localStorage.currency ?? '₹'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
@@ -33,6 +35,7 @@ const initializeSettings = async () => {
     ...(localStorage.calculationSettings && JSON.parse(localStorage.calculationSettings)),
   })
   localStorage.version = await getAppVersion()
+  localStorage.updateInfo = ''
   localStorage.nativeGstinPrefix = localStorage.nativeGstinPrefix ?? '08'
   await updatePrinterList()
 }

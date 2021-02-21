@@ -35,12 +35,19 @@
         width: 50rem;
       }
 
+
       &__header {
         padding-left: 1rem;
       }
 
       .settings {
         padding: 1rem;
+      }
+    }
+
+    &__update-panel {
+      .ms-Panel-main  {
+        width: 40rem;
       }
     }
   }
