@@ -57,7 +57,7 @@ const darkThemePalette = {
   neutralLighter: '#72767d',
   neutralLight: '#4f545c',
   neutralQuaternaryAlt: '#0d0d0d',
-  neutralQuaternary: '#0c0c0c',
+  neutralQuaternary: '#c7c7c7',
   neutralTertiaryAlt: '#72767d',
   neutralTertiary: '#b9bbbe',
   neutralSecondary: '#fcfcfc',
