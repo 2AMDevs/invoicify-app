@@ -196,9 +196,9 @@ const InvoiceSettings = () => {
           onChange={onChangeOpFree}
           label={(
             <div>
-              OP Freedom
+              Return Item without meta
               {' '}
-              <TooltipHost content="Enables to add Old Purchase without Item Info">
+              <TooltipHost content="Allows to add Return Item without Item Info">
                 <Icon iconName="Info" />
               </TooltipHost>
             </div>

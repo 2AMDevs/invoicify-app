@@ -442,7 +442,7 @@ const Invoice = ({ showPdfPreview }) => {
               prefix="₹"
             />
             <TextField
-              label="Old Purchase"
+              label="Return Item"
               type="number"
               disabled={invoiceItems.some((item) => item.isOldItem)
                 || (!invoiceItems.some((item) => item.isOldItem)
