@@ -73,14 +73,20 @@ const setProducts = (newProducts, replace) => {
  */
 const upsertProduct = (product) => {
   const products = getProductsJSON()
-  const target = products
-    .findIndex((p) => p.id === product.id)
+  let isFound = false
 
-  if (target !== -1) {
-    products[target] = product
-  }
+  const newProducts = products.map((p) => {
+    if (p.id === product.id) {
+      isFound = true
+      return product
+    }
 
-  setProducts(products, true)
+    return p
+  })
+
+  if (!isFound) newProducts.push(product)
+
+  setProducts(newProducts, true)
 }
 
 /**
