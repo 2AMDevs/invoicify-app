@@ -6,9 +6,19 @@
   height: 100%;
   color: white;
 
-  background-color: #3056ff;
   background-attachment: fixed;
   background-size: cover;
+  background: #2c3e50; /* fallback for old browsers */
+  background-color: -webkit-linear-gradient(
+    to top,
+    #3498db,
+    #2c3e50
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background-color: linear-gradient(
+    to top,
+    #3498db,
+    #2c3e50
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   &__clock {
     position: absolute;
