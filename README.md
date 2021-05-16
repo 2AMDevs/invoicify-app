@@ -44,6 +44,10 @@ We welcome all contributions.
 
 <!-- You can sponsor 2AM Devs by emailing at  -->
 
+## Support
+
+For any queries message us at: https://discord.gg/UgvYpNrHa6
+
 ## Credits
 
 Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
