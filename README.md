@@ -44,9 +44,9 @@ We welcome all contributions.
 
 <!-- You can sponsor 2AM Devs by emailing at  -->
 
-## Support
+## 💬 Support
 
-For any queries message us at: https://discord.gg/UgvYpNrHa6
+For any queries message us on Discord Server [here](https://discord.gg/UgvYpNrHa6)
 
 ## Credits
 
