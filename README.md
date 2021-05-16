@@ -31,6 +31,26 @@ An application aimed to make it easier for SMEs to migrate to digital billing wi
 
 ## ⌨️ Development
 
+- Clone this repo or create your own fork and then clone.
+- Create your own `.env`, `.electron-builder.yml`
+
+```bash
+#.env
+GH_TOKEN=<REPO TOKEN>
+REACT_APP_API_URL=<API_URL_USED_FOR_OTP>
+REACT_APP_RELEASE_NOTES_API=<RELEASE_NOTES_API>
+```
+
+```bash
+#electron-builder.yml
+appId: devs.2am.Invoicify
+publish:
+  provider: github
+  token: <REPO TOKEN>
+```
+
+- To start development install dependencies using `npm i`
+- Now start development app using `npm run start`
 
 ## 🤝 Contributing ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
 
@@ -39,8 +59,7 @@ We welcome all contributions.
 - You can submit any ideas as Pull Request or Issues.
 - If you'd like to improve code, make sure you stick to exisiting practices in code.
 
-
-## ❤️ Sponsors and Backers
+<!-- ## ❤️ Sponsors and Backers -->
 
 <!-- You can sponsor 2AM Devs by emailing at  -->
 
