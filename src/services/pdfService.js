@@ -28,7 +28,7 @@ const getFontBuffer = async () => {
  * @param {Date} date Date to be modified
  * @return Formmatted Date in HI/EN as per user pref.
  */
-const getInvoiceDate = (date) => {
+const getInvoiceDate = (date=new Date()) => {
   const options = {
     year: 'numeric', month: 'long', day: 'numeric',
   }
@@ -354,4 +354,4 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
 
 const printPDF = (pdfBytes) => printIt(pdfBytes, getFromStorage('printer'))
 
-export { getPdf, printPDF }
+export { getPdf, printPDF, getInvoiceDate }

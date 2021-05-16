@@ -99,6 +99,30 @@ const getFilePath = async (fileFilters, disableAllFiles = false) => {
   }
 }
 
+const saveFile = async(fileFilters, disableAllFiles=true, data, fileName) => {
+  const filters = [
+    ...(fileFilters || []),
+    ...(!disableAllFiles ? [{ name: 'All Files', extensions: ['*'] }] : []),
+  ]
+  const file = await dialog.showSaveDialog({
+    title: 'Select the File Path to Save',
+    buttonLabel: 'Save',
+    defaultPath: fileName,
+    filters,
+  })
+  if (file) {
+    if (!file.canceled) {
+      console.log(file.filePath.toString());
+      fs.writeFileSync(
+        file.filePath.toString(),
+        data,
+        function (err) {
+          if (err) throw err;
+      });
+    }
+  }
+}
+
 ipcMain.on('bye-bye', () => {
   win.close()
 })
@@ -113,6 +137,7 @@ ipcMain.on('shut-up', () => {
 
 ipcMain.handle('app:version', () => app.getVersion())
 ipcMain.handle('file:select', (_event, filters, disableAllFiles) => getFilePath([filters], disableAllFiles))
+ipcMain.handle('file:save', (_event, filters, disableAllFiles, data, fileName) => saveFile([filters], disableAllFiles, data, fileName))
 ipcMain.handle('get-printers', getPrinters)
 ipcMain.handle('printers:get-default', getDefaultPrinter)
 ipcMain.handle('file:is-valid', (_event, args) => fs.existsSync(args))
