@@ -9,25 +9,25 @@
 <div align="center">
 
 An application aimed to make it easier for SMEs to migrate to digital billing without throwing their exisiting bill books.
-<!-- Add Badges here -->
+<!-- Add Build and all Badges here -->
 </div>
 
 ## ✨ Features
 
-- 🌈 Native Windows like UI and Feel.
-- 🔐 Password Protection and Email OTP based Password Reset.
-- ⏬ Automatic In-app updates
-- ☁ Import Products from CSV (Export to CSV coming soon.)
 - 📦 Variety of Preferences for Application
 - ⚙️ Fields customization on print and in-app.
 - 🌍 Customizable Currency and State GST Code.
 - 🎨 Powerful theme customization in every detail.
+- 🌈 Native Windows like UI and Feel.
+- 🔐 Password Protection and Email OTP based Password Reset.
+- ⏬ Automatic In-app updates
+- ☁ Import Products from CSV (Export to CSV coming soon.)
 
-## 🖥 Environment Support
+## 🖥 Platform Support
 
 | <img src="https://raw.githubusercontent.com/2AMDevs/cdn/main/windows.png" alt="Windows" width="24px" height="24px" /><br/>Windows | <img src="https://raw.githubusercontent.com/2AMDevs/cdn/main/linux.png" alt="Linux" width="24px" height="24px" /><br/>Linux | <img src="https://raw.githubusercontent.com/2AMDevs/cdn/main/apple.png" alt="MacOS" width="24px" height="24px" /><br/>MacOS |
 | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| v0.4.13 ✅                                                                                                                         | 🚧 (Build WIP)                                                                                                               | 🚧   (Build WIP)                                                                                                             |
+| [v0.4.13](https://github.com/2AMDevs/invoicify-app/releases/tag/v0.4.13) ✅                                                        | 🚧 (Build WIP)                                                                                                               | 🚧   (Build WIP)                                                                                                             |
 
 ## ⌨️ Development
 
