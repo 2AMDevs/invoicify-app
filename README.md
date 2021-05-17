@@ -18,10 +18,10 @@ An application aimed to make it easier for SMEs to migrate to digital billing wi
 - ⚙️ Fields customization on print and in-app.
 - 🌍 Customizable Currency and State GST Code.
 - 🎨 Powerful theme customization in every detail.
-- 🌈 Native Windows like UI and Feel.
+- 🌈 Native OS like UX and smooth IPC.
 - 🔐 Password Protection and Email OTP based Password Reset.
 - ⏬ Automatic In-app updates
-- ☁ Import Products from CSV (Export to CSV coming soon.)
+- 🔀 Import Products from CSV & Export to CSV.
 
 ## 🖥 Platform Support
 
