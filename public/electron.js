@@ -99,7 +99,7 @@ const getFilePath = async (fileFilters, disableAllFiles = false) => {
   }
 }
 
-const saveFile = async(fileFilters, disableAllFiles=true, data, fileName) => {
+const saveFile = async (fileFilters, disableAllFiles = true, data, fileName) => {
   const filters = [
     ...(fileFilters || []),
     ...(!disableAllFiles ? [{ name: 'All Files', extensions: ['*'] }] : []),
@@ -112,13 +112,13 @@ const saveFile = async(fileFilters, disableAllFiles=true, data, fileName) => {
   })
   if (file) {
     if (!file.canceled) {
-      console.log(file.filePath.toString());
       fs.writeFileSync(
         file.filePath.toString(),
         data,
-        function (err) {
-          if (err) throw err;
-      });
+        (err) => {
+          if (err) throw err
+        },
+      )
     }
   }
 }

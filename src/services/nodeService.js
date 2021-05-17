@@ -1,4 +1,3 @@
-
 const { ipcRenderer } = require('electron')
 
 /** Toggles Fullscreen state of application */
@@ -35,7 +34,7 @@ const isValidPath = async (path) => path && ipcRenderer.invoke('file:is-valid', 
  * @param {boolean} fileFilter File Types to be allowed while saving
  * @param {boolean} disableAllFiles Boolean to check whether to allow *
  */
- const saveCSV = async (data, fileFilter, disableAllFiles, fileName) => {
+const saveCSV = async (data, fileFilter, disableAllFiles, fileName) => {
   // Don't export fields like 'id'
   const keys = Object.keys(data[0]).filter((k) => k !== 'id')
   // Print all keys first
@@ -50,7 +49,7 @@ const isValidPath = async (path) => path && ipcRenderer.invoke('file:is-valid', 
   })
 
   ipcRenderer.invoke('file:save', fileFilter, disableAllFiles, csvData, fileName)
- }
+}
 
 /**
  * @async
