@@ -93,5 +93,8 @@
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
     "wait-on": "^5.2.1"
+  },
+  "peerDependencies": {
+    "eslint-plugin-import": "^2.22.1"
   }
 }
