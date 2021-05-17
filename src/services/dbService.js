@@ -173,4 +173,5 @@ export {
   getFromStorage, getProductTypes, currency,
   setProducts, upsertProduct, deleteProducts, getProducts,
   updatePrinterList, getUpdateInfo, editUpdateInfo,
+  getProductsJSON,
 }
