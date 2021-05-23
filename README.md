@@ -16,7 +16,7 @@ An application aimed to make it easier for SMEs to migrate to digital billing wi
 [![Open Issues](https://img.shields.io/github/issues-raw/2AMDevs/invoicify-app?style=flat-square)](https://github.com/2AMDevs/invoicify-app/issues)
 [![Current Version](https://img.shields.io/github/package-json/v/2AMDevs/invoicify-app/master?style=flat-square)](/)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/UgvYpNrHa6)
