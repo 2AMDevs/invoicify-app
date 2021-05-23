@@ -10,11 +10,11 @@
 
 An application aimed to make it easier for SMEs to migrate to digital billing without throwing their exisiting bill books.
 
-[![Build Status](https://img.shields.io/github/checks-status/2AMDevs/invoicify-app/master?style=flat-square)](/)
-[![Top Lang](https://img.shields.io/github/languages/top/2AMDevs/invoicify-app?style=flat-square)](/)
+<!-- [![Build Status](https://img.shields.io/github/checks-status/2AMDevs/invoicify-app/master?style=flat-square)](https://github.com/2AMDevs/invoicify-app) -->
+[![Top Lang](https://img.shields.io/github/languages/top/2AMDevs/invoicify-app?style=flat-square)](https://github.com/2AMDevs/invoicify-app)
 [![Downloads](https://img.shields.io/github/downloads/2AMDevs/invoicify-app/total?style=flat-square)](https://github.com/2AMDevs/invoicify-app/releases)
 [![Open Issues](https://img.shields.io/github/issues-raw/2AMDevs/invoicify-app?style=flat-square)](https://github.com/2AMDevs/invoicify-app/issues)
-[![Current Version](https://img.shields.io/github/package-json/v/2AMDevs/invoicify-app/master?style=flat-square)](/)
+[![Current Version](https://img.shields.io/github/package-json/v/2AMDevs/invoicify-app/master?style=flat-square)](https://github.com/2AMDevs/invoicify-app)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
