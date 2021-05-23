@@ -60,7 +60,7 @@ publish:
 - To start development install dependencies using `npm i`
 - Now start development app using `npm run start`
 
-## 🤝 Contributing ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
+## 🤝 Contributing [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/2AMDevs/invoicify-app/compare)
 
 We welcome all contributions.
 
