@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "mohitkyadav",
+      "name": "Mohit Kumar Yadav",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25580776?v=4",
+      "profile": "https://www.only4.dev/",
+      "contributions": [
+        "bug",
+        "ideas",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "invoicify-app",
+  "projectOwner": "2AMDevs",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

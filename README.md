@@ -15,7 +15,9 @@ An application aimed to make it easier for SMEs to migrate to digital billing wi
 [![Downloads](https://img.shields.io/github/downloads/2AMDevs/invoicify-app/total?style=flat-square)](https://github.com/2AMDevs/invoicify-app/releases)
 [![Open Issues](https://img.shields.io/github/issues-raw/2AMDevs/invoicify-app?style=flat-square)](https://github.com/2AMDevs/invoicify-app/issues)
 [![Current Version](https://img.shields.io/github/package-json/v/2AMDevs/invoicify-app/master?style=flat-square)](/)
-[![Contributors](https://img.shields.io/github/all-contributors/2AMDevs/invoicify-app/master?style=flat-square)](https://github.com/2AMDevs/invoicify-app/graphs/contributors)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/UgvYpNrHa6)
 </div>
@@ -74,6 +76,22 @@ We welcome all contributions.
 
 For any queries message us on Discord Server [here](https://discord.gg/UgvYpNrHa6)
 
-## 🙏🏻 Credits
+## Contributors ✨
 
-Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">Flaticon</a>
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://www.only4.dev/"><img src="https://avatars.githubusercontent.com/u/25580776?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mohit Kumar Yadav</b></sub></a><br /><a href="https://github.com/2AMDevs/invoicify-app/issues?q=author%3Amohitkyadav" title="Bug reports">🐛</a> <a href="#ideas-mohitkyadav" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/2AMDevs/invoicify-app/commits?author=mohitkyadav" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
