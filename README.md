@@ -10,15 +10,14 @@
 
 An application aimed to make it easier for SMEs to migrate to digital billing without throwing their exisiting bill books.
 
-![Build Status](https://img.shields.io/github/checks-status/2AMDevs/invoicify-app/master?style=flat-square)
-![Top Lang](https://img.shields.io/github/languages/top/2AMDevs/invoicify-app?style=flat-square)
-![Downloads](https://img.shields.io/github/downloads/2AMDevs/invoicify-app/total?style=flat-square)
-![Open Issues](https://img.shields.io/github/issues-raw/2AMDevs/invoicify-app?style=flat-square)
-![Current Version](https://img.shields.io/github/package-json/v/2AMDevs/invoicify-app/master?style=flat-square)
-![Contributors](https://img.shields.io/github/all-contributors/2AMDevs/invoicify-app/master?style=flat-square)
+[![Build Status](https://img.shields.io/github/checks-status/2AMDevs/invoicify-app/master?style=flat-square)](/)
+[![Top Lang](https://img.shields.io/github/languages/top/2AMDevs/invoicify-app?style=flat-square)](/)
+[![Downloads](https://img.shields.io/github/downloads/2AMDevs/invoicify-app/total?style=flat-square)](https://github.com/2AMDevs/invoicify-app/releases)
+[![Open Issues](https://img.shields.io/github/issues-raw/2AMDevs/invoicify-app?style=flat-square)](https://github.com/2AMDevs/invoicify-app/issues)
+[![Current Version](https://img.shields.io/github/package-json/v/2AMDevs/invoicify-app/master?style=flat-square)](/)
+[![Contributors](https://img.shields.io/github/all-contributors/2AMDevs/invoicify-app/master?style=flat-square)](https://github.com/2AMDevs/invoicify-app/graphs/contributors)
 
 [![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/UgvYpNrHa6)
-
 </div>
 
 ## ✨ Features
@@ -27,7 +26,7 @@ An application aimed to make it easier for SMEs to migrate to digital billing wi
 - ⚙️ Fields customization on print and in-app.
 - 🌍 Customizable Currency and State GST Code.
 - 🎨 Powerful theme customization in every detail.
-- 🌈 Native OS like UX and smooth IPC.
+- 🌈 Native OS like UX
 - 🔐 Password Protection and Email OTP based Password Reset.
 - ⏬ Automatic In-app updates
 - 🔀 Import Products from CSV & Export to CSV.
@@ -69,13 +68,12 @@ We welcome all contributions.
 - If you'd like to improve code, make sure you stick to exisiting practices in code.
 
 <!-- ## ❤️ Sponsors and Backers -->
-
 <!-- You can sponsor 2AM Devs by emailing at  -->
 
 ## 💬 Support
 
 For any queries message us on Discord Server [here](https://discord.gg/UgvYpNrHa6)
 
-## Credits
+## 🙏🏻 Credits
 
-Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">Flaticon</a>
