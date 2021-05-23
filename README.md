@@ -85,6 +85,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
+    <td align="center"><a href="http://aashutosh.dev"><img src="https://avatars.githubusercontent.com/u/21199234?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aashutosh Rathi</b></sub></a><br /><a href="#infra-aashutoshrathi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/2AMDevs/invoicify-app/commits?author=aashutoshrathi" title="Documentation">📖</a> <a href="https://github.com/2AMDevs/invoicify-app/commits?author=aashutoshrathi" title="Code">💻</a></td>
     <td align="center"><a href="https://www.only4.dev/"><img src="https://avatars.githubusercontent.com/u/25580776?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mohit Kumar Yadav</b></sub></a><br /><a href="https://github.com/2AMDevs/invoicify-app/issues?q=author%3Amohitkyadav" title="Bug reports">🐛</a> <a href="#ideas-mohitkyadav" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/2AMDevs/invoicify-app/commits?author=mohitkyadav" title="Code">💻</a></td>
   </tr>
 </table>
