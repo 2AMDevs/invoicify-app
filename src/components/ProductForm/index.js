@@ -66,6 +66,7 @@ const ProductForm = ({
             <TextField
               label="Price"
               required
+              type="number"
               placeholder="Product Price"
               value={price}
               onChange={changePrice}
@@ -89,6 +90,7 @@ const ProductForm = ({
                 iconProps={{ iconName: 'Save' }}
                 primary
                 onClick={saveForm}
+                disabled={!name || !type || !parseInt(price, 10) > 0}
               />
               <DefaultButton
                 text="Reset"

@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600&display=swap');
+$font-family: 'Manrope', sans-serif;
+
 // color variables
 :root {
   --color-white: white;
@@ -12,21 +15,30 @@
   --color-black-op-20: rgba(0, 0, 0, 0.2);
   --color-red-exit: rgba(238, 62, 79, 0.75);
 
-  --color-bg: #23272A;
-  --color-primary: #36A5F9;
+  --color-bg: #23272a;
+  --color-primary: #36a5f9;
 
-  --color-scrollbar-background: #36393F;
+  --color-scrollbar-background: #36393f;
   --color-scrollbar-thumb: #36a4f973;
 
-  --after-header-gradient: -webkit-gradient(linear, 0 0, 100% 0, from(var(--color-scrollbar-thumb)), to(var(--color-scrollbar-thumb)), color-stop(50%, var(--color-primary)));
+  --after-header-gradient: -webkit-gradient(
+    linear,
+    0 0,
+    100% 0,
+    from(var(--color-scrollbar-thumb)),
+    to(var(--color-scrollbar-thumb)),
+    color-stop(50%, var(--color-primary))
+  );
 }
 
 *,
 *::after,
 *::before {
-    margin: 0;
-    padding: 0;
-    box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  font-family: 'Manrope', sans-serif;
+  letter-spacing: 0.28px;
 }
 
 *::-webkit-scrollbar {
@@ -35,7 +47,9 @@
 }
 
 *::-webkit-scrollbar-track {
-  background-color: var(--color-scrollbar-background);
+  background-color: var(
+    --color-scrollbar-background
+  );
   border-radius: 1rem;
 }
 
@@ -52,17 +66,18 @@ main {
 
 html {
   font-size: 62.5% !important; // 1rem = 10px
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-bg);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco,
+    Consolas, 'Courier New', monospace;
 }
 
 .hidden {
@@ -83,7 +98,7 @@ code {
     bottom: 0;
     width: 100%;
     height: 0.2rem;
-    background: var(--after-header-gradient)
+    background: var(--after-header-gradient);
   }
 }
 
@@ -106,7 +121,7 @@ code {
 
 @keyframes scaleUp {
   0% {
-    transform: scale(0.90);
+    transform: scale(0.9);
     opacity: 0;
   }
   100% {
@@ -158,4 +173,39 @@ code {
   -webkit-backdrop-filter: blur(0.8rem);
   backdrop-filter: blur(0.8rem);
   background-color: var(--color-black-op-20);
+}
+
+.wave {
+  animation-name: wave-animation; /* Refers to the name of your @keyframes element below */
+  animation-duration: 2.5s; /* Change to speed up or slow down */
+  animation-iteration-count: infinite; /* Never stop waving :) */
+  transform-origin: 70% 70%; /* Pivot around the bottom-left palm */
+  display: inline-block;
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(14deg);
+  } /* The following five values can be played with to make the waving more or less extreme */
+  20% {
+    transform: rotate(-8deg);
+  }
+  30% {
+    transform: rotate(14deg);
+  }
+  40% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  } /* Reset for the last half to pause */
+  100% {
+    transform: rotate(0deg);
+  }
 }

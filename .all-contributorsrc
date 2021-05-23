@@ -11,9 +11,20 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/21199234?v=4",
       "profile": "http://aashutosh.dev",
       "contributions": [
-        "infra",
+        "code",
         "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "mohitkyadav",
+      "name": "Mohit Kumar Yadav",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25580776?v=4",
+      "profile": "https://www.only4.dev/",
+      "contributions": [
         "code"
+        "bug",
+        "ideas",
       ]
     }
   ],
