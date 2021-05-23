@@ -29,6 +29,30 @@ const isValidPath = async (path) => path && ipcRenderer.invoke('file:is-valid', 
 
 /**
  * @async
+ * Opens Save File Modal to save CSV with data in it
+ * @param {Object} data JSON Object to be added as CSV
+ * @param {boolean} fileFilter File Types to be allowed while saving
+ * @param {boolean} disableAllFiles Boolean to check whether to allow *
+ */
+const saveCSV = async (data, fileFilter, disableAllFiles, fileName) => {
+  // Don't export fields like 'id'
+  const keys = Object.keys(data[0]).filter((k) => k !== 'id')
+  // Print all keys first
+  let csvData = `${keys.join(',')}\n`
+
+  // Now Print each row in file
+  data.forEach((d) => {
+    keys.forEach((k) => {
+      csvData += `${d[k]},`
+    })
+    csvData = `${csvData.slice(0, -1)}\n`
+  })
+
+  ipcRenderer.invoke('file:save', fileFilter, disableAllFiles, csvData, fileName)
+}
+
+/**
+ * @async
  * Reads File Content using Node and turns them in Buffer
  * @param {string} Path to File (in public/)
  * @return Buffer content of file
@@ -68,5 +92,5 @@ const printIt = async (content, printer) => ipcRenderer.invoke('printers:print',
 export {
   toggleFullScreen, quitApp, restartApp,
   minimizeApp, getPrintersList, isValidPath, getFileBuffer,
-  getAppVersion, getDefPrinter, printIt, getB64File,
+  getAppVersion, getDefPrinter, printIt, getB64File, saveCSV,
 }
