@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "aashutoshrathi",
+      "name": "Aashutosh Rathi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21199234?v=4",
+      "profile": "http://aashutosh.dev",
+      "contributions": [
+        "infra",
+        "doc",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "invoicify-app",
+  "projectOwner": "2AMDevs",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
