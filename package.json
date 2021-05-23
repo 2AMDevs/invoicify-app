@@ -1,6 +1,6 @@
 {
   "name": "invoicify",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "author": "2AM Devs",
   "description": "Digitalizes your billing process",
   "private": true,
@@ -41,7 +41,7 @@
     "convert-rupees-into-words": "^1.0.6",
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
-    "electron-updater": "^4.3.4",
+    "electron-updater": "^4.3.9",
     "github-markdown-css": "^4.0.0",
     "node-sass": "^4.14.1",
     "office-ui-fabric-react": "^7.145.0",
@@ -93,5 +93,8 @@
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
     "wait-on": "^5.2.1"
+  },
+  "peerDependencies": {
+    "eslint-plugin-import": "^2.22.1"
   }
 }

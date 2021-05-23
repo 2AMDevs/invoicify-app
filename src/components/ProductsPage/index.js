@@ -1,19 +1,20 @@
-import React from 'react'
-
 import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
 import {
   DetailsList,
   DetailsListLayoutMode,
-  SelectionMode,
+  SelectionMode
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
-
-import { deleteProducts, getProducts, setProducts } from '../../services/dbService'
-import { productTableColumns } from '../../utils/constants'
+import React from 'react'
+import { deleteProducts, getProducts, getProductsJSON, setProducts } from '../../services/dbService'
+import { getInvoiceDate } from '../../services/pdfService'
+import { saveCSV } from '../../services/nodeService'
+import { productTableColumns, SELECT_FILE_TYPE } from '../../utils/constants'
 import ImportProducts from '../ImportProducts'
 import ListEmpty from '../ListEmpty'
 import ProductForm from '../ProductForm'
 import './index.scss'
+
 
 class ProductsPage extends React.Component {
   constructor (props) {
@@ -125,6 +126,13 @@ class ProductsPage extends React.Component {
     targetBtn: typeof id === 'string' ? id : null,
   }))
 
+  exportProduct = () => saveCSV(
+    getProductsJSON(),
+    SELECT_FILE_TYPE.EXCEL,
+    true,
+    `Products-${getInvoiceDate()}.csv`
+  )
+
   render () {
     return (
       <div className="products-page animation-slide-up">
@@ -158,6 +166,13 @@ class ProductsPage extends React.Component {
             checked={false}
           />
           <ImportProducts refreshProductItems={this.refreshProductItems} />
+          <CommandBarButton
+            className="products-page__header__btn"
+            iconProps={{ iconName: 'Export' }}
+            text="Export"
+            onClick={this.exportProduct}
+            checked={false}
+          />
           <CommandBarButton
             className="products-page__header__btn"
             iconProps={{ iconName: 'Delete' }}

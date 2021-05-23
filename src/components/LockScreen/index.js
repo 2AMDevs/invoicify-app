@@ -61,6 +61,7 @@ const LockScreen = () => {
           <span
             role="img"
             aria-label="wave-hand"
+            className="wave"
           >
             👋🏻
           </span>

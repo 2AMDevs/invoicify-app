@@ -20,7 +20,7 @@
     bottom: 0;
     width: 100%;
     height: 0.2rem;
-    background: var(--after-header-gradient)
+    background: var(--after-header-gradient);
   }
 
   &__left-section {
@@ -30,11 +30,11 @@
   &__right-section {
     display: flex;
 
-    &__products-panel, &__settings-panel {
-      .ms-Panel-main  {
+    &__products-panel,
+    &__settings-panel {
+      .ms-Panel-main {
         width: 50rem;
       }
-
 
       &__header {
         padding-left: 1rem;
@@ -46,7 +46,7 @@
     }
 
     &__update-panel {
-      .ms-Panel-main  {
+      .ms-Panel-main {
         width: 40rem;
       }
     }
