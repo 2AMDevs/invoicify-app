@@ -47,6 +47,17 @@ const Header = ({ className, ...restProps }) => {
                 checked={false}
               />
             </Link>
+            <Link
+              className="header__link"
+              to="/new-configure"
+            >
+              <CommandBarButton
+                className="header__link__btn"
+                iconProps={{ iconName: 'BullseyeTargetEdit' }}
+                text="Customize"
+                checked={false}
+              />
+            </Link>
           </div>
         )}
         <Text
