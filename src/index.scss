@@ -3,19 +3,24 @@ $font-family: 'Manrope', sans-serif;
 
 // color variables
 :root {
+  --ice-white: #e5f1fa;
   --color-white: white;
   --color-white-op-80: rgba(255, 255, 255, 0.8);
   --color-white-op-50: rgba(255, 255, 255, 0.5);
   --color-white-op-20: rgba(255, 255, 255, 0.2);
+  --color-white-op-10: rgba(255, 255, 255, 0.1);
 
   --color-black: rgba(0, 0, 0, 1);
   --color-black-op-80: rgba(0, 0, 0, 0.8);
   --color-black-op-50: rgba(0, 0, 0, 0.5);
   --color-black-op-30: rgba(0, 0, 0, 0.3);
   --color-black-op-20: rgba(0, 0, 0, 0.2);
+  --color-black-op-10: rgba(0, 0, 0, 0.1);
   --color-red-exit: rgba(238, 62, 79, 0.75);
 
   --color-bg: #23272a;
+  --color-dark: #3e4046;
+  --color-darker: #2b2d36;
   --color-primary: #36a5f9;
 
   --color-scrollbar-background: #36393f;
