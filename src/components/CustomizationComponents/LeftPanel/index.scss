@@ -1,0 +1,48 @@
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-dark);
+  box-shadow: 0 0.3rem 0.6rem 0
+    var(--color-black-op-20);
+  width: 22%;
+  overflow: hidden scroll;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__item {
+    background: transparent;
+    border: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 1.36;
+    letter-spacing: 0.048rem;
+    color: var(--ice-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+    border-bottom: solid 0.1rem
+      var(--color-darker);
+    will-change: background-color;
+    transition: background-color 0.2s ease-out;
+
+    &:focus {
+      background-color: var(--color-darker);
+      outline: none;
+    }
+
+    p {
+      padding: 5rem 3.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
+  }
+}
