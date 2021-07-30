@@ -30,5 +30,16 @@
     border-radius: 1.2rem;
     border: dashed 0.4rem var(--ice-white);
     background-color: var(--color-white-op-20);
+    position: relative;
+
+    &__handle {
+      position: absolute;
+      width: 13rem;
+      height: 4rem;
+      border-radius: 0.8rem;
+      box-shadow: 0 0.3rem 0.6rem 0
+        var(--color-black-op-20);
+      background-color: var(--purple);
+    }
   }
 }
