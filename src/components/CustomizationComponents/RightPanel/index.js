@@ -18,16 +18,19 @@ const RightPanel = ({ selectedItem }) => {
       <div
         className="right-panel__preview"
         onMouseMove={(e) => {
-          console.log(dragging)
           if (!dragging) return
 
           const rect = e.target.getBoundingClientRect()
-          setPos({ x: e.clientX - rect.left - 10, y: e.clientY - rect.top - 10 })
+          setPos({ x: e.clientX - rect.left - 15, y: e.clientY - rect.top - 15 })
         }}
       >
         <div
           className="right-panel__preview__handle"
-          style={{ top: `${pos.y}px`, left: `${pos.x}px` }}
+          style={{
+            top: `${pos.y}px`,
+            left: `${pos.x}px`,
+            // pointerEvents: dragging ? 'none' : 'all',
+          }}
           onMouseDown={() => setDragging(true)}
           onMouseUp={() => setDragging(false)}
           role="presentation"
