@@ -4,10 +4,31 @@
   transform: scale(1.4) translateX(100%);
   will-change: transform;
   transition: transform 0.5s ease-out;
+  padding: 1rem 3rem;
 
   &--active {
     transform: scale(1) translateX(0);
     box-shadow: 0 0.3rem 0.6rem 0
       var(--color-black-op-20);
+  }
+
+  &__header {
+    font-size: 2.4rem;
+    font-weight: 800;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.38;
+    letter-spacing: 0.096rem;
+    text-align: left;
+    color: var(--ice-white);
+  }
+
+  &__preview {
+    width: 100%;
+    height: 85%;
+    margin-top: 2.8rem;
+    border-radius: 1.2rem;
+    border: dashed 0.4rem var(--ice-white);
+    background-color: var(--color-white-op-20);
   }
 }

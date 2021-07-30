@@ -10,7 +10,8 @@ const RightPanel = ({ selectedItem }) => (
       'right-panel--active': selectedItem,
     })}
   >
-    Right panel
+    <h1 className="right-panel__header">Set position of the Field on invoice</h1>
+    <div className="right-panel__preview" />
   </div>
 )
 
