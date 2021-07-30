@@ -28,7 +28,6 @@ const RightPanel = ({ selectedItem }) => {
           id="drag-target"
           role="presentation"
           onDragEnd={(e) => {
-            e.target.style.curser = 'move'
             const rect = document.getElementById('drop-target').getBoundingClientRect()
             setPos({ x: e.clientX - rect.left - 60, y: e.clientY - rect.top - 10 })
           }}

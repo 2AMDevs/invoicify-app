@@ -34,13 +34,22 @@
 
     &__handle {
       position: absolute;
-      cursor: pointer;
+      cursor: move;
+      cursor: grab;
+      cursor: -moz-grab;
+      cursor: -webkit-grab;
       width: 13rem;
       height: 4rem;
       border-radius: 0.8rem;
       box-shadow: 0 0.3rem 0.6rem 0
         var(--color-black-op-20);
       background-color: var(--purple);
+
+      &:active {
+        cursor: grabbing;
+        cursor: -moz-grabbing;
+        cursor: -webkit-grabbing;
+      }
     }
   }
 }
