@@ -44,12 +44,6 @@
       box-shadow: 0 0.3rem 0.6rem 0
         var(--color-black-op-20);
       background-color: var(--purple);
-
-      &:active {
-        cursor: grabbing;
-        cursor: -moz-grabbing;
-        cursor: -webkit-grabbing;
-      }
     }
   }
 }

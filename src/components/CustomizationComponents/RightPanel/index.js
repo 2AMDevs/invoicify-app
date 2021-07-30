@@ -7,6 +7,11 @@ import './index.scss'
 const RightPanel = ({ selectedItem }) => {
   const [pos, setPos] = useState({ x: 0, y: 0 })
 
+  const dragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
   return (
     <div
       className={cn('right-panel', {
@@ -17,6 +22,7 @@ const RightPanel = ({ selectedItem }) => {
       <div
         className="right-panel__preview"
         id="drop-target"
+        onDragOver={dragOver}
       >
         <div
           className="right-panel__preview__handle"
