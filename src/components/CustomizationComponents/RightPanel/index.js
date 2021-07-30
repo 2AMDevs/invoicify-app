@@ -6,7 +6,6 @@ import './index.scss'
 
 const RightPanel = ({ selectedItem }) => {
   const [pos, setPos] = useState({ x: 0, y: 0 })
-  const [dragging, setDragging] = useState(false)
 
   return (
     <div
@@ -17,23 +16,22 @@ const RightPanel = ({ selectedItem }) => {
       <h1 className="right-panel__header">Set position of the Field on invoice</h1>
       <div
         className="right-panel__preview"
-        onMouseMove={(e) => {
-          if (!dragging) return
-
-          const rect = e.target.getBoundingClientRect()
-          setPos({ x: e.clientX - rect.left - 15, y: e.clientY - rect.top - 15 })
-        }}
+        id="drop-target"
       >
         <div
           className="right-panel__preview__handle"
+          draggable
           style={{
             top: `${pos.y}px`,
             left: `${pos.x}px`,
-            // pointerEvents: dragging ? 'none' : 'all',
           }}
-          onMouseDown={() => setDragging(true)}
-          onMouseUp={() => setDragging(false)}
+          id="drag-target"
           role="presentation"
+          onDragEnd={(e) => {
+            e.target.style.curser = 'move'
+            const rect = document.getElementById('drop-target').getBoundingClientRect()
+            setPos({ x: e.clientX - rect.left - 60, y: e.clientY - rect.top - 10 })
+          }}
         />
       </div>
     </div>
