@@ -1,2 +1,16 @@
 .middle-section {
+  padding: 5rem;
+  color: var(--ice-white);
+
+  &__row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2.4rem;
+
+    & > div {
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
+    }
+  }
 }

@@ -21,37 +21,44 @@ const MiddleSection = ({
 
   return (
     <div className="middle-section">
-      <TextField
-        label="Field Name"
-        onChange={(_, val) => handleChange(idx, 'name', val)}
-        value={setting.name}
-        disabled={setting.disableNameChange}
-      />
-      <TextField
-        label="Row Number"
-        onChange={(_, val) => handleChange(idx, 'row', val)}
-        value={setting.row}
-      />
-      <TextField
-        label="X Co-ordinate"
-        onChange={(_, val) => handleChange(idx, 'x', val)}
-        value={setting.x}
-      />
-      <TextField
-        label="Y Co-ordinate"
-        onChange={(_, val) => handleChange(idx, 'y', val)}
-        value={setting.y}
-      />
-      <Toggle
-        label="Required?"
-        checked={setting.required}
-        onChange={(_, val) => handleChange(idx, 'required', val)}
-      />
-      <Toggle
-        label="Disabled?"
-        checked={setting.disabled}
-        onChange={(_, val) => handleChange(idx, 'disabled', val)}
-      />
+      <div className="middle-section__row">
+        <TextField
+          label="Field Name"
+          onChange={(_, val) => handleChange(idx, 'name', val)}
+          value={setting.name}
+          disabled={setting.disableNameChange}
+        />
+        <TextField
+          label="Row Number"
+          onChange={(_, val) => handleChange(idx, 'row', val)}
+          value={setting.row}
+        />
+      </div>
+      <div className="middle-section__row">
+        <Toggle
+          label="Required?"
+          checked={setting.required}
+          onChange={(_, val) => handleChange(idx, 'required', val)}
+        />
+        <Toggle
+          label="Disabled?"
+          checked={setting.disabled}
+          onChange={(_, val) => handleChange(idx, 'disabled', val)}
+        />
+      </div>
+      <div className="middle-section__row">
+        <TextField
+          label="X Co-ordinate"
+          onChange={(_, val) => handleChange(idx, 'x', val)}
+          value={setting.x}
+        />
+        <TextField
+          label="Y Co-ordinate"
+          onChange={(_, val) => handleChange(idx, 'y', val)}
+          value={setting.y}
+        />
+      </div>
+
       <Dropdown
         label="Type"
         options={fieldTypes}
@@ -64,6 +71,7 @@ const MiddleSection = ({
         onChange={(_, val) => handleChange(idx, 'size', val)}
         value={setting.size}
       />
+
       {setting.type === MASKED
         ? (
           <TextField
