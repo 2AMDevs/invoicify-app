@@ -60,6 +60,8 @@ const CustomizationPage = () => {
       />
       <RightPanel
         selectedItem={selectedItem}
+        idx={selectedItemIdx}
+        handleChange={handleChange}
       />
     </div>
   )

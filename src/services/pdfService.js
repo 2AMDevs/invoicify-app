@@ -331,19 +331,23 @@ const getPdf = async (invoiceDetails, mode = PRINT) => {
   printDuplicate(mode, page, printSettings, font, fontSize)
 
   // Print Invoice Header
-  makeInvoiceHeader(page, meta, font, fontSize)
+  if (meta) {
+    makeInvoiceHeader(page, meta, font, fontSize)
+  }
 
   // Print Items
-  printItems(page, items, printSettings, font, fontSize)
+  if (items) {
+    printItems(page, items, printSettings, font, fontSize)
+    // oldPurchase Stuff
+    printOldPurchase(page, items, commonFont)
+  }
 
   // Print Footer
-  printFooter(page, footer, printSettings, font, fontSize)
-
-  // oldPurchase Stuff
-  printOldPurchase(page, items, commonFont)
-
-  // Print Distribution
-  printPaymentDist(page, footer, font, fontSize)
+  if (footer) {
+    printFooter(page, footer, printSettings, font, fontSize)
+    // Print Distribution
+    printPaymentDist(page, footer, font, fontSize)
+  }
 
   pdfDoc.setTitle('Invoice Preview')
   pdfDoc.setAuthor(COMPANY_NAME)
