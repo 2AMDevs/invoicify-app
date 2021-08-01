@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import cn from 'classnames'
 
@@ -6,6 +6,14 @@ import './index.scss'
 
 const RightPanel = ({ selectedItem }) => {
   const [pos, setPos] = useState({ x: 0, y: 0 })
+
+  useEffect(() => {
+    setPos({
+      x: selectedItem ? selectedItem.x : 0,
+      y: selectedItem ? selectedItem.y : 0,
+    })
+  }, [selectedItem])
+
   const heightDragHandle = 40
   const widthDragHandle = 130
 
