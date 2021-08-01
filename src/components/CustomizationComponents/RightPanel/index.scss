@@ -1,5 +1,5 @@
 .right-panel {
-  width: 46%;
+  width: 30%;
   background-color: var(--color-dark);
   transform: scale(1.4) translateX(100%);
   will-change: transform;
@@ -25,8 +25,8 @@
 
   &__preview {
     width: 100%;
-    height: 85%;
-    margin-top: 2.8rem;
+    height: 80%;
+    margin-top: 3.8rem;
     border-radius: 1.2rem;
     border: dashed 0.4rem var(--ice-white);
     background-color: var(--color-white-op-20);
