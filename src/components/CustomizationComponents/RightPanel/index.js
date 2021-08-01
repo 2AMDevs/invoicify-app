@@ -52,7 +52,6 @@ const RightPanel = ({ selectedItem }) => {
       >
         <Document
           file={getFromStorage('previewPDFUrl')}
-          className="home-page__preview-panel__doc"
           loading={(
             <Spinner
               size={SpinnerSize.large}
