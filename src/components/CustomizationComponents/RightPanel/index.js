@@ -33,7 +33,7 @@ const RightPanel = ({ selectedItem, idx, handleChange }) => {
   }, [])
 
   const heightDragHandle = selectedItem?.size ?? 30
-  const widthDragHandle = 100
+  const widthDragHandle = 60
 
   useEffect(() => {
     setPos({
@@ -47,7 +47,8 @@ const RightPanel = ({ selectedItem, idx, handleChange }) => {
       handleChange(idx, 'x', offsets.x + (pos.x / scale))
       handleChange(idx, 'y', (offsets.y - (pos.y / scale)))
     }
-  }, [pos, idx, handleChange])
+    // eslint-disable-next-line
+  }, [pos, idx])
 
   const dragOver = (e) => {
     e.preventDefault()
