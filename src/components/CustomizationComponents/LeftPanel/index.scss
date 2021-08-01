@@ -31,6 +31,7 @@
       var(--color-darker);
     will-change: background-color;
     transition: background-color 0.2s ease-out;
+    cursor: pointer;
 
     &:focus {
       background-color: var(--color-darker);

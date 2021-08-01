@@ -7,14 +7,15 @@ import {
 } from '../../../utils/constants'
 
 import './index.scss'
+import { round } from '../../../utils/utils'
 
 const MiddleSection = ({
   setting, handleChange, idx,
 }) => {
   if (!setting) {
     return (
-      <div className="middle-section">
-        empty
+      <div className="middle-section__not-selected">
+        Select a field from left panel to start customizing the invoice.
       </div>
     )
   }
@@ -50,12 +51,12 @@ const MiddleSection = ({
         <TextField
           label="X Co-ordinate"
           onChange={(_, val) => handleChange(idx, 'x', val)}
-          value={setting.x}
+          value={round(setting.x, 2)}
         />
         <TextField
           label="Y Co-ordinate"
           onChange={(_, val) => handleChange(idx, 'y', val)}
-          value={setting.y}
+          value={round(setting.y, 2)}
         />
       </div>
 

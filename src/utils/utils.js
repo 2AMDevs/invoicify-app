@@ -92,8 +92,10 @@ const getReadableSize = (size, speed = false) => {
   return `${Math.max(size, 0.1).toFixed(1)} ${units[i]}${(speed ? '/sec' : '')}`
 }
 
+const round = (num, decimals = 2) => +(num.toFixed(decimals))
+
 export {
   getBoolFromString, makeHash, groupBy,
   titleCase, quantize, incrementor, validateEmail,
-  getReadableSize,
+  getReadableSize, round,
 }

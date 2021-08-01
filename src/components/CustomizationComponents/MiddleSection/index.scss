@@ -2,6 +2,12 @@
   padding: 5rem;
   color: var(--ice-white);
 
+  &__not-selected {
+    padding: 5rem;
+    text-align: center;
+    font-size: 1.6rem;
+  }
+
   &__row {
     display: flex;
     align-items: center;
