@@ -92,7 +92,7 @@ const getReadableSize = (size, speed = false) => {
   return `${Math.max(size, 0.1).toFixed(1)} ${units[i]}${(speed ? '/sec' : '')}`
 }
 
-const round = (num, decimals = 2) => +(num.toFixed(decimals))
+const round = (num, decimals = 2) => +(parseFloat(num).toFixed(decimals))
 
 export {
   getBoolFromString, makeHash, groupBy,

@@ -10,12 +10,12 @@ import './index.scss'
 
 const scale = 0.75
 const offsets = {
-  x: 10,
-  y: defaultPageSettings.height - 70,
+  x: 8,
+  y: defaultPageSettings.height - 66,
 }
 
 const RightPanel = ({ selectedItem, idx, handleChange }) => {
-  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const [pos, setPos] = useState({ x: 0, y: 0, changeRoot: false })
   const [pdfData, setPdfBytes] = useState('')
 
   const previewPDF = () => {
@@ -39,16 +39,17 @@ const RightPanel = ({ selectedItem, idx, handleChange }) => {
     setPos({
       x: selectedItem ? (selectedItem.x * scale) - offsets.x : 0,
       y: selectedItem ? ((offsets.y - selectedItem.y) * scale) : 0,
+      changeRoot: false,
     })
-  }, [selectedItem])
+  }, [selectedItem, idx])
 
   useEffect(() => {
-    if (idx !== undefined) {
+    if (idx !== undefined && pos.changeRoot) {
       handleChange(idx, 'x', offsets.x + (pos.x / scale))
       handleChange(idx, 'y', (offsets.y - (pos.y / scale)))
     }
     // eslint-disable-next-line
-  }, [pos, idx])
+  }, [pos])
 
   const dragOver = (e) => {
     e.preventDefault()
@@ -64,6 +65,7 @@ const RightPanel = ({ selectedItem, idx, handleChange }) => {
     setPos({
       x: Math.min(x, rect.width - widthDragHandle),
       y: Math.min(y, rect.height - heightDragHandle),
+      changeRoot: true,
     })
   }
 
