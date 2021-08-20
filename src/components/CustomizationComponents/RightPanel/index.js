@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import cn from 'classnames'
+import { Icon } from 'office-ui-fabric-react'
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner'
 import { Document, Page } from 'react-pdf'
 
@@ -58,7 +59,7 @@ const RightPanel = ({ selectedItem, idx, handleChange }) => {
 
   const handleDragEnd = (e) => {
     const rect = document.getElementById('drop-target').getBoundingClientRect()
-    const posX = e.clientX - rect.left - (widthDragHandle / 2)
+    const posX = e.clientX - rect.left
     const posY = e.clientY - rect.top - (heightDragHandle / 2)
     const x = posX < 0 ? 0 : posX
     const y = posY < 0 ? 0 : posY
@@ -111,7 +112,12 @@ const RightPanel = ({ selectedItem, idx, handleChange }) => {
           id="drag-target"
           role="presentation"
           onDragEnd={handleDragEnd}
-        />
+        >
+          <Icon
+            className="right-panel__preview__handle--icn"
+            iconName="DragObject"
+          />
+        </div>
       </div>
     </div>
   )

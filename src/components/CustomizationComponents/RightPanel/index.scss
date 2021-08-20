@@ -24,12 +24,6 @@
   }
 
   &__preview {
-    width: 100%;
-    height: 80%;
-    margin-top: 3.8rem;
-    border-radius: 1.2rem;
-    border: dashed 0.4rem var(--ice-white);
-    background-color: var(--color-white-op-20);
     position: relative;
 
     &__handle {
@@ -44,6 +38,28 @@
       box-shadow: 0 0.3rem 0.6rem 0
         var(--color-black-op-20);
       background-color: var(--purple);
+
+      &--icn {
+        padding: 0.2rem;
+      }
+    }
+
+    .react-pdf__Document {
+      width: 100%;
+      margin-top: 3.8rem;
+      border-radius: 1.2rem;
+      border: dashed 0.4rem var(--ice-white);
+      background-color: var(--color-white-op-20);
+
+      .react-pdf__Page {
+        width: 100% !important;
+        height: auto !important;
+
+        canvas {
+          width: 100% !important;
+          height: auto !important;
+        }
+      }
     }
   }
 }
