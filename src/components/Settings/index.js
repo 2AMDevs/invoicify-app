@@ -43,6 +43,7 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
   const [resetSettingsPasswordError, setResetSettingsPasswordError] = useState('')
   const [resetSettingsPassword, setResetSettingsPassword] = useState('')
   const [printBoth, setPrintBoth] = useState(getFromStorage('printBoth'))
+  const [enableBeta, setEnableBeta] = useState(getFromStorage('enableBeta'))
 
   const billTooltipId = useId('billTooltipId')
   const fontTooltipId = useId('fontTooltipId')
@@ -65,6 +66,11 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
   const onChangePrintBoth = (_, c) => {
     localStorage.printBoth = c
     setPrintBoth(c)
+  }
+
+  const onChangeBetaFeatures = (_, c) => {
+    localStorage.enableBeta = c
+    setEnableBeta(c)
   }
 
   const onMonthShowChange = (_, checked) => {
@@ -330,6 +336,13 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
           primary
           onClick={() => setShowAuthModal(true)}
           styles={{ root: { width: '18rem' } }}
+        />
+        <Toggle
+          label="Beta features (restart app to take effect)"
+          onText="enabled"
+          offText="disabled"
+          checked={enableBeta}
+          onChange={onChangeBetaFeatures}
         />
         <br />
         <p className="outside-link">
