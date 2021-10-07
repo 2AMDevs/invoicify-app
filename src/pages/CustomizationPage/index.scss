@@ -1,0 +1,9 @@
+.customization-page {
+  display: flex;
+  justify-content: space-between;
+  height: calc(100% - 5rem);
+  padding-top: 5rem;
+  color: var(--color-white);
+  background-color: var(--color-darker);
+  overflow: hidden;
+}

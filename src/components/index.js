@@ -31,3 +31,5 @@ export {
   SetPassword,
   UpdatePanel,
 }
+
+export * from './CustomizationComponents'

@@ -10,7 +10,7 @@ import {
 
 import { Header } from './components'
 import { InvoiceStateProvider, AuthStateProvider } from './contexts'
-import { HomePage, InvoiceSettings } from './pages'
+import { HomePage, InvoiceSettings, CustomizationPage } from './pages'
 import { initializeSettings } from './services/settingsService'
 import { darkThemePalette } from './utils/constants'
 
@@ -40,6 +40,10 @@ ReactDOM.render(
           <Route
             path="/configure"
             component={InvoiceSettings}
+          />
+          <Route
+            path="/new-configure"
+            component={CustomizationPage}
           />
         </main>
       </div>
