@@ -29,3 +29,4 @@ electron-builder.yml
 .vscode/
 
 dev-app-update.yml
+package-lock.json
