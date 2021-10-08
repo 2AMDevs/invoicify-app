@@ -338,9 +338,9 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
           styles={{ root: { width: '18rem' } }}
         />
         <Toggle
-          label="Beta features (restart app to take effect)"
-          onText="enabled"
-          offText="disabled"
+          label="Beta Features (restart app to take effect)"
+          onText="Enabled"
+          offText="Disabled"
           checked={enableBeta}
           onChange={onChangeBetaFeatures}
         />
