@@ -82,6 +82,11 @@ const validateEmail = (email) => {
   return re.test(String(email).toLowerCase())
 }
 
+/**
+ * Returns download size and (optional) speed.
+ * @param {number} size Size of file in bytes
+ * @param {boolean} speed If true, shows speed.
+ */
 const getReadableSize = (size, speed = false) => {
   let i = -1
   const units = ['kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb', 'Zb', 'Yb']
@@ -92,8 +97,29 @@ const getReadableSize = (size, speed = false) => {
   return `${Math.max(size, 0.1).toFixed(1)} ${units[i]}${(speed ? '/sec' : '')}`
 }
 
+/**
+ * Returns formated number in Number DataType
+ * @param {number} num Number to be formatted
+ * @param {number} decimals Number of decimals
+ */
+const round = (num, decimals = 2) => +(parseFloat(num).toFixed(decimals))
+
+/**
+ * Returns Date Object from a string
+ * @param {string} dateStr String to be parsed as date
+ * @param {string} delimiter String to be used as delimiter
+ */
+const parseDate = (dateStr, delimiter = '-') => {
+  const [d, m, y] = (dateStr || '').trim().split(delimiter)
+  const day = Math.max(1, Math.min(31, parseInt(d, 10)))
+  const month = Math.max(1, Math.min(12, parseInt(m, 10))) - 1
+  const yearInt = parseInt(y, 10)
+  const year = yearInt < 100 ? yearInt + 2000 : yearInt
+  return new Date(year, month, day)
+}
+
 export {
   getBoolFromString, makeHash, groupBy,
   titleCase, quantize, incrementor, validateEmail,
-  getReadableSize,
+  getReadableSize, round, parseDate,
 }

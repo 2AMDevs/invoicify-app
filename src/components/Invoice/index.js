@@ -17,7 +17,9 @@ import { getInvoiceSettings } from '../../services/settingsService'
 import {
   DATE, defaultPrintSettings, ISET, MASKED, PAY_METHOD, PREVIEW, PRINT, ZERO,
 } from '../../utils/constants'
-import { makeHash, groupBy, incrementor } from '../../utils/utils'
+import {
+  makeHash, groupBy, incrementor, parseDate,
+} from '../../utils/utils'
 import Alert from '../Alert'
 import HoverTotal from '../HoverTotal'
 import InvoiceItems from '../InvoiceItems'
@@ -314,6 +316,16 @@ const Invoice = ({ showPdfPreview }) => {
   const validateMandatoryMeta = () => !invoiceSettings
     .some((field) => field.required && !validateInvoiceField(field))
 
+  const onParseDateFromString = (newValue, value) => {
+    const previousValue = value || new Date()
+    try {
+      const parsedDate = parseDate(newValue, getFromStorage('dateSep'))
+      return parsedDate
+    } catch (e) {
+      return previousValue
+    }
+  }
+
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="animation-slide-up invoice">
@@ -366,9 +378,11 @@ const Invoice = ({ showPdfPreview }) => {
                     ? (
                       <DatePicker
                         {...props}
+                        onChange={() => {}}
                         value={invoice[field.name] ?? new Date()}
                         ariaLabel="Select a date"
                         allowTextInput
+                        parseDateFromString={(v) => onParseDateFromString(v, invoice[field.name])}
                         onSelectDate={(date) => {
                           setInvoice({ ...invoice, [field.name]: date })
                         }}

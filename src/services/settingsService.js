@@ -18,6 +18,7 @@ const initializeSettings = async () => {
   localStorage.customFont = localStorage.customFont ?? CUSTOM_FONT
   localStorage.customLockBg = localStorage.customLockBg ?? ''
   localStorage.currency = localStorage.currency ?? '₹'
+  localStorage.dateSep = localStorage.dateSep ?? '-'
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
 

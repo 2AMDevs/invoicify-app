@@ -1,6 +1,6 @@
 {
   "name": "invoicify",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "author": "2AM Devs",
   "description": "Digitalizes your billing process",
   "private": true,
@@ -65,6 +65,7 @@
     "build": "npm run react-build && npm run electron-build",
     "ship": "npm run react-build && npm run electron-deploy",
     "lint": "node_modules/eslint/bin/eslint.js src/**/*.js --fix",
+    "lint-win": "node_modules/.bin/eslint src/**/*.js --fix",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
@@ -88,10 +89,11 @@
   "devDependencies": {
     "concurrently": "^5.2.0",
     "electron": "^9.0.5",
-    "electron-builder": "^22.7.0",
+    "electron-builder": "^22.10.5",
     "electron-reload": "^1.5.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.23.4",
     "wait-on": "^5.2.1"
   },
   "peerDependencies": {

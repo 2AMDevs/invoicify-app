@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useId } from '@uifabric/react-hooks'
 import { DefaultButton, IconButton } from 'office-ui-fabric-react'
@@ -13,10 +13,9 @@ import { getFromStorage } from '../../services/dbService'
 import { isValidPath } from '../../services/nodeService'
 import { resetSettings } from '../../services/settingsService'
 import {
-  FILE_TYPE, SELECT_FILE_TYPE, ERROR, COMPANY_NAME,
+  COMPANY_NAME, ERROR, FILE_TYPE, SELECT_FILE_TYPE,
 } from '../../utils/constants'
 import SetPassword from '../SetPasswordModal'
-
 import './index.scss'
 
 // eslint-disable-next-line global-require
@@ -38,11 +37,13 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
   const [font, setFont] = useState(getFromStorage('customFont'))
   const [bg, setBg] = useState(getFromStorage('customLockBg'))
   const [gstinPrefix, setGstinPrefix] = useState(getFromStorage('nativeGstinPrefix'))
+  const [dateSep, setDateSep] = useState(getFromStorage('dateSep'))
   const [currency, setCurrency] = useState(getFromStorage('currency'))
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [resetSettingsPasswordError, setResetSettingsPasswordError] = useState('')
   const [resetSettingsPassword, setResetSettingsPassword] = useState('')
   const [printBoth, setPrintBoth] = useState(getFromStorage('printBoth'))
+  const [enableBeta, setEnableBeta] = useState(getFromStorage('enableBeta'))
 
   const billTooltipId = useId('billTooltipId')
   const fontTooltipId = useId('fontTooltipId')
@@ -67,6 +68,11 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
     setPrintBoth(c)
   }
 
+  const onChangeBetaFeatures = (_, c) => {
+    localStorage.enableBeta = c
+    setEnableBeta(c)
+  }
+
   const onMonthShowChange = (_, checked) => {
     localStorage.showFullMonth = checked
     setShowFullMonth(checked)
@@ -75,6 +81,12 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
   const onCurrencyChange = (_, val) => {
     localStorage.currency = val
     setCurrency(val)
+  }
+
+  const onDateSepChange = (_, val) => {
+    if (val.length > 1) return
+    localStorage.dateSep = val
+    setDateSep(val)
   }
 
   const onGstinPrefixChange = (_, val) => {
@@ -200,16 +212,22 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
           horizontal
         >
           <TextField
-            label="Native GSTIN Prefix"
+            label="GSTIN Prefix"
             onChange={onGstinPrefixChange}
             value={gstinPrefix}
-            description="2 Digit State Code for GSTIN"
+            description="State Code for GSTIN"
+          />
+          <TextField
+            label="Date Separator"
+            onChange={onDateSepChange}
+            value={dateSep}
+            description="Char between D,M&Y"
           />
           <Toggle
             label="Date Language"
             checked={hindiDate}
-            onText="हिन्दी"
-            offText="English"
+            onText="आ"
+            offText="Aa"
             onChange={onDateLangChange}
           />
           <Toggle
@@ -331,6 +349,15 @@ const Settings = ({ refreshCompanyName, reloadPage }) => {
           onClick={() => setShowAuthModal(true)}
           styles={{ root: { width: '18rem' } }}
         />
+
+        <Toggle
+          label="Beta Features 🔨 (requires restart)"
+          onText="Enabled"
+          offText="Disabled"
+          checked={enableBeta}
+          onChange={onChangeBetaFeatures}
+        />
+
         <br />
         <p className="outside-link">
           ©

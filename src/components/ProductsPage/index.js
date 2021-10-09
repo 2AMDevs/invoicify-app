@@ -1,20 +1,23 @@
+import React from 'react'
+
 import { CommandBarButton, IconButton } from 'office-ui-fabric-react'
 import {
   DetailsList,
   DetailsListLayoutMode,
-  SelectionMode
+  SelectionMode,
 } from 'office-ui-fabric-react/lib/DetailsList'
 import { TeachingBubble } from 'office-ui-fabric-react/lib/TeachingBubble'
-import React from 'react'
-import { deleteProducts, getProducts, getProductsJSON, setProducts } from '../../services/dbService'
-import { getInvoiceDate } from '../../services/pdfService'
+
+import {
+  deleteProducts, getProducts, getProductsJSON, setProducts,
+} from '../../services/dbService'
 import { saveCSV } from '../../services/nodeService'
+import { getInvoiceDate } from '../../services/pdfService'
 import { productTableColumns, SELECT_FILE_TYPE } from '../../utils/constants'
 import ImportProducts from '../ImportProducts'
 import ListEmpty from '../ListEmpty'
 import ProductForm from '../ProductForm'
 import './index.scss'
-
 
 class ProductsPage extends React.Component {
   constructor (props) {
@@ -130,7 +133,7 @@ class ProductsPage extends React.Component {
     getProductsJSON(),
     SELECT_FILE_TYPE.EXCEL,
     true,
-    `Products-${getInvoiceDate()}.csv`
+    `Products-${getInvoiceDate()}.csv`,
   )
 
   render () {
