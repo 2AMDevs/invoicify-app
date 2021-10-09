@@ -10,7 +10,7 @@ import { Stack } from 'office-ui-fabric-react/lib/Stack'
 import { TextField } from 'office-ui-fabric-react/lib/TextField'
 
 import { currency, getProducts, getProductTypes } from '../../services/dbService'
-import { groupBy, quantize } from '../../utils/utils'
+import { groupBy } from '../../utils/utils'
 import './index.scss'
 
 const columnProps = {
@@ -124,7 +124,7 @@ const InvoiceItems = ({
                   label="Pcs"
                   disabled={!currentInvoiceItem.product}
                   value={currentInvoiceItem.quantity}
-                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', quantize(value))}
+                  onChange={(_, value) => onChangeField(currentInvoiceItemIndex, 'quantity', value)}
                   required
                 />
               </>
