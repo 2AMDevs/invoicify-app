@@ -113,7 +113,9 @@ const parseDate = (dateStr, delimiter = '-') => {
   const [d, m, y] = (dateStr || '').trim().split(delimiter)
   const day = Math.max(1, Math.min(31, parseInt(d, 10)))
   const month = Math.max(1, Math.min(12, parseInt(m, 10))) - 1
-  return new Date(parseInt(y, 10), month, day)
+  const yearInt = parseInt(y, 10)
+  const year = yearInt < 100 ? yearInt + 2000 : yearInt
+  return new Date(year, month, day)
 }
 
 export {
