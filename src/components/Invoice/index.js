@@ -378,6 +378,7 @@ const Invoice = ({ showPdfPreview }) => {
                     ? (
                       <DatePicker
                         {...props}
+                        onChange={() => {}}
                         value={invoice[field.name] ?? new Date()}
                         ariaLabel="Select a date"
                         allowTextInput
