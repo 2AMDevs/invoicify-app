@@ -22,11 +22,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
 public/print.pdf
 electron-builder.yml
 .env
 .vscode/
 
 dev-app-update.yml
-package-lock.json
