@@ -37,7 +37,7 @@ An application aimed to make it easier for SMEs to migrate to digital billing wi
 
 | <img src="https://raw.githubusercontent.com/2AMDevs/cdn/main/windows.png" alt="Windows" width="24px" height="24px" /><br/>Windows | <img src="https://raw.githubusercontent.com/2AMDevs/cdn/main/linux.png" alt="Linux" width="24px" height="24px" /><br/>Linux | <img src="https://raw.githubusercontent.com/2AMDevs/cdn/main/apple.png" alt="MacOS" width="24px" height="24px" /><br/>MacOS |
 | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| [v0.4.13](https://github.com/2AMDevs/invoicify-app/releases/tag/v0.4.13) ✅                                                        | 🚧 (Build WIP)                                                                                                               | 🚧   (Build WIP)                                                                                                             |
+| [v0.4.15](https://github.com/2AMDevs/invoicify-app/releases/tag/v0.4.15) ✅                                                        | 🚧 (Build WIP)                                                                                                               | 🚧   (Build WIP)                                                                                                             |
 
 ## ⌨️ Development
 
