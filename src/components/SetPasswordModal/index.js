@@ -25,7 +25,6 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
   const [otpSent, setOtpSent] = useState(false)
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState('')
-  const [sessionId, setSessionId] = useState('')
   const [emailError, setEmailError] = useState('')
   const [isEmailVerified, setIsEmailVerified] = useState(false)
   const [oldPass, setOldPass] = useState('')
@@ -57,8 +56,7 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
     const name = getFromStorage('companyName')
     createUser(name, email).then((res) => {
       if (res.status === 'OK') {
-        localStorage.email = res.data.email
-        setSessionId(res.data.sessionId)
+        localStorage.email = email
         setOtpSent(true)
         setOtpError('')
       } else {
@@ -70,9 +68,9 @@ const SetPassword = ({ hideDialog, setHideDialog, isForgotPasswordPage }) => {
   }
 
   const submitOtp = () => {
-    if (!email || !sessionId || !otp) return
+    if (!email || !otp) return
 
-    verifyOtp(email, otp, sessionId).then((res) => {
+    verifyOtp(email, otp).then((res) => {
       if (res.status === 'OK') {
         setIsEmailVerified(true)
         setOtpSent(false)
