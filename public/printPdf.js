@@ -3,7 +3,9 @@ const fs = require('fs')
 const os = require('os')
 const path = require('path')
 
-const ptp = require('pdf-to-printer')
+const ptp = process.platform === 'win32'
+  ? require('pdf-to-printer')
+  : require('unix-print')
 
 /**
  * returns list of printers present on device

@@ -1,6 +1,6 @@
 {
   "name": "invoicify",
-  "version": "0.4.15",
+  "version": "0.4.16",
   "author": "2AM Devs",
   "description": "Digitalizes your billing process",
   "private": true,
@@ -46,14 +46,15 @@
     "node-sass": "^4.14.1",
     "office-ui-fabric-react": "^7.145.0",
     "pdf-lib": "^1.9.0",
-    "pdf-to-printer": "^1.4.1",
+    "pdf-to-printer": "^5.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-markdown": "^5.0.3",
     "react-pdf": "^5.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "read-excel-file": "^4.0.6"
+    "read-excel-file": "^4.0.6",
+    "unix-print": "^1.1.0"
   },
   "scripts": {
     "react-start": "craco start",
@@ -88,7 +89,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.2.0",
-    "electron": "^9.0.5",
+    "electron": "^16.0.4",
     "electron-builder": "^22.10.5",
     "electron-reload": "^1.5.0",
     "eslint": "^6.6.0",
