@@ -22,7 +22,8 @@ const initializeSettings = async () => {
   localStorage.invoiceSettings = localStorage.invoiceSettings
                                   ?? JSON.stringify(defaultPrintSettings)
 
-  localStorage.printer = localStorage.printer ?? await getDefPrinter()
+  const defPrinter = await getDefPrinter() ?? {}
+  localStorage.printer = localStorage.printer ?? (defPrinter.name ?? '')
   localStorage.morePrintSettings = JSON.stringify({
     ...morePrintSettings,
     ...(localStorage.morePrintSettings && JSON.parse(localStorage.morePrintSettings)),
