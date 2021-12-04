@@ -123,7 +123,7 @@ const getProducts = (id) => {
  * helping in rendering Printer Options
  */
 const printerList = async () => {
-  const list = await getPrintersList()
+  const list = await getPrintersList() ?? []
   const getIcon = (name) => {
     if (name.includes('Fax')) return 'fax'
     if (name.includes('to PDF')) return 'pdf'

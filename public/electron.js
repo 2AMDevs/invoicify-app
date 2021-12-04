@@ -11,10 +11,12 @@ const readXlsxFile = require('read-excel-file/node')
 
 const { print, getPrinters, getDefaultPrinter } = require('./printPdf')
 
+const electronBinary = process.platform === 'win32' ? 'electron.cmd' : 'electron'
+
 if (isDev) {
   // eslint-disable-next-line global-require
   require('electron-reload')(__dirname, {
-    electron: path.join(process.cwd(), 'node_modules', '.bin', 'electron.cmd'),
+    electron: path.join(process.cwd(), 'node_modules', '.bin', electronBinary),
   })
 }
 
@@ -32,6 +34,7 @@ const createWindow = () => {
       nodeIntegration: true,
       devTools: !!isDev,
       plugins: true,
+      contextIsolation: false
     },
   })
 
