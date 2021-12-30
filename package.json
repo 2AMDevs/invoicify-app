@@ -44,7 +44,7 @@
     "electron-updater": "^4.3.9",
     "github-markdown-css": "^4.0.0",
     "node-sass": "^4.14.1",
-    "office-ui-fabric-react": "^7.145.0",
+    "office-ui-fabric-react": "^7.180.1",
     "pdf-lib": "^1.9.0",
     "pdf-to-printer": "^1.4.1",
     "react": "^16.13.1",
