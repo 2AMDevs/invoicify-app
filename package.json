@@ -43,7 +43,7 @@
     "electron-is-dev": "^1.2.0",
     "electron-updater": "^4.3.9",
     "github-markdown-css": "^4.0.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.1",
     "office-ui-fabric-react": "^7.145.0",
     "pdf-lib": "^1.9.0",
     "pdf-to-printer": "^1.4.1",
@@ -52,7 +52,7 @@
     "react-markdown": "^5.0.3",
     "react-pdf": "^5.1.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.0",
     "read-excel-file": "^4.0.6"
   },
   "scripts": {
