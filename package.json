@@ -45,7 +45,7 @@
     "github-markdown-css": "^4.0.0",
     "node-sass": "^4.14.1",
     "office-ui-fabric-react": "^7.145.0",
-    "pdf-lib": "^1.9.0",
+    "pdf-lib": "^1.17.1",
     "pdf-to-printer": "^1.4.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
