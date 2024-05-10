@@ -36,7 +36,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "@uifabric/icons": "^7.3.58",
+    "@uifabric/icons": "^7.9.5",
     "classnames": "^2.2.6",
     "convert-rupees-into-words": "^1.0.6",
     "cross-env": "^7.0.2",
