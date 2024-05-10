@@ -41,7 +41,7 @@
     "convert-rupees-into-words": "^1.0.6",
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
-    "electron-updater": "^4.3.9",
+    "electron-updater": "^4.6.5",
     "github-markdown-css": "^4.0.0",
     "node-sass": "^9.0.0",
     "office-ui-fabric-react": "^7.145.0",
