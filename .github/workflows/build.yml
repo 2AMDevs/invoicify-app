@@ -12,24 +12,31 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 10
+          node-version: 18
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run react-build
         env:
           CI: false
           REACT_APP_API_URL: ${{ secrets.INVOICIFY_API_URL }}
           REACT_APP_RELEASE_NOTES_API: ${{ secrets.RELEASE_NOTES_API }}
-          GH_TOKEN: ${{ secrets.github_token }}
-        with:
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+      - name: Build Electron app
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: npm run electron-build
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+
+      - name: Build and publish Electron release
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: npm run electron-deploy
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
