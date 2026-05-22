@@ -14,7 +14,7 @@ const { print, getPrinters, getDefaultPrinter } = require('./printPdf')
 if (isDev) {
   // eslint-disable-next-line global-require
   require('electron-reload')(__dirname, {
-    electron: path.join(process.cwd(), 'node_modules', '.bin', 'electron.cmd'),
+    electron: path.join(process.cwd(), 'node_modules', '.bin', process.platform === 'win32' ? 'electron.cmd' : 'electron'),
   })
 }
 
@@ -30,6 +30,7 @@ const createWindow = () => {
     resizable: false,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       devTools: !!isDev,
       plugins: true,
     },
